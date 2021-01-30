@@ -19,6 +19,7 @@ CMD_AWS += --region $(AWS_REGION)
 endif
 
 setup-deb:
+	pip install -q -U pip awscli
 	curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 	sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
 	sudo apt-get update && sudo apt-get install -y terraform
