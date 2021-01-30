@@ -1,41 +1,30 @@
 before_script:
-  - python3 --version
-  - pylint --version
+  - terraform --version
   - aws --version
 
 stages:
-  - test
-  - build
+  - plan
   - deploy
 
-lint:
+plan:
   retry: 2
   tags:
-    - python
-  stage: test
+    - terraform
+  stage: plan
   script:
-    - echo ok
+    - make plan
   only:
     refs:
       - merge_request
-
-build-artifacts:
-  retry: 2
-  tags:
-    - python
-  stage: build
-  script:
-    - echo ok
-  only:
-    refs:
       - master
 
 deploy:
+  retry: 2
   tags:
-    - python
+    - terraform
   stage: deploy
   script:
-    - echo ok
+    - make deploy
   only:
     refs:
       - master

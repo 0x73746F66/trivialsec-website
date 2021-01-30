@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trivial Security</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles/icofont.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/styles/main.css" />
+    <script type=text/javascript>
+            window.recaptcha_site_key = '6LcmfrgUAAAAAILAIF_PlQWjPEPJi403Pv7GSK8T'
+        </script>
+    <link rel="shortcut icon" href="/static/favicon.ico">
+    <meta name="msapplication-TileColor" content="#494949">
+    <meta name="theme-color" content="#1ABB9C">
+    <script type=text/javascript src="/static/js/main.js"></script>
+</head>
+
+<body>
+    <div class="top-nav">
+        <a href="/" class="title-link-side">
+            <div class="banner-logo">
+                <img id="logo" src="/static/images/icon-64x64.png" />
+            </div>
+            <h1 class="banner-heading">Trivial Security</h1>
+        </a>
+        <nav role="navigation">
+            <ul>
+                <li class="active nav-home">
+                    <a href="/">
+                        <span>Home</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <section class="container">
+
+        <div id="banner-images">
+            <img src="/static/images/mock1.png" />
+            <img src="/static/images/mock2.png" />
+        </div>
+
+        <div class="subscribe" data-slug="">
+            <div class="message">
+                <p>
+                    <b>Trivial Security</b> is nearing launch!
+                </p>
+                <p>
+                    At <b>Trivial Security</b> we track bad actor tools, techniques, and practices so we can monitor
+                    your threat surface for you.
+                </p>
+                <p>
+                    Reserve an exclusive invitation, this will put you in our priority list for exclusive access to
+                    Trivial Security.
+                </p>
+            </div>
+            <div class="subscribe-form">
+                <div id="app-messages"></div>
+                <form id="subscribe_form" action="https://api.trivialsec.com/subscribe" method="POST">
+                    <div class="email-elem">
+                        <input id="email" type="email" required name="email" placeholder="you@example.com" />
+                    </div>
+                    <div class="form-submit">
+                        <button class="wait_recaptcha" disabled type="submit">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="footer">
+            Copyright © 2021 Trivial Security | <a href="/privacy">Privacy Policy</a>
+        </div>
+        <input type="hidden" name="recaptcha_token" id="recaptcha_token" />
+        <script src="https://www.google.com/recaptcha/api.js?render=6LcmfrgUAAAAAILAIF_PlQWjPEPJi403Pv7GSK8T"></script>
+
+    </section>
+</body>
+
+</html>

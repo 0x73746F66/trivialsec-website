@@ -1,0 +1,238 @@
+body {
+    padding: 0;
+    background:rgb(232, 232, 232);
+    background: linear-gradient(0deg, rgb(211, 211, 211), rgb(247, 247, 247));
+    overflow-y: hidden;
+    font-family: "Helvetica Neue", Helvetica, Arial; 
+}
+html, body {
+    height:100vh;
+    margin:0;
+}
+
+.grecaptcha-badge {
+    display: none !important;
+}
+
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8vh;
+    background: rgba(72, 72, 72, 0.8);
+    z-index: 1;
+}
+
+.top-nav nav {
+    width: 80%;
+    display: inline-block;
+    vertical-align: top;
+    height: 8vh;
+}
+  
+.top-nav ul {
+    line-height: 8vh;
+    padding: 0;
+    margin: 0;
+}
+
+.top-nav li {
+    margin-left: 1vw;
+    list-style: none;
+    display: inline-block;
+}
+  
+.top-nav a {
+    color: #f9f9f9;
+    text-decoration: none;
+    font-size: 22px;
+}
+
+.top-nav a:hover, .top-nav li.active a {
+    color: #1ABB9C;
+}
+
+.banner-logo {
+    display: inline-block;
+    margin: 3px 20px 0 20px;
+}
+
+.banner-heading {
+    display: inline-block;
+    color: #f9f9f9;
+    line-height: 4vh;
+    font-size: 3vh;
+}
+
+.container {
+    padding: 8vh 2vh;
+    margin: 0;
+    overflow-y: scroll;
+    height: 85vh;
+}
+
+.banner-heading {
+    line-height: 7.5vh;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    vertical-align: top;
+}
+input {
+    outline: none;
+}
+button::-moz-focus-inner {
+    border: 0;
+}
+
+/* ALERTS*/
+
+#app-messages {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.modal-messages {
+    margin: 5px 0;
+    min-height: 40px;
+}
+
+.alert {
+    line-height: 40px;
+    border-radius: 3px 3px 3px 3px;
+}
+
+.alert.alert-info {
+    color: #059;
+    background-color: #BEF;
+}
+
+.alert.alert-success {
+    color: #270;
+    background-color: #DFF2BF;
+}
+
+.alert.alert-warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
+}
+
+.alert.alert-error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+
+.alert i {
+    font-size: 30px;
+    margin-right: 10px;
+    position: relative;
+    top: 5px;
+    left: 5px;
+}
+#banner-images img {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+#banner-images img:nth-of-type(1) {
+    animation-name: FadeInOut;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-duration: 10s;
+    animation-direction: alternate;
+}
+
+#banner-images img:nth-of-type(2) {
+    animation-name: FadeOutIn;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-duration: 10s;
+    animation-direction: alternate;
+}
+
+.subscribe {
+    z-index: 1;
+    position: fixed;
+    bottom: 0;
+    background: rgba(17, 138, 114, 0.9);
+    border-radius: 8px;
+    padding: 50px;
+    color: #fff;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5vh;
+    width: 80%;
+}
+
+button {
+    background: #fff;
+    border: 0;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.form-submit {
+    display: inline-block;
+}
+
+.email-elem {
+    display: inline-block;
+}
+
+.email-elem input {
+    width: 25vw;
+    padding: 10px;
+}
+
+@keyframes FadeOutIn {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes FadeInOut {
+    0% {
+        opacity: 1;
+    }
+    25% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.footer {
+    color: #fff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 2;
+}
+.footer a {
+    color: #fff;
+}

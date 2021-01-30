@@ -1,0 +1,49 @@
+resource "aws_route53_record" "www_a" {
+    allow_overwrite = true
+    zone_id = local.hosted_zone
+    name    = local.domain_name
+    type    = "A"
+
+    alias {
+        name                   = aws_cloudfront_distribution.static_trivialsec.domain_name
+        zone_id                = aws_cloudfront_distribution.static_trivialsec.hosted_zone_id
+        evaluate_target_health = false
+    }
+}
+
+resource "aws_route53_record" "www_aaaa" {
+    allow_overwrite = true
+    zone_id = local.hosted_zone
+    name    = local.domain_name
+    type    = "AAAA"
+
+    alias {
+        name                   = aws_cloudfront_distribution.static_trivialsec.domain_name
+        zone_id                = aws_cloudfront_distribution.static_trivialsec.hosted_zone_id
+        evaluate_target_health = false
+    }
+}
+
+resource "aws_route53_record" "apex_a" {
+    zone_id = local.hosted_zone
+    name    = local.apex_domain
+    type    = "A"
+
+    alias {
+        name                   = aws_cloudfront_distribution.static_trivialsec.domain_name
+        zone_id                = aws_cloudfront_distribution.static_trivialsec.hosted_zone_id
+        evaluate_target_health = false
+    }
+}
+
+resource "aws_route53_record" "apex_aaaa" {
+    zone_id = local.hosted_zone
+    name    = local.apex_domain
+    type    = "AAAA"
+
+    alias {
+        name                   = aws_cloudfront_distribution.static_trivialsec.domain_name
+        zone_id                = aws_cloudfront_distribution.static_trivialsec.hosted_zone_id
+        evaluate_target_health = false
+    }
+}
