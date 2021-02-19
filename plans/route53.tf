@@ -1,5 +1,4 @@
 resource "aws_route53_record" "www_a" {
-    allow_overwrite = true
     zone_id = local.hosted_zone
     name    = local.domain_name
     type    = "A"
@@ -12,7 +11,6 @@ resource "aws_route53_record" "www_a" {
 }
 
 resource "aws_route53_record" "www_aaaa" {
-    allow_overwrite = true
     zone_id = local.hosted_zone
     name    = local.domain_name
     type    = "AAAA"

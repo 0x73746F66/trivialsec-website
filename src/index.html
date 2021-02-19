@@ -4,76 +4,120 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Trivial Security</title>
-    <link rel="stylesheet" type="text/css" href="/static/styles/icofont.min.css" />
-    <link rel="stylesheet" type="text/css" href="/static/styles/main.css" />
-    <script type=text/javascript>
-            window.recaptcha_site_key = '6LcmfrgUAAAAAILAIF_PlQWjPEPJi403Pv7GSK8T'
-        </script>
-    <link rel="shortcut icon" href="/static/favicon.ico">
     <meta name="msapplication-TileColor" content="#494949">
     <meta name="theme-color" content="#1ABB9C">
-    <script type=text/javascript src="/static/js/main.js"></script>
+    <title>Trivial Security</title>
+    <link rel="shortcut icon" href="./static/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="./static/styles/icofont.min.css" />
+    <link rel="stylesheet" type="text/css" href="./static/styles/main.css" />
+    <script type=text/javascript>
+        window.recaptcha_site_key = '6LcmfrgUAAAAAILAIF_PlQWjPEPJi403Pv7GSK8T'
+    </script>
+    <script type=text/javascript src="./static/js/utils.js"></script>
+    <script type=text/javascript src="./static/js/main.js"></script>
 </head>
 
 <body>
-    <div class="top-nav">
-        <a href="/" class="title-link-side">
-            <div class="banner-logo">
-                <img id="logo" src="/static/images/icon-64x64.png" />
+    <div class="container">
+        <section class="main vh70">
+            <div class="main__top">
+                <a class="main__logo" href="https://www.trivialsec.com">
+                    <img src="./static/images/icon-64x64.png">
+                    <div>Trivial Security</div>
+                </a>
+                <div class="main__links">
+                    <a href="#sme">For Small Business</a>
+                </div>
+                <div class="main__links">
+                    <a href="#enterprise">For Security Professionals</a>
+                </div>
             </div>
-            <h1 class="banner-heading">Trivial Security</h1>
-        </a>
-        <nav role="navigation">
-            <ul>
-                <li class="active nav-home">
-                    <a href="/">
-                        <span>Home</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+            <div class="main__jumbo">
+                <div class="main__jumbo-title">
+                    What is your public exposure?
+                </div>
+                <div class="main__blurb">
+                    <div class="main__blurb--parra">
+                        Using a combination of passive, active, and purposely crafted probing techniques, we assess your attack surface and present findings on possible exposures.
+                    </div>
+                    <div class="main__blurb--parra">
+                        Leveraging our own purpose built evaluations, curated sources of Threat Intelligence, Security Advisories, and the common vulnerability databases - our solution will enrich your reports by integrating with over 50 of your own Open Source and Proprietary data sources.
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="aside vh70">
+            <div class="aside__links">
+                <a href="login.html">Sign In</a>
+                <a href="pricing.html">Pricing</a>
+            </div>
+            <div class="aside__register">
+                <div class="aside__register--heading">Sign Up</div>
+                <div class="input-group half">
+                    <label for="firstName">First name</label>
+                    <input class="form-control" id="firstName" placeholder="Jo" required type="text">
+                    <div class="invalid company">
+                        Please enter a valid name
+                    </div>
+                </div>
+                <div class="input-group spacer"></div>
+                <div class="input-group half">
+                    <label for="lastName">Last name</label>
+                    <input class="form-control" id="lastName" placeholder="Citizen" type="text">
+                    <div class="invalid company">
+                        Please enter a valid name
+                    </div>
+                  </div>
+                <div class="input-group">
+                    <label for="company">Company Name</label>
+                    <input class="form-control" id="company" placeholder="ACME corp." required type="text">
+                    <div class="invalid company">
+                      Please enter a valid company name
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input class="form-control" id="email" placeholder="you@example.com" required type="email">
+                    <div class="invalid email">
+                      Please enter a valid email address
+                    </div>
+                </div>
+                <!-- <div class="input-group">
+                    <label for="message">Message</label>
+                    <textarea class="form-control" id="message" name="message" placeholder="Enter message"></textarea>
+                    <div class="invalid message">
+                      Please provide a message 
+                    </div>
+                </div> -->
+                <div class="input-group">
+                    <input id="privacy-acceptance" type="checkbox" required>
+                    <label for="privacy-acceptance">By submitting my information I acknowledge that I read<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        and agree to <a href="./terms.html">Terms of Service</a> and <a href="./privacy.html">Privacy Policy</a>
+                    </label>
+                </div>
+                <button type="submit" class="register">Sign Up</button>
+            </div>
+        </section>
+        <section class="main__section">
+            <div class="section__text">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </div>
+            <div class="section__spacer"></div>
+            <div class="section__text--screenshot">
+                <img src="./static/images/domain-view.png">
+            </div>
+        </section>
+        <section class="aside--spacer">&nbsp;</section>
+
     </div>
-    <section class="container">
-
-        <div id="banner-images">
-            <img src="/static/images/mock1.png" />
-            <img src="/static/images/mock2.png" />
+    <div class="footer">
+        <div>
+            © 2021 Trivial Security. All Rights Reserved.<br>
+            <a href="./terms.html">Terms of Service</a> | <a href="./privacy.html">Privacy Policy</a>
         </div>
-
-        <div class="subscribe" data-slug="">
-            <div class="message">
-                <p>
-                    <b>Trivial Security</b> is nearing launch!
-                </p>
-                <p>
-                    At <b>Trivial Security</b> we track bad actor tools, techniques, and practices so we can monitor
-                    your threat surface for you.
-                </p>
-                <p>
-                    Reserve an exclusive invitation, this will put you in our priority list for exclusive access to
-                    Trivial Security.
-                </p>
-            </div>
-            <div class="subscribe-form">
-                <div id="app-messages"></div>
-                <form id="subscribe_form" action="https://api.trivialsec.com/subscribe" method="POST">
-                    <div class="email-elem">
-                        <input id="email" type="email" required name="email" placeholder="you@example.com" />
-                    </div>
-                    <div class="form-submit">
-                        <button class="wait_recaptcha" disabled type="submit">Subscribe</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="footer">
-            Copyright © 2021 Trivial Security | <a href="/privacy">Privacy Policy</a>
-        </div>
-        <input type="hidden" name="recaptcha_token" id="recaptcha_token" />
-        <script src="https://www.google.com/recaptcha/api.js?render=6LcmfrgUAAAAAILAIF_PlQWjPEPJi403Pv7GSK8T"></script>
-
-    </section>
+    </div>
+    <input type="hidden" name="recaptcha_token" id="recaptcha_token" />
+    <script src="https://www.google.com/recaptcha/api.js?render=6LcmfrgUAAAAAILAIF_PlQWjPEPJi403Pv7GSK8T"></script>
 </body>
 
 </html>
