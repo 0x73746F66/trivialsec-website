@@ -12,16 +12,22 @@ body {
     display: flex;
     flex-flow: wrap row;
 }
+.bg-dark {
+    background: rgb(42, 63, 84);
+}
+.bg-light {
+    background: rgba(106, 168, 155, 0.9);
+}
 .main {
     z-index: 1;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     color: #fff;
     flex: 0 0 60%;
-    background: rgb(42, 63, 84);
 }
 .vh70 {
-    height: 70vh;
+    min-height: 70vh;
+    height: max-content;
 }
 .main__top {
     max-height: 64px;
@@ -80,10 +86,9 @@ a.main__logo {
     text-decoration: none;
 }
 .main__links > a:hover {
-    color: rgba(106, 168, 155, 0.9);
+    color: rgba(26, 187, 156, 0.9);
 }
 .main__section {
-    background: rgba(106, 168, 155, 0.9);
     flex: 0 0 52%;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -112,7 +117,6 @@ a.main__logo {
 }
 .aside--spacer {
     background: rgb(232 232 232);
-    height: 100vh;
     flex: 0 0 40%;
 }
 .aside__links {
@@ -245,7 +249,31 @@ input[type="checkbox"]:checked {
     box-shadow: 0 3px 0 rgb(16, 163, 134);
     top: 3px;
 }
+.open-sign-up {
+    display: none;
+    position: fixed;
+    top: 2px;
+    right: 2px;
+}
+.close-sign-up {
+    position: fixed;
+}
+.sign-up-icon {
+    color: rgba(117, 117, 117, .9);
+    font-size: 30px;
+    z-index: 9;
+    cursor: pointer;
+    height: max-content;
+}
+.sign-up-icon:hover {
+    color: rgba(117, 117, 117, .7);
+}
 /* footer */
+.footer__spacer {
+    min-height: 30px;
+    height: 5vh;
+    flex: 0 0 100%;
+}
 .footer {
     min-height: 30px;
     height: 5vh;

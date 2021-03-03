@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en_AU">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="msapplication-TileColor" content="#494949">
     <meta name="theme-color" content="#1ABB9C">
     <title>Trivial Security</title>
-    <link rel="shortcut icon" href="./static/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="./static/styles/icofont.min.css" />
-    <link rel="stylesheet" type="text/css" href="./static/styles/main.css" />
+    <link rel="shortcut icon" href="/static/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/static/styles/icofont.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/styles/main.css" />
     <script type=text/javascript>
         window.recaptcha_site_key = '6LcmfrgUAAAAAILAIF_PlQWjPEPJi403Pv7GSK8T'
     </script>
-    <script type=text/javascript src="./static/js/utils.js"></script>
-    <script type=text/javascript src="./static/js/main.js"></script>
+    <script type=text/javascript src="/static/js/utils.js"></script>
+    <script type=text/javascript src="/static/js/main.js"></script>
 </head>
-
 <body>
     <div class="container">
-        <section class="main vh70">
+        <section class="main vh70 bg-dark">
+            <i class="icofont-square-left sign-up-icon open-sign-up" title="Open Sign up section"></i>
             <div class="main__top">
                 <a class="main__logo" href="https://www.trivialsec.com">
-                    <img src="./static/images/icon-64x64.png">
+                    <img alt="icon" src="/static/images/icon-64x64.png">
                     <div>Trivial Security</div>
                 </a>
                 <div class="main__links">
@@ -47,8 +46,9 @@
             </div>
         </section>
         <section class="aside vh70">
+            <i class="icofont-square-right sign-up-icon close-sign-up" title="Close Sign up section"></i>
             <div class="aside__links">
-                <a href="https://app.trivialsec.com/login">Sign In</a>
+                <a id="sign-in" href="Javascript:void(0)">Sign In</a>
                 <a href="pricing.html">Pricing</a>
             </div>
             <div class="aside__register">
@@ -82,38 +82,69 @@
                       Please enter a valid email address
                     </div>
                 </div>
-                <!-- <div class="input-group">
-                    <label for="message">Message</label>
-                    <textarea class="form-control" id="message" name="message" placeholder="Enter message"></textarea>
-                    <div class="invalid message">
-                      Please provide a message 
-                    </div>
-                </div> -->
                 <div class="input-group">
                     <input id="privacy-acceptance" type="checkbox" required>
                     <label for="privacy-acceptance">By submitting my information I acknowledge that I read<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        and agree to <a href="./terms.html">Terms of Service</a> and <a href="./privacy.html">Privacy Policy</a>
+                        and agree to <a href="/terms.html">Terms of Service</a> and <a href="/privacy.html">Privacy Policy</a>
                     </label>
                 </div>
-                <button type="submit" class="register">Sign Up</button>
+                <input type="hidden" id="recaptcha_token" name="recaptcha_token">
+                <button id="register-form" type="submit" class="register wait_recaptcha">Sign Up</button>
             </div>
         </section>
-        <section class="main__section">
+        <section class="main__section bg-light">
             <div class="section__text">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
             </div>
             <div class="section__spacer"></div>
             <div class="section__text--screenshot">
-                <img src="./static/images/domain-view.png">
+                <a target="_blank" href="/static/images/project-view.png">
+                    <img alt="project view" src="/static/images/project-view.png">
+                </a>
+            </div>
+        </section>
+        <section class="aside--spacer">&nbsp;</section>
+        <section class="main__section bg-dark">
+            <div class="section__text--screenshot">
+                <a target="_blank" href="/static/images/domain-view.png">
+                    <img alt="domain view" src="/static/images/domain-view.png">
+                </a>
+            </div>
+            <div class="section__spacer"></div>
+            <div class="section__text">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </div>
+        </section>
+        <section class="aside--spacer">&nbsp;</section>
+        <section class="main__section bg-light" id="sme">
+            <div class="section__text">
+                <h2>Small Business</h2>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </div>
+            <div class="section__spacer"></div>
+            <div class="section__text--screenshot">
+                <img alt="temp media" src="/static/images/temp-media.png">
+            </div>
+        </section>
+        <section class="aside--spacer">&nbsp;</section>
+        <section class="main__section bg-dark" id="enterprise">
+            <div class="section__text--screenshot">
+                <img alt="temp media" src="/static/images/temp-media.png">
+            </div>
+            <div class="section__spacer"></div>
+            <div class="section__text">
+                <h2>Security Professionals</h2>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
             </div>
         </section>
         <section class="aside--spacer">&nbsp;</section>
 
     </div>
+    <div class="footer__spacer"></div>
     <div class="footer">
         <div>
             © 2021 Trivial Security. All Rights Reserved.<br>
-            <a href="./terms.html">Terms of Service</a> | <a href="./privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Service</a> | <a href="/privacy.html">Privacy Policy</a>
         </div>
     </div>
     <input type="hidden" name="recaptcha_token" id="recaptcha_token" />

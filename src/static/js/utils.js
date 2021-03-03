@@ -129,10 +129,14 @@ const refresh_recaptcha_token = async(action) => {
     for await(const el of document.querySelectorAll('.wait_recaptcha')) {
         el.disabled = true
     }
-    let token = await grecaptcha.execute(recaptcha_site_key, {action})
-    document.getElementById('recaptcha_token').value = token
+    try {
+        let token = await grecaptcha.execute(recaptcha_site_key, {action})
+        document.getElementById('recaptcha_token').value = token
+        
+    } catch (error) {
+        console.error(error)
+    }
     for await(const el of document.querySelectorAll('.wait_recaptcha')) {
         el.disabled = false
     }
-
 }
