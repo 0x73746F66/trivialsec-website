@@ -19,12 +19,16 @@ CMD_AWS += --region $(AWS_REGION)
 endif
 
 setup-deb:
+	npm i http-server --save-dev
 	pip install -q -U pip awscli
 	curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 	sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
 	sudo apt-get update && sudo apt-get install -y terraform
 	terraform -install-autocomplete
 	terraform init plans
+
+serve:
+	./node_modules/http-server/bin/http-server ./src
 
 update:
 	git pull
