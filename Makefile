@@ -18,7 +18,7 @@ ifdef AWS_REGION
 CMD_AWS += --region $(AWS_REGION)
 endif
 
-setup-deb:
+setup-debian:
 	npm i http-server --save-dev
 	pip install -q -U pip awscli
 	curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -40,5 +40,8 @@ plan:
 	terraform plan -no-color -out=build/.tfplan plans
 
 deploy:
+	terraform init plans
 	terraform apply -auto-approve -refresh=true build/.tfplan
+
+publish:
 	$(CMD_AWS) s3 sync --only-show-errors src/ s3://static-trivialsec/

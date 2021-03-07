@@ -10,6 +10,7 @@ before_script:
 stages:
   - plan
   - deploy
+  - publish
 
 plan:
   retry: 2
@@ -24,6 +25,7 @@ plan:
       - master
   artifacts:
     paths:
+    - .terraform
     - build/.tfplan
 
 deploy:
@@ -38,3 +40,14 @@ deploy:
       - master
   dependencies: 
     - plan
+
+publish:
+  retry: 2
+  tags:
+    - python
+  stage: publish
+  script:
+    - make publish
+  only:
+    refs:
+      - master
