@@ -2,6 +2,8 @@ SHELL := /bin/bash
 -include .env
 export $(shell sed 's/=.*//' .env)
 APP_NAME := website
+TFPLAN := build/.tfplan
+TFSTATE := build/.tfstate
 
 .PHONY: help
 
@@ -41,11 +43,10 @@ validate:
 	terraform validate plans
 
 plan:
-	terraform plan -no-color -out=build/.tfplan plans
+	terraform plan -no-color -state=$(TFSTATE) -out=$(TFPLAN) plans
 
 deploy:
-	terraform init plans
-	terraform apply -auto-approve -refresh=true build/.tfplan
+	terraform apply -state=$(TFSTATE) -auto-approve -refresh=true -input=false $(TFPLAN)
 
 publish:
 	$(CMD_AWS) s3 sync --only-show-errors src/ s3://static-trivialsec/

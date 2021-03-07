@@ -2,31 +2,23 @@ variables:
   AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
   AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
   AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+  TFPLAN: build/.tfplan
+  TFSTATE: build/.tfstate
 
-before_script:
-  - terraform --version
-  - aws --version
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .terraform
 
 stages:
   - init
   - plan
   - deploy
 
-init:tf:
-  retry: 2
-  tags:
-    - python
-  stage: init
-  script:
-    - make init
-  only:
-    refs:
-      - merge_request
-      - master
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - .terraform
+before_script:
+  - terraform --version
+  - aws --version
+  - terraform init plans
 
 plan:validate:
   retry: 2
@@ -34,7 +26,7 @@ plan:validate:
     - python
   stage: plan
   script:
-    - make validate
+    - terraform validate plans
   only:
     refs:
       - merge_request
@@ -50,7 +42,7 @@ plan:tf:
     - python
   stage: plan
   script:
-    - make plan
+    - terraform plan -no-color -state=$TFSTATE -out=$TFPLAN plans
   only:
     refs:
       - merge_request
@@ -62,7 +54,8 @@ plan:tf:
   artifacts:
     name: plan
     paths:
-      - build/.tfplan
+      - $TFPLAN
+      - $TFSTATE
 
 deploy:tf:
   retry: 2
@@ -70,7 +63,7 @@ deploy:tf:
     - python
   stage: deploy
   script:
-    - make deploy
+    - terraform apply -state=$TFSTATE -auto-approve -refresh=true -input=false $TFPLAN
   when: manual
   only:
     refs:
