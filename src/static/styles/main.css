@@ -138,21 +138,21 @@ a.main__logo {
 .aside__links a:hover {
     color: rgba(45, 151, 130, 0.7);
 }
-.aside__register {
+.aside__forms {
     position: fixed;
     top: 5vh;
     padding: 2% 3%;
     display: flex;
     flex-flow: row wrap;
 }
-.aside__register--heading {
+.aside__forms--heading {
     font-size: large;
     font-weight: 600;
     margin: 0 0 2vh 0;
     flex: 0 0 100%;
 }
-.aside__register a,
-.aside__register a:visited {
+.aside__forms a,
+.aside__forms a:visited {
   color: rgb(19, 130, 110);
   text-decoration-style: dotted;
 }
@@ -165,6 +165,7 @@ a.main__logo {
     font-weight: 600;
 }
 .input-group input[type="text"],
+.input-group input[type="password"],
 .input-group input[type="email"],
 .input-group textarea {
     width: 100%;
@@ -177,6 +178,7 @@ a.main__logo {
     padding: 0 2%;
 }
 .input-group input[type="text"],
+.input-group input[type="password"],
 .input-group input[type="email"] {
     line-height: 4vh;
     padding: 0 0 0 10px;
@@ -224,7 +226,7 @@ input[type="checkbox"]:checked {
     outline: none;
 }
 
-.register {
+.submit__btn {
     flex: 0 0 100%;
     background-color: rgb(26, 187, 156);
     color: rgb(244, 244, 244);
@@ -240,10 +242,10 @@ input[type="checkbox"]:checked {
     top: 0px;
     transition: all ease 0.3s;
 }
-.register:hover {
+.submit__btn:hover {
     background-color: rgba(26, 187, 156, .9);
 }
-.register:focus {
+.submit__btn:focus {
     border: 0;
     outline: none;
     box-shadow: 0 3px 0 rgb(16, 163, 134);
@@ -268,6 +270,7 @@ input[type="checkbox"]:checked {
 .sign-up-icon:hover {
     color: rgba(117, 117, 117, .7);
 }
+
 /* footer */
 .footer__spacer {
     min-height: 30px;

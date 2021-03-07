@@ -24,8 +24,36 @@ const closeSignUp = async event => {
     }
 }
 
-const loginAction = async(event) => {
-    window.location.href = `${domainName}/login`
+const navActions = async(event) => {
+    for (const el of document.querySelectorAll('.aside__forms')) {
+        el.style.display = 'none'
+    }
+    if (event.currentTarget.classList.contains('contact-us')) {
+        document.querySelector('.aside__forms.contact-us').style.display = ''
+        document.querySelector('.aside__links .contact-us').style.display = 'none'
+        document.querySelector('.aside__links .sign-in').style.display = ''
+        document.querySelector('.aside__links .sign-up').style.display = ''
+    }
+    if (event.currentTarget.classList.contains('sign-in')) {
+        document.querySelector('.aside__forms.sign-in').style.display = ''
+        document.querySelector('.aside__links .sign-in').style.display = 'none'
+        document.querySelector('.aside__links .sign-up').style.display = ''
+        document.querySelector('.aside__links .contact-us').style.display = ''
+    }
+    if (event.currentTarget.classList.contains('sign-up')) {
+        document.querySelector('.aside__forms.sign-up').style.display = ''
+        document.querySelector('.aside__links .sign-up').style.display = 'none'
+        document.querySelector('.aside__links .sign-in').style.display = ''
+        document.querySelector('.aside__links .contact-us').style.display = ''
+    }
+}
+
+const signInAction = async(event) => {
+    
+}
+
+const contactUsAction = async(event) => {
+    
 }
 
 const registerAction = async(event) => {
@@ -58,9 +86,10 @@ document.addEventListener('DOMContentLoaded', async() => {
             refresh_recaptcha_token('register_action')
         })
     }
-    const signInEl = document.getElementById('sign-in')
-    signInEl.addEventListener('click', loginAction, false)
-    signInEl.addEventListener('touchstart', loginAction, supportsPassive ? { passive: true } : false)
+    for (const el of document.querySelectorAll('.aside__links a')) {
+        el.addEventListener('click', navActions, false)
+        el.addEventListener('touchstart', navActions, supportsPassive ? { passive: true } : false)
+    }
     const signUpEl = document.getElementById('register-form')
     signUpEl.addEventListener('click', registerAction, false)
     signUpEl.addEventListener('touchstart', registerAction, supportsPassive ? { passive: true } : false)

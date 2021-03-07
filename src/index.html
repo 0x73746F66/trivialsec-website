@@ -17,6 +17,7 @@
 </head>
 <body>
     <div class="container">
+        <input type="hidden" id="recaptcha_token" name="recaptcha_token">
         <section class="main vh70 bg-dark">
             <i class="icofont-square-left sign-up-icon open-sign-up" title="Open Sign up section"></i>
             <div class="main__top">
@@ -48,15 +49,16 @@
         <section class="aside vh70">
             <i class="icofont-square-right sign-up-icon close-sign-up" title="Close Sign up section"></i>
             <div class="aside__links">
-                <a id="sign-in" href="Javascript:void(0)">Sign In</a>
-                <a href="pricing.html">Pricing</a>
+                <a class="sign-in" href="Javascript:void(0)">Sign In</a>
+                <a class="sign-up" href="Javascript:void(0)" style="display: none">Sign Up</a>
+                <a class="contact-us" href="Javascript:void(0)">Contact Us</a>
             </div>
-            <div class="aside__register">
-                <div class="aside__register--heading">Sign Up</div>
+            <div class="aside__forms sign-up">
+                <div class="aside__forms--heading">Sign Up</div>
                 <div class="input-group half">
                     <label for="firstName">First name</label>
                     <input class="form-control" id="firstName" placeholder="Jo" required type="text">
-                    <div class="invalid company">
+                    <div class="invalid firstName">
                         Please enter a valid name
                     </div>
                 </div>
@@ -64,7 +66,7 @@
                 <div class="input-group half">
                     <label for="lastName">Last name</label>
                     <input class="form-control" id="lastName" placeholder="Citizen" type="text">
-                    <div class="invalid company">
+                    <div class="invalid lastName">
                         Please enter a valid name
                     </div>
                   </div>
@@ -88,10 +90,71 @@
                         and agree to <a href="/terms.html">Terms of Service</a> and <a href="/privacy.html">Privacy Policy</a>
                     </label>
                 </div>
-                <input type="hidden" id="recaptcha_token" name="recaptcha_token">
-                <button id="register-form" type="submit" class="register wait_recaptcha">Sign Up</button>
+
+                <button id="register-form" type="submit" class="submit__btn wait_recaptcha">Sign Up</button>
+            </div>
+
+            <div class="aside__forms sign-in" style="display: none">
+                <div class="aside__forms--heading">Sign In</div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input class="form-control" id="email" placeholder="you@example.com" required type="email">
+                    <div class="invalid email">
+                      Please enter a valid email address
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input class="form-control" id="password" placeholder="****" required type="password">
+                    <div class="invalid password">
+                        Please enter a valid password
+                    </div>
+                </div>
+                <button id="sign-in-form" type="submit" class="submit__btn wait_recaptcha">Sign In</button>
+            </div>
+
+            <div class="aside__forms contact-us" style="display: none">
+                <div class="aside__forms--heading">Contact Us</div>
+                <div class="input-group half">
+                    <label for="firstName">First name</label>
+                    <input class="form-control" id="firstName" placeholder="Jo" required type="text">
+                    <div class="invalid company">
+                        Please enter a valid name
+                    </div>
+                </div>
+                <div class="input-group spacer"></div>
+                <div class="input-group half">
+                    <label for="lastName">Last name</label>
+                    <input class="form-control" id="lastName" placeholder="Citizen" type="text">
+                    <div class="invalid company">
+                        Please enter a valid name
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="company">Company Name</label>
+                    <input class="form-control" id="company" placeholder="ACME corp." required type="text">
+                    <div class="invalid company">
+                      Please enter a valid company name
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input class="form-control" id="email" placeholder="you@example.com" required type="email">
+                    <div class="invalid email">
+                      Please enter a valid email address
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="email">Message</label>
+                    <textarea class="form-control" id="message" placeholder="Share your thoughts" required></textarea>
+                    <div class="invalid message">
+                      Please enter a valid message
+                    </div>
+                </div>
+                <button id="contact-us-form" type="submit" class="submit__btn wait_recaptcha">Submit</button>
             </div>
         </section>
+
         <section class="main__section bg-light">
             <div class="section__text">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 

@@ -35,6 +35,7 @@ update:
 
 plan:
 	mkdir -p build
+	terraform init plans
 	terraform validate plans
 	terraform plan -no-color -out=build/.tfplan plans
 
