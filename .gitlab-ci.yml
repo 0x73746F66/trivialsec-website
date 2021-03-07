@@ -8,6 +8,7 @@ before_script:
   - aws --version
 
 stages:
+  - init
   - plan
   - deploy
 
@@ -20,7 +21,7 @@ init:
   retry: 2
   tags:
     - python
-  stage: plan
+  stage: init
   script:
     - make init
   only:
