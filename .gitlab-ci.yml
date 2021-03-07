@@ -22,6 +22,9 @@ plan:
     refs:
       - merge_request
       - master
+  artifacts:
+    paths:
+    - build/.tfplan
 
 deploy:
   retry: 2
@@ -33,3 +36,5 @@ deploy:
   only:
     refs:
       - master
+  dependencies: 
+    - plan
