@@ -10,7 +10,35 @@ before_script:
 stages:
   - plan
   - deploy
-  - publish
+
+cache:
+  key: terraform-state
+  paths:
+    - .terraform
+
+init:
+  retry: 2
+  tags:
+    - python
+  stage: plan
+  script:
+    - make init
+  only:
+    refs:
+      - merge_request
+      - master
+
+validate:
+  retry: 2
+  tags:
+    - python
+  stage: plan
+  script:
+    - make validate
+  only:
+    refs:
+      - merge_request
+      - master
 
 plan:
   retry: 2
@@ -24,9 +52,9 @@ plan:
       - merge_request
       - master
   artifacts:
+    name: plan
     paths:
-    - .terraform
-    - build/.tfplan
+      - build/.tfplan
 
 deploy:
   retry: 2
@@ -35,6 +63,7 @@ deploy:
   stage: deploy
   script:
     - make deploy
+  when: manual
   only:
     refs:
       - master
@@ -45,7 +74,7 @@ publish:
   retry: 2
   tags:
     - python
-  stage: publish
+  stage: deploy
   script:
     - make publish
   only:

@@ -33,10 +33,14 @@ serve:
 update:
 	git pull
 
-plan:
+init:
 	mkdir -p build
 	terraform init plans
+
+validate:
 	terraform validate plans
+
+plan:
 	terraform plan -no-color -out=build/.tfplan plans
 
 deploy:
