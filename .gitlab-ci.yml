@@ -12,12 +12,7 @@ stages:
   - plan
   - deploy
 
-cache:
-  key: terraform-state
-  paths:
-    - .terraform
-
-init:
+init:tf:
   retry: 2
   tags:
     - python
@@ -28,8 +23,12 @@ init:
     refs:
       - merge_request
       - master
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .terraform
 
-validate:
+plan:validate:
   retry: 2
   tags:
     - python
@@ -40,8 +39,12 @@ validate:
     refs:
       - merge_request
       - master
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .terraform
 
-plan:
+plan:tf:
   retry: 2
   tags:
     - python
@@ -52,12 +55,16 @@ plan:
     refs:
       - merge_request
       - master
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .terraform
   artifacts:
     name: plan
     paths:
       - build/.tfplan
 
-deploy:
+deploy:tf:
   retry: 2
   tags:
     - python
@@ -70,8 +77,12 @@ deploy:
       - master
   dependencies: 
     - plan
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .terraform
 
-publish:
+deploy:s3:
   retry: 2
   tags:
     - python
