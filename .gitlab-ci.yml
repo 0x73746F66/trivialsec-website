@@ -76,7 +76,7 @@ deploy:tf:
     refs:
       - master
   dependencies: 
-    - plan
+    - plan:tf
   cache:
     key: "$CI_COMMIT_REF_SLUG"
     paths:
