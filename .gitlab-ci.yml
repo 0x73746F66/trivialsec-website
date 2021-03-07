@@ -2,11 +2,11 @@ variables:
   AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
   AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
   AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-  TFPLAN: build/.tfplan
-  TFSTATE: build/.tfstate
+  TFPLAN: $CI_COMMIT_REF_SLUG.tfplan
+  TFSTATE: $CI_COMMIT_REF_SLUG.tfstate
 
 cache:
-  key: "$CI_COMMIT_REF_SLUG"
+  key: $CI_COMMIT_REF_SLUG
   paths:
     - .terraform
 
@@ -17,7 +17,6 @@ stages:
 
 before_script:
   - terraform --version
-  - aws --version
   - terraform init plans
 
 plan:validate:
@@ -31,10 +30,6 @@ plan:validate:
     refs:
       - merge_request
       - master
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - .terraform
 
 plan:tf:
   retry: 2
@@ -47,10 +42,6 @@ plan:tf:
     refs:
       - merge_request
       - master
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - .terraform
   artifacts:
     name: plan
     paths:
@@ -70,10 +61,6 @@ deploy:tf:
       - master
   dependencies: 
     - plan:tf
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - .terraform
 
 deploy:s3:
   retry: 2
@@ -81,6 +68,7 @@ deploy:s3:
     - python
   stage: deploy
   script:
+    - aws --version
     - make publish
   only:
     refs:
