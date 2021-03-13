@@ -13,6 +13,7 @@
         window.recaptcha_site_key = '6LcmfrgUAAAAAILAIF_PlQWjPEPJi403Pv7GSK8T'
     </script>
     <script type=text/javascript src="/static/js/utils.js"></script>
+    <script type=text/javascript src="/static/js/api.js"></script>
     <script type=text/javascript src="/static/js/main.js"></script>
 </head>
 <body>
@@ -55,32 +56,17 @@
             </div>
             <div class="aside__forms sign-up">
                 <div class="aside__forms--heading">Sign Up</div>
-                <div class="input-group half">
-                    <label for="firstName">First name</label>
-                    <input class="form-control" id="firstName" placeholder="Jo" required type="text">
-                    <div class="invalid firstName">
-                        Please enter a valid name
-                    </div>
-                </div>
-                <div class="input-group spacer"></div>
-                <div class="input-group half">
-                    <label for="lastName">Last name</label>
-                    <input class="form-control" id="lastName" placeholder="Citizen" type="text">
-                    <div class="invalid lastName">
-                        Please enter a valid name
-                    </div>
-                  </div>
                 <div class="input-group">
-                    <label for="company">Company Name</label>
-                    <input class="form-control" id="company" placeholder="ACME corp." required type="text">
-                    <div class="invalid company">
+                    <label for="register_company">Company Name</label>
+                    <input class="form-control" id="register_company" placeholder="ACME corp." required type="text">
+                    <div class="invalid register_company">
                       Please enter a valid company name
                     </div>
                 </div>
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input class="form-control" id="email" placeholder="you@example.com" required type="email">
-                    <div class="invalid email">
+                    <label for="register_email">Email</label>
+                    <input class="form-control" id="register_email" placeholder="you@example.com" required type="email">
+                    <div class="invalid register_email">
                       Please enter a valid email address
                     </div>
                 </div>
@@ -89,58 +75,60 @@
                     <label for="privacy-acceptance">By submitting my information I acknowledge that I read<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         and agree to <a href="/terms.html">Terms of Service</a> and <a href="/privacy.html">Privacy Policy</a>
                     </label>
+                    <div class="invalid privacy">
+                        Please read and accept both our Privacy Policy and Terms of Service
+                    </div>
                 </div>
-
+                <div id="register-messages" class="alert-container"></div>
                 <button id="register-form" type="submit" class="submit__btn wait_recaptcha">Sign Up</button>
             </div>
 
             <div class="aside__forms sign-in" style="display: none">
                 <div class="aside__forms--heading">Sign In</div>
+                <div class="input-group magic-link">
+                    <img alt="magic link" src="/static/images/magic-link.svg" width="60px">
+                    <div>
+                        We do not store passwords, we email you a link for login.
+                    </div>
+                </div>
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input class="form-control" id="email" placeholder="you@example.com" required type="email">
-                    <div class="invalid email">
+                    <input class="form-control" id="login_email" placeholder="you@example.com" required type="email">
+                    <div class="invalid login_email">
                       Please enter a valid email address
                     </div>
                 </div>
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input class="form-control" id="password" placeholder="****" required type="password">
-                    <div class="invalid password">
-                        Please enter a valid password
-                    </div>
-                </div>
-                <button id="sign-in-form" type="submit" class="submit__btn wait_recaptcha">Sign In</button>
+                <div id="sign-in-messages" class="alert-container"></div>
+                <button id="sign-in-form" type="submit" class="submit__btn wait_recaptcha">Send Magic Link</button>
             </div>
 
             <div class="aside__forms contact-us" style="display: none">
                 <div class="aside__forms--heading">Contact Us</div>
                 <div class="input-group half">
-                    <label for="firstName">First name</label>
-                    <input class="form-control" id="firstName" placeholder="Jo" required type="text">
-                    <div class="invalid company">
+                    <label for="first_name">First name</label>
+                    <input class="form-control" id="first_name" placeholder="Jo" required type="text">
+                    <div class="invalid first_name">
                         Please enter a valid name
                     </div>
                 </div>
                 <div class="input-group spacer"></div>
                 <div class="input-group half">
-                    <label for="lastName">Last name</label>
-                    <input class="form-control" id="lastName" placeholder="Citizen" type="text">
-                    <div class="invalid company">
+                    <label for="last_name">Last name</label>
+                    <input class="form-control" id="last_name" placeholder="Citizen" type="text">
+                    <div class="invalid last_name">
                         Please enter a valid name
                     </div>
                 </div>
                 <div class="input-group">
-                    <label for="company">Company Name</label>
-                    <input class="form-control" id="company" placeholder="ACME corp." required type="text">
-                    <div class="invalid company">
+                    <label for="contact_company">Company Name</label>
+                    <input class="form-control" id="contact_company" placeholder="ACME corp." required type="text">
+                    <div class="invalid contact_company">
                       Please enter a valid company name
                     </div>
                 </div>
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input class="form-control" id="email" placeholder="you@example.com" required type="email">
-                    <div class="invalid email">
+                    <label for="contact_email">Email</label>
+                    <input class="form-control" id="contact_email" placeholder="you@example.com" required type="email">
+                    <div class="invalid contact_email">
                       Please enter a valid email address
                     </div>
                 </div>
@@ -151,6 +139,7 @@
                       Please enter a valid message
                     </div>
                 </div>
+                <div id="contact-us-messages" class="alert-container"></div>
                 <button id="contact-us-form" type="submit" class="submit__btn wait_recaptcha">Submit</button>
             </div>
         </section>

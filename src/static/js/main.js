@@ -1,6 +1,4 @@
-const domainName = window.location.hostname == 'localhost' ? 'http://localhost:5000' : 'https://app.trivialsec.com'
-const openSignUp = async event => {
-    event.preventDefault()
+const openSignUp = async() => {
     for await(const el of document.querySelectorAll('.main__section')) {
         el.style.flex = '0 0 52%'
     }
@@ -11,8 +9,7 @@ const openSignUp = async event => {
     document.querySelector('.aside').style.display = 'flex'
     document.querySelector('.open-sign-up').style.display = 'none'
 }
-const closeSignUp = async event => {
-    event.preventDefault()
+const closeSignUp = async() => {
     document.querySelector('.open-sign-up').style.display = 'block'
     document.querySelector('.aside').style.display = 'none'
     for await(const el of document.querySelectorAll('.aside--spacer')) {
@@ -23,8 +20,7 @@ const closeSignUp = async event => {
         el.style.flex = '0 0 92%'
     }
 }
-
-const navActions = async(event) => {
+const navActions = async event => {
     for (const el of document.querySelectorAll('.aside__forms')) {
         el.style.display = 'none'
     }
@@ -47,43 +43,154 @@ const navActions = async(event) => {
         document.querySelector('.aside__links .contact-us').style.display = ''
     }
 }
-
-const signInAction = async(event) => {
-    
-}
-
-const contactUsAction = async(event) => {
-    
-}
-
-const registerAction = async(event) => {
-    event.preventDefault()
-    const token = document.getElementById('recaptcha_token').value
-    const response = await fetch(`${domainName}/register`, {
-        credentials: 'same-origin',
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            recaptcha_token: token,
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            company: document.getElementById('company').value,
-            email: document.getElementById('email').value,
-            privacy: document.getElementById('privacy-acceptance').checked,
-        })
+const signInAction = async() => {
+    const appAlert = document.getElementById('sign-in-messages')
+    const email = document.getElementById('login_email').value
+    const recaptcha_token = document.getElementById('recaptcha_token').value
+    let invalid = false
+    document.querySelector('.invalid.login_email').style.visibility = 'hidden'
+    if (!email || !email.includes('@')) {
+        document.querySelector('.invalid.login_email').style.visibility = 'unset'
+        invalid = true
+    }
+    if (email || email.includes('@')) {
+        let email_domain = email.split('@')[1]
+        if (!validDomain(email_domain)) {
+            document.querySelector('.invalid.contact_email').style.visibility = 'unset'
+            invalid = true
+        }
+    }
+    if (invalid == true) {
+        return;
+    }
+    const json = await Api.post(`/login`, {
+        recaptcha_token,
+        email
     }).catch(err => {
-        appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.')
+        appMessage(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
         console.log(err)
     })
-    const json = await response.json()
-    appMessage(json.status, json.message)
-    refresh_recaptcha_token('register_action')
+    if (json.status == 'retry') {
+        refresh_recaptcha_token('public_action')
+        return signInAction()
+    }
+    appMessage(appAlert, json.status, json.message)
+}
+const contactUsAction = async event => {
+    const appAlert = document.getElementById('contact-us-messages')
+    const first_name = document.getElementById('first_name').value
+    const last_name = document.getElementById('last_name').value
+    const company = document.getElementById('contact_company').value
+    const email = document.getElementById('contact_email').value
+    const message = document.getElementById('message').value
+    const recaptcha_token = document.getElementById('recaptcha_token').value
+    let invalid = false
+    document.querySelector('.invalid.first_name').style.visibility = 'hidden'
+    document.querySelector('.invalid.last_name').style.visibility = 'hidden'
+    document.querySelector('.invalid.contact_company').style.visibility = 'hidden'
+    document.querySelector('.invalid.contact_email').style.visibility = 'hidden'
+    document.querySelector('.invalid.message').style.visibility = 'hidden'
+    if (!first_name || first_name.length <= 2) {
+        document.querySelector('.invalid.first_name').style.visibility = 'unset'
+        invalid = true
+    }
+    if (!last_name || last_name.length <= 2) {
+        document.querySelector('.invalid.last_name').style.visibility = 'unset'
+        invalid = true
+    }
+    if (!company || company.length <= 8) {
+        document.querySelector('.invalid.contact_company').style.visibility = 'unset'
+        invalid = true
+    }
+    if (!email || !email.includes('@')) {
+        document.querySelector('.invalid.contact_email').style.visibility = 'unset'
+        invalid = true
+    }
+    if (email || email.includes('@')) {
+        let email_domain = email.split('@')[1]
+        if (!validDomain(email_domain)) {
+            document.querySelector('.invalid.contact_email').style.visibility = 'unset'
+            invalid = true
+        }
+    }
+    if (!message || message.length <= 20) {
+        document.querySelector('.invalid.message').style.visibility = 'unset'
+        invalid = true
+    }
+    if (invalid == true) {
+        return;
+    }
+    const json = await Api.post(`/contact-form`, {
+        recaptcha_token,
+        first_name,
+        last_name,
+        company,
+        email,
+        message
+    }).catch(err => {
+        appMessage(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
+        console.log(err)
+    })
+    if (json.status == 'retry') {
+        refresh_recaptcha_token('public_action')
+        return registerAction(event)
+    }
+    appMessage(appAlert, json.status, json.message)
+}
+const registerAction = async event => {
+    const appAlert = document.getElementById('register-messages')
+    const company = document.getElementById('register_company').value
+    const email = document.getElementById('register_email').value
+    const privacy = document.getElementById('privacy-acceptance').checked
+    const recaptcha_token = document.getElementById('recaptcha_token').value
+    let invalid = false
+    document.querySelector('.invalid.register_company').style.visibility = 'hidden'
+    document.querySelector('.invalid.register_email').style.visibility = 'hidden'
+    document.querySelector('.invalid.privacy').style.visibility = 'hidden'
+    if (!company || company.length <= 8) {
+        document.querySelector('.invalid.register_company').style.visibility = 'unset'
+        invalid = true
+    }
+    if (!email || !email.includes('@')) {
+        document.querySelector('.invalid.register_email').style.visibility = 'unset'
+        invalid = true
+    }
+    if (email || email.includes('@')) {
+        let email_domain = email.split('@')[1]
+        if (!validDomain(email_domain)) {
+            document.querySelector('.invalid.register_email').style.visibility = 'unset'
+            invalid = true
+        }
+    }
+    if (!privacy) {
+        document.querySelector('.invalid.privacy').style.visibility = 'unset'
+        invalid = true
+    }
+    if (invalid == true) {
+        return;
+    }
+    const json = await Api.post(`/register`, {
+        recaptcha_token,
+        first_name,
+        last_name,
+        company,
+        email,
+        privacy
+    }).catch(err => {
+        appMessage(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
+        console.log(err)
+    })
+    if (json.status == 'retry') {
+        refresh_recaptcha_token('public_action')
+        return registerAction(event)
+    }
+    appMessage(appAlert, json.status, json.message)
 }
 
 document.addEventListener('DOMContentLoaded', async() => {
     if (recaptcha_site_key) {
         grecaptcha.ready(() => {
-            refresh_recaptcha_token('register_action')
+            refresh_recaptcha_token('public_action')
         })
     }
     for (const el of document.querySelectorAll('.aside__links a')) {
@@ -93,6 +200,12 @@ document.addEventListener('DOMContentLoaded', async() => {
     const signUpEl = document.getElementById('register-form')
     signUpEl.addEventListener('click', registerAction, false)
     signUpEl.addEventListener('touchstart', registerAction, supportsPassive ? { passive: true } : false)
+    const contactUsEl = document.getElementById('contact-us-form')
+    contactUsEl.addEventListener('click', contactUsAction, false)
+    contactUsEl.addEventListener('touchstart', contactUsAction, supportsPassive ? { passive: true } : false)
+    const signInEl = document.getElementById('sign-in-form')
+    signInEl.addEventListener('click', signInAction, false)
+    signInEl.addEventListener('touchstart', signInAction, supportsPassive ? { passive: true } : false)
     for (const closeEl of document.querySelectorAll('.alert .icofont-close')) {
         closeEl.addEventListener('click', event => event.currentTarget.parent('.alert').remove(), false)
         closeEl.addEventListener('touchstart', event => event.currentTarget.parent('.alert').remove(), supportsPassive ? { passive: true } : false)

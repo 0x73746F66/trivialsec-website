@@ -201,6 +201,10 @@ a.main__logo {
     margin: 1vh 0 0 0;
     visibility: hidden;
 }
+.magic-link {
+    text-align: center;
+    margin: 0 0 2em 0;
+}
 #privacy-acceptance {
     display: inline-block;
     position: relative;
@@ -270,7 +274,13 @@ input[type="checkbox"]:checked {
 .sign-up-icon:hover {
     color: rgba(117, 117, 117, .7);
 }
-
+label[for=password-reset] {
+    display: inline-block;
+}
+#password-reset {
+    vertical-align: top;
+    font-size: 18px;
+}
 /* footer */
 .footer__spacer {
     min-height: 30px;
@@ -301,14 +311,10 @@ input[type="checkbox"]:checked {
     transform: translateX(-50%);
 }
 /* ALERTS*/
-#app-messages {
-    position: sticky;
-    top: 0;
+.alert-container {
+    flex: 0 0 100%;
     z-index: 2;
-}
-.modal-messages {
-    margin: 5px 0;
-    min-height: 40px;
+    position: relative;
 }
 .alert {
     line-height: 40px;
@@ -335,5 +341,13 @@ input[type="checkbox"]:checked {
     margin-right: 10px;
     position: relative;
     top: 5px;
-    left: 5px;
+}
+.alert .icofont-close {
+    color: rgba(27, 27, 27, 1);
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+}
+.alert .icofont-close:hover {
+    color: rgba(59, 59, 59, 0.9);
 }

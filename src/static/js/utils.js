@@ -63,7 +63,7 @@ Array.prototype.clone = function() {
 const createUTCDate = d => new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()))
 const convertDateToUTC = d => new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds())
 
-const appMessage = (type, str) => {
+const appMessage = (appAlert, type, str) => {
     const messageTypes = ['warning', 'error', 'info', 'success']
     let obj;
     if (str && messageTypes.includes(type)) {
@@ -78,26 +78,14 @@ const appMessage = (type, str) => {
         let font;
         if (obj['status'] == 'success') {
             font = 'tick-mark'
+        } else if (obj['status'] == 'error') {
+            font = 'exclamation-square'
         } else {
             font = obj['status']
         }
-        const modalAlert = document.querySelector('.modal-open[data-modal-id]')
-        if (modalAlert) {
-            const alertId = String().random()
-            const msgEl = modalAlert.querySelector('.modal-messages')
-            msgEl.innerHTML = `<div id="${alertId}" class="alert alert-${obj['status']}"><i class="icofont-${font}"></i>${obj['message']}<i class="icofont-close"></i></div>`
-            const alertEl = document.getElementById(alertId)
-            const closeEl = alertEl.querySelector('.icofont-close')
-            closeEl.addEventListener('click', event => event.currentTarget.parent('.alert').remove(), false)
-            closeEl.addEventListener('touchstart', event => event.currentTarget.parent('.alert').remove(), supportsPassive ? { passive: true } : false)
-            if (document.querySelectorAll('.modal-open').length > 0) {
-                return;
-            }
-        }
-        const appAlert = document.getElementById('app-messages')
         if (appAlert) {
             const msgId = String().random()
-            appAlert.innerHTML = `<div id="${msgId}" class="alert alert-${obj['status']}"><i class="icofont-${font}"></i>${obj['message']}<i class="icofont-close"></i></div>`
+            appAlert.innerHTML = `<div id="${msgId}" class="alert alert-${obj['status']}"><i class="icofont-${font}"></i>${obj['message']}<i class="icofont-close" title="Dismiss"></i></div>`
             const alertEl = document.getElementById(msgId)
             const closeEl = alertEl.querySelector('.icofont-close')
             closeEl.addEventListener('click', event => event.currentTarget.parent('.alert').remove(), false)
