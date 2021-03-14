@@ -4,6 +4,7 @@ variables:
   AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
   TFPLAN: $CI_COMMIT_REF_SLUG.tfplan
   TFSTATE: $CI_COMMIT_REF_SLUG.tfstate
+  CF_DISTRIBUTION_ID: E32XEUIY96JKX4
 
 cache:
   key: $CI_COMMIT_REF_SLUG
@@ -70,6 +71,18 @@ deploy:s3:
   script:
     - aws --version
     - make publish
+  only:
+    refs:
+      - master
+
+deploy:cf:
+  retry: 2
+  tags:
+    - python
+  stage: deploy
+  script:
+    - aws --version
+    - make invalidate-cloudfront
   only:
     refs:
       - master

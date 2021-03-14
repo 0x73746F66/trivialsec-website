@@ -1,9 +1,6 @@
 SHELL := /bin/bash
 -include .env
 export $(shell sed 's/=.*//' .env)
-APP_NAME := website
-TFPLAN := build/.tfplan
-TFSTATE := build/.tfstate
 
 .PHONY: help
 
@@ -47,6 +44,11 @@ plan:
 
 deploy:
 	terraform apply -state=$(TFSTATE) -auto-approve -refresh=true -input=false $(TFPLAN)
+
+invalidate-cloudfront:
+	$(CMD_AWS) cloudfront create-invalidation \
+		--distribution-id ${CF_DISTRIBUTION_ID} \
+		--paths "/static/" "/index.html" "/privacy.html"
 
 publish:
 	$(CMD_AWS) s3 sync --only-show-errors src/ s3://static-trivialsec/
