@@ -2,12 +2,13 @@ variables:
   AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
   AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
   AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-  TFPLAN: $CI_COMMIT_REF_SLUG.tfplan
-  TFSTATE: $CI_COMMIT_REF_SLUG.tfstate
+  TFPLAN: $CI_PIPELINE_ID.tfplan
+  PLAN_JSON: tfplan-$CI_PIPELINE_ID.json
+  TFSTATE: $CI_PIPELINE_ID.tfstate
   CF_DISTRIBUTION_ID: E32XEUIY96JKX4
 
 cache:
-  key: $CI_COMMIT_REF_SLUG
+  key: $CI_PIPELINE_ID
   paths:
     - .terraform
 
@@ -39,6 +40,9 @@ plan:tf:
   stage: plan
   script:
     - terraform plan -no-color -state=$TFSTATE -out=$TFPLAN plans
+    - shopt -s expand_aliases
+    - alias convert_report="jq -r '([.resource_changes[]?.change.actions?]|flatten)|{\"create\":(map(select(.==\"create\"))|length),\"update\":(map(select(.==\"update\"))|length),\"delete\":(map(select(.==\"delete\"))|length)}'"
+    - terraform show --json $PLAN | convert_report > $PLAN_JSON
   only:
     refs:
       - merge_request
@@ -46,8 +50,9 @@ plan:tf:
   artifacts:
     name: plan
     paths:
-      - $TFPLAN
-      - $TFSTATE
+      - $PLAN_JSON
+    reports:
+      terraform: $PLAN_JSON
 
 deploy:tf:
   retry: 2
@@ -60,8 +65,6 @@ deploy:tf:
   only:
     refs:
       - master
-  dependencies: 
-    - plan:tf
 
 deploy:s3:
   retry: 2
