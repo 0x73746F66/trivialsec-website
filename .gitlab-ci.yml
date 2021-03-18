@@ -13,8 +13,8 @@ cache:
     - .terraform
 
 stages:
-  - init
   - plan
+  - apply
   - deploy
 
 before_script:
@@ -55,11 +55,11 @@ plan:tf:
     reports:
       terraform: $PLAN_JSON
 
-deploy:tf:
+apply:tf:
   retry: 2
   tags:
     - python
-  stage: deploy
+  stage: apply
   script:
     - terraform apply -state=$TFSTATE -auto-approve -refresh=true -input=false $TFPLAN
   when: manual
