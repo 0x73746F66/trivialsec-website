@@ -39,10 +39,11 @@ plan:tf:
     - python
   stage: plan
   script:
-    - terraform plan -no-color -state=$TFSTATE -out=$TFPLAN plans
+    - touch $PLAN_JSON
     - shopt -s expand_aliases
     - alias convert_report="jq -r '([.resource_changes[]?.change.actions?]|flatten)|{\"create\":(map(select(.==\"create\"))|length),\"update\":(map(select(.==\"update\"))|length),\"delete\":(map(select(.==\"delete\"))|length)}'"
-    - terraform show --json $PLAN | convert_report > $PLAN_JSON
+    - terraform plan -detailed-exitcode -no-color -state=$TFSTATE -out=$TFPLAN plans
+    - if [ $? -eq 2 ]; then terraform show --json $TFPLAN | convert_report > $PLAN_JSON; fi
   only:
     refs:
       - merge_request
