@@ -66,6 +66,8 @@ apply:tf:
   only:
     refs:
       - master
+  needs:
+    - plan:tf
 
 deploy:s3:
   retry: 2
@@ -78,6 +80,8 @@ deploy:s3:
   only:
     refs:
       - master
+  needs:
+    - apply:tf
 
 deploy:cf:
   retry: 2
@@ -90,3 +94,5 @@ deploy:cf:
   only:
     refs:
       - master
+  needs:
+    - apply:tf
