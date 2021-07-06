@@ -3,7 +3,7 @@ const domainsAction = async event => {
     location.href = `/domain/${domain_id}`
 }
 const projectArchiveButton = async event => {
-    document.body.insertAdjacentHTML('afterbegin', `<div class="loading"></div>`)
+    document.body.insertAdjacentHTML('afterbegin', `<div class="loading"></div>`) // nosemgrep
     const project_id = event.currentTarget.parent('.project-actions').getAttribute('data-project-id')
     const json = await Api.post_async(`/v1/archive-project`, {
         project_id

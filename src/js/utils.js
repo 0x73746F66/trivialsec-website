@@ -85,7 +85,7 @@ const appMessage = (appAlert, type, str) => {
         }
         if (appAlert) {
             const msgId = String().random()
-            appAlert.innerHTML = `<div id="${msgId}" class="alert alert-${obj['status']}"><i class="icofont-${font}"></i>${obj['message']}<i class="icofont-close" title="Dismiss"></i></div>`
+            appAlert.innerHTML = `<div id="${msgId}" class="alert alert-${obj['status']}"><i class="icofont-${font}"></i>${obj['message']}<i class="icofont-close" title="Dismiss"></i></div>` // nosemgrep
             const alertEl = document.getElementById(msgId)
             const closeEl = alertEl.querySelector('.icofont-close')
             closeEl.addEventListener('click', event => event.currentTarget.parent('.alert').remove(), false)
@@ -110,7 +110,7 @@ const validIPAddress = ip_address => {
 }
 const htmlDecode = input => {
     let e = document.createElement('textarea')
-    e.innerHTML = input
+    e.innerHTML = input // nosemgrep
     return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue
 }
 const refresh_recaptcha_token = async(action) => {

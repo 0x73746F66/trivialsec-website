@@ -26,7 +26,7 @@ const update_service_state = data => {
     category_el.querySelector('.running span').textContent = data.running_jobs
     category_el.querySelector('.errors span').textContent = data.errored_jobs
     category_el.querySelector('.last-event span').textContent = data.last_event
-    category_el.querySelector('.timestamp span').innerHTML = `<time datetime="${convertDateToUTC(new Date).toISOString()}" title="${(new Date).toLocaleString(window.navigator.userLanguage || window.navigator.language)}"></time>`
+    category_el.querySelector('.timestamp span').innerHTML = `<time datetime="${convertDateToUTC(new Date).toISOString()}" title="${(new Date).toLocaleString(window.navigator.userLanguage || window.navigator.language)}"></time>` // nosemgrep
 }
 const check_offline = async() => {
     for await(const el of document.querySelectorAll('.service-status-connecting')) {

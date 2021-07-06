@@ -14,12 +14,12 @@ const bulkAction = async() => {
             invite_role_id: default_role_id
         }).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
         document.getElementById('invitation-list').style = 'display: inline-block;'
-        const tmpl = htmlDecode(document.getElementById('tmpl-invitation-list').innerHTML)
+        const tmpl = htmlDecode(document.getElementById('tmpl-invitation-list').innerHTML) // nosemgrep
         json.invited_by = app.accountEmail
         json.created_at = (new Date).toLocaleString()
         const row = ejs.render(tmpl, json, {rmWhitespace: true})
         const tr = document.createElement('tr')
-        tr.innerHTML = row
+        tr.innerHTML = row // nosemgrep
         invitationList.insertAdjacentElement('beforeend', tr)
     }
 }

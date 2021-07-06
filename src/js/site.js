@@ -91,7 +91,7 @@ const appMessage = (type, str) => {
         const appAlert = document.getElementById('app-messages')
         if (appAlert) {
             const msgId = String().random()
-            appAlert.innerHTML = `<div id="${msgId}" class="alert alert-${obj['status']}"><i class="icofont-${font}"></i>${obj['message']}<i class="icofont-close"></i></div>`
+            appAlert.innerHTML = `<div id="${msgId}" class="alert alert-${obj['status']}"><i class="icofont-${font}"></i>${obj['message']}<i class="icofont-close"></i></div>` // nosemgrep
             const alertEl = document.getElementById(msgId)
             const closeEl = alertEl.querySelector('.icofont-close')
             closeEl.addEventListener('click', event => event.currentTarget.parent('.alert').remove(), false)
@@ -140,7 +140,7 @@ const validProject = project_name => {
 }
 const htmlDecode = input => {
     let e = document.createElement('textarea')
-    e.innerHTML = input
+    e.innerHTML = input // nosemgrep
     return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue
 }
 
