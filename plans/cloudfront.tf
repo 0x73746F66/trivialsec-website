@@ -8,6 +8,9 @@ resource "aws_cloudfront_distribution" "static_trivialsec" {
     origin {
         domain_name = "${local.s3_bucket}.s3.${local.default_region}.amazonaws.com"
         origin_id   = local.s3_origin_id
+        connection_timeout      = 2
+        connection_attempts     = 3
+        origin_path             = "/static"
 
         s3_origin_config {
             origin_access_identity = aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path
@@ -16,7 +19,7 @@ resource "aws_cloudfront_distribution" "static_trivialsec" {
 
     enabled             = true
     is_ipv6_enabled     = true
-    default_root_object = "/index.html"
+    default_root_object = "/static/index.html"
     aliases = [local.domain_name]
 
     default_cache_behavior {
@@ -64,7 +67,6 @@ resource "aws_cloudfront_distribution" "static_trivialsec" {
 
     custom_error_response {
         error_code         = 404
-        response_code      = 200
-        response_page_path = "/index.html"
+        response_page_path = "/static/404.html"
     }
 }
