@@ -1,0 +1,16 @@
+@use "../var";
+
+body {
+	padding: 0;
+	background: rgb(232, 232, 232);
+	background: linear-gradient(0deg, rgb(211, 211, 211), rgb(247, 247, 247));
+	overflow-y: hidden;
+	font-family: "Helvetica Neue", Helvetica, Arial;
+}
+html, body {
+	height: 100vh;
+	margin: 0;
+}
+.grecaptcha-badge {
+	display: none !important;
+}

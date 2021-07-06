@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 -include .env
 export $(shell sed 's/=.*//' .env)
-
+.ONESHELL: # Applies to every targets in the file!
 .PHONY: help
 
 help: ## This help.
@@ -9,46 +9,78 @@ help: ## This help.
 
 .DEFAULT_GOAL := help
 
-CMD_AWS := aws
-ifdef AWS_PROFILE
-CMD_AWS += --profile $(AWS_PROFILE)
-endif
-ifdef AWS_REGION
-CMD_AWS += --region $(AWS_REGION)
-endif
+prep:
+	find . -type f -name '*.DS_Store' -delete 2>/dev/null || true
+	@rm *.zip || true
 
-setup-debian:
-	npm i http-server --save-dev
-	pip install -q -U pip awscli
-	curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-	sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
-	sudo apt-get update && sudo apt-get install -y terraform
-	terraform -install-autocomplete
-	terraform init plans
+init:  ## Runs tf init tf
+	cd plans
+	terraform init -reconfigure -upgrade=true
 
-serve:
-	./node_modules/http-server/bin/http-server ./src
+plan: init ## Runs tf validate and tf plan
+	cd plans
+	terraform init -reconfigure -upgrade=true
+	terraform validate
+	terraform plan -no-color -out=.tfplan
+	terraform show --json .tfplan | jq -r '([.resource_changes[]?.change.actions?]|flatten)|{"create":(map(select(.=="create"))|length),"update":(map(select(.=="update"))|length),"delete":(map(select(.=="delete"))|length)}' > tfplan.json
 
-update:
-	git pull
+apply: plan ## tf apply -auto-approve -refresh=true
+	cd plans
+	terraform apply -auto-approve -refresh=true .tfplan
 
-init:
-	mkdir -p build
-	terraform init plans
-
-validate:
-	terraform validate plans
-
-plan:
-	terraform plan -no-color -state=$(TFSTATE) -out=$(TFPLAN) plans
-
-deploy:
-	terraform apply -state=$(TFSTATE) -auto-approve -refresh=true -input=false $(TFPLAN)
+destroy: init ## tf destroy -auto-approve
+	cd plans
+	terraform validate
+	terraform plan -destroy -no-color -out=.tfdestroy
+	terraform show --json .tfdestroy | jq -r '([.resource_changes[]?.change.actions?]|flatten)|{"create":(map(select(.=="create"))|length),"update":(map(select(.=="update"))|length),"delete":(map(select(.=="delete"))|length)}' > tfdestroy.json
+	terraform apply -auto-approve -destroy .tfdestroy
 
 invalidate-cloudfront:
-	$(CMD_AWS) cloudfront create-invalidation \
+ifdef AWS_PROFILE
+	aws --profile $(AWS_PROFILE) \
+		cloudfront create-invalidation \
 		--distribution-id ${CF_DISTRIBUTION_ID} \
-		--paths "/static/" "/index.html" "/privacy.html"
+		--paths "/static/"
+else
+	aws cloudfront create-invalidation \
+		--distribution-id ${CF_DISTRIBUTION_ID} \
+		--paths "/static/"
+endif
 
-publish:
-	$(CMD_AWS) s3 sync --only-show-errors src/ s3://static-trivialsec/
+publish-s3:
+ifdef AWS_PROFILE
+	aws --profile $(AWS_PROFILE) s3 sync --only-show-errors public/ s3://static-trivialsec/static/
+else
+	aws s3 sync --only-show-errors public/ s3://static-trivialsec/static/
+endif
+
+build: ## Build compressed container
+	docker-compose build
+
+buildnc: package ## Clean build docker
+	docker-compose build --no-cache
+
+rebuild: down build
+
+up: ## Start the app
+	docker-compose up -d
+
+down: ## Stop the app
+	@docker-compose down --remove-orphans
+
+semgrep-tf-ci:
+	semgrep --disable-version-check -q --strict --error -o semgrep-tf.json --json --config p/terraform plans/**/*.tf
+
+semgrep-sast-ci:
+	semgrep --disable-version-check -q --strict --error -o semgrep-ci.json --json --config p/r2c-ci --lang=js src/**/*.js
+
+semgrep-xss-ci:
+	semgrep --disable-version-check -q --strict --error -o semgrep-xss.json --json --config p/xss --lang=js src/**/*.js
+
+semgrep-secrets-ci:
+	semgrep --disable-version-check -q --strict --error -o semgrep-secrets.json --json --config p/secrets --lang=js src/**/*.js
+
+semgrep-tls-ci:
+	semgrep --disable-version-check -q --strict --error -o semgrep-tls.json --json --config p/insecure-transport --lang=js src/**/*.js
+
+lint: semgrep-sast-ci semgrep-nodescan

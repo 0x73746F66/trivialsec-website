@@ -1,0 +1,41 @@
+version: '3.6'
+x-defaults: &defaults
+  env_file: .env
+  # network_mode: host
+  restart: unless-stopped
+  logging:
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+services:
+  website:
+    <<: *defaults
+    image: trivialsec/static-website
+    container_name: website
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    volumes:
+      - ./public:/srv/app/public
+    cap_drop:
+      - ALL
+    cap_add:
+      - DAC_OVERRIDE
+    networks:
+      default:
+        aliases:
+          - website
+          - assets
+
+networks:
+  default:
+    external:
+      name: trivialsec
+      
