@@ -1,0 +1,34 @@
+@use "../var";
+
+h2 {
+	color: #666;
+	margin: 0 0 20px 0 ;
+}
+section.fields {
+	width: 90%;
+	margin: 2% 10% 0 0;
+}
+.fields-row {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.column {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 100%;
+	flex: 1;
+}
+.label-column {
+	flex: 30%;
+	label {
+		margin: 20px 0 0 20px;
+		img {
+			margin: 0;
+			vertical-align: bottom;
+		}
+	}
+}
+.input-column {
+	flex: 70%;
+}

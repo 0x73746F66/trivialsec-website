@@ -1,98 +1,174 @@
 variables:
-  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-  TFPLAN: $CI_PIPELINE_ID.tfplan
-  PLAN_JSON: tfplan-$CI_PIPELINE_ID.json
-  TFSTATE: $CI_PIPELINE_ID.tfstate
+  AWS_REGION: ap-southeast-2
   CF_DISTRIBUTION_ID: E32XEUIY96JKX4
 
-cache:
-  key: $CI_PIPELINE_ID
-  paths:
-    - .terraform
-
 stages:
-  - plan
+  - test
   - apply
   - deploy
 
 before_script:
+  - touch .env
+  - make --version
+  - aws --version
   - terraform --version
-  - terraform init plans
+  - echo nodejs $(node --version)
+  - echo npm $(npm --version)
+  - echo semgrep $(semgrep --version)
 
-plan:validate:
-  retry: 2
+test:sast:
   tags:
-    - python
-  stage: plan
+    - linode
+  stage: test
   script:
-    - terraform validate plans
+    - make semgrep-sast-ci
   only:
     refs:
       - merge_request
-      - master
-
-plan:tf:
-  retry: 2
-  tags:
-    - python
-  stage: plan
-  script:
-    - touch $PLAN_JSON
-    - shopt -s expand_aliases
-    - alias convert_report="jq -r '([.resource_changes[]?.change.actions?]|flatten)|{\"create\":(map(select(.==\"create\"))|length),\"update\":(map(select(.==\"update\"))|length),\"delete\":(map(select(.==\"delete\"))|length)}'"
-    - terraform plan -detailed-exitcode -no-color -state=$TFSTATE -out=$TFPLAN plans
-    - if [ $? -eq 2 ]; then terraform show --json $TFPLAN | convert_report > $PLAN_JSON; fi
-  only:
-    refs:
-      - merge_request
-      - master
+      - main
   artifacts:
-    name: plan
+    name: sast-results
     paths:
-      - $PLAN_JSON
-    reports:
-      terraform: $PLAN_JSON
+      - semgrep-ci.json
 
-apply:tf:
-  retry: 2
+test:xss:
   tags:
-    - python
-  stage: apply
+    - linode
+  stage: test
   script:
-    - terraform apply -state=$TFSTATE -auto-approve -refresh=true -input=false $TFPLAN
-  when: manual
+    - make semgrep-xss-ci
   only:
     refs:
-      - master
-  needs:
-    - plan:tf
+      - merge_request
+      - main
+  artifacts:
+    name: xss-results
+    paths:
+      - semgrep-xss.json
 
-deploy:s3:
-  retry: 2
+test:secrets:
   tags:
-    - python
-  stage: deploy
+    - linode
+  stage: test
   script:
-    - aws --version
-    - make publish
+    - make semgrep-secrets-ci
   only:
     refs:
-      - master
-  needs:
-    - apply:tf
+      - merge_request
+      - main
+  artifacts:
+    name: secrets-results
+    paths:
+      - semgrep-secrets.json
 
-deploy:cf:
+test:tf:
+  tags:
+    - linode
+  stage: test
+  script:
+    - make semgrep-tf-ci
+  only:
+    refs:
+      - merge_request
+      - main
+  artifacts:
+    name: tf-results
+    paths:
+      - semgrep-tf.json
+
+test:tls:
+  tags:
+    - linode
+  stage: test
+  script:
+    - make semgrep-tls-ci
+  only:
+    refs:
+      - merge_request
+      - main
+  artifacts:
+    name: tls-results
+    paths:
+      - semgrep-tls.json
+
+aws:s3:
   retry: 2
   tags:
-    - python
+    - linode
   stage: deploy
   script:
-    - aws --version
+    - make publish-s3
+  only:
+    refs:
+      - main
+  needs:
+    - tf:apply
+
+aws:cloudfront:
+  retry: 2
+  tags:
+    - linode
+  stage: deploy
+  script:
     - make invalidate-cloudfront
   only:
     refs:
-      - master
+      - main
   needs:
-    - apply:tf
+    - tf:apply
+
+tf:plan:
+  retry: 2
+  tags:
+    - linode
+  stage: test
+  script:
+    - make plan
+  only:
+    refs:
+      - merge_request
+      - main
+  artifacts:
+    name: tfplan
+    paths:
+      - plans/.tfplan
+    reports:
+      terraform: plans/tfplan.json
+
+tf:apply:
+  retry: 2
+  tags:
+    - linode
+  stage: apply
+  script:
+    - make apply
+  only:
+    refs:
+      - main
+  environment:
+    name: aws
+    url: https://sso.jumpcloud.com/saml2/aws1
+    on_stop: tf:destroy
+  dependencies:
+    - tf:plan
+  when: manual
+
+tf:destroy:
+  retry: 2
+  stage: apply
+  variables:
+    GIT_STRATEGY: none
+  tags:
+    - linode
+  script:
+    - make destroy
+  when: manual
+  environment:
+    name: aws
+    action: stop
+  artifacts:
+    name: tfdestroy
+    paths:
+      - plans/.tfdestroy
+    reports:
+      terraform: plans/tfdestroy.json
