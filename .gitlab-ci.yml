@@ -19,7 +19,7 @@ before_script:
 test:sast:
   tags:
     - linode
-  stage: tests
+  stage: test
   script:
     - make semgrep-sast-ci
   only:
@@ -34,7 +34,7 @@ test:sast:
 test:xss:
   tags:
     - linode
-  stage: tests
+  stage: test
   script:
     - make semgrep-xss-ci
   only:
@@ -49,7 +49,7 @@ test:xss:
 test:secrets:
   tags:
     - linode
-  stage: tests
+  stage: test
   script:
     - make semgrep-secrets-ci
   only:
@@ -64,7 +64,7 @@ test:secrets:
 test:tf:
   tags:
     - linode
-  stage: tests
+  stage: test
   script:
     - make semgrep-tf-ci
   only:
@@ -79,7 +79,7 @@ test:tf:
 test:tls:
   tags:
     - linode
-  stage: tests
+  stage: test
   script:
     - make semgrep-tls-ci
   only:
