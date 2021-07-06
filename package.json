@@ -1,5 +1,32 @@
 {
-  "devDependencies": {
+  "name": "trivialsec-static-website",
+  "version": "0.1.1",
+  "description": "Trivial Security Static Website and Assets",
+  "main": "./src",
+  "dependencies": {
     "http-server": "^0.12.3"
-  }
+  },
+  "devDependencies": {
+    "run-when-changed": "^2.1.0",
+    "sass": "^1.35.1",
+    "terser": "^5.7.1"
+  },
+  "scripts": {
+    "server": "http-server public",
+    "test": "make lint",
+    "compress-sass": "sass --no-color --load-path=src/styles --style=compressed --source-map --embed-source-map --no-stop-on-error src:dist",
+    "compress-js": "echo src/**/*.js | xargs -n1 sh -c 'o=public/${1#src/}; terser --output ${o%.js}.min.js --compress --keep-classnames --keep-fnames --no-rename -- $1' argv0",
+    "watch-sass": "sass --watch --color --load-path=src/styles --style=compressed --update --source-map --embed-source-map --no-stop-on-error src:public",
+    "watch-js": "run-when-changed --watch 'src/**/*.js' --exec 'c=%s; o=public/${c#src/}; terser --output ${o%.js}.min.js --compress --keep-classnames --keep-fnames --no-rename -- %s'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/trivialsec/website.git"
+  },
+  "author": "Christopher Langton <chris@trivialsec.com>",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://gitlab.com/trivialsec/website/issues"
+  },
+  "homepage": "https://www.trivialsec.com"
 }

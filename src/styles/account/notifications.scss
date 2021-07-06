@@ -1,0 +1,70 @@
+@use "../var";
+
+h2 {
+	color: #666;
+	margin: 0 0 20px 0 ;
+}
+.flex-outer, .flex-inner {
+	list-style-type: none;
+	padding: 0;
+	li input:not([type=checkbox]), li select, li textarea {
+		padding: 15px;
+		border-width: 1px;
+		border-radius: 6px;
+		border-color: #9c9c9c;
+		-webkit-box-shadow: 0 8px 6px -6px #bdbdbd;
+		-moz-box-shadow: 0 8px 6px -6px #bdbdbd;
+		box-shadow: 0 8px 6px -6px #bdbdbd;
+	}
+	li input:hover, li textarea:hover {
+		border-color: #9c9c9c7c;
+		-webkit-box-shadow: 0 8px 6px -6px #bdbdbd7c;
+		-moz-box-shadow: 0 8px 6px -6px #bdbdbd7c;
+		box-shadow: 0 8px 6px -6px #bdbdbd7c;
+	}
+}
+.flex-outer {
+	margin: 0 auto;
+	&>li:not(:last-child) {
+		margin-bottom: 20px;
+	}
+	li label {
+		padding: 8px;
+		font-weight: 300;
+		letter-spacing: .09em;
+	}
+	&>li>label {
+		flex: 1 0 120px;
+		max-width: 220px;
+	}
+	li button {
+		margin-left: auto;
+		padding: 8px 16px;
+		border: none;
+		background-color: #1ABB9C;
+		color: #fff;
+		text-transform: uppercase;
+		letter-spacing: .09em;
+		border-radius: 2px;
+		&:hover {
+			cursor: pointer;
+			background-color: #1ABB9C7a;
+			color: #333;
+		}
+	}
+}
+.flex-outer li, .flex-inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+.flex-inner {
+	padding: 0 8px;
+	justify-content: space-between;
+	li {
+		width: 100px;
+	}
+}
+.flex-outer>li>label+input, .flex-outer>li>label+textarea, .flex-outer>li>label+button, .flex-outer>li>label+select, .flex-inner {
+	flex: 1 0 220px;
+}

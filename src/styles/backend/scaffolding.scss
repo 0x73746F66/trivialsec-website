@@ -1,0 +1,42 @@
+@use "../var";
+
+.col-3 {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: stretch;
+	.left {
+		order: 1;
+		flex-basis: 100%;
+		min-height: 300px;
+	}
+	.middle {
+		order: 3;
+		flex-basis: 100%;
+		min-height: 300px;
+	}
+	.right {
+		order: 2;
+		flex-basis: 100%;
+		min-height: 300px;
+	}
+}
+
+@media screen and (min-width:600px) {
+    .col-3 {
+        flex-wrap: nowrap;
+        .left {
+            flex-basis: 200px;
+            order: 1;
+        }
+        .middle {
+            flex-basis: 1;
+            order: 2;
+        }
+        .right {
+            flex-basis: 200px;
+            order: 3;
+        }
+    }    
+}

@@ -1,0 +1,37 @@
+@use "../var";
+
+td {
+	i {
+		font-size: 25px;
+		color: #34495ef0;
+		cursor: pointer;
+		&:hover {
+			color: #1ABB9C;
+		}
+	}
+	&.actions {
+		min-width: 55px;
+	}
+}
+th {
+	&.actions {
+		i {
+			font-size: 25px;
+			color: #fffffff0;
+			cursor: pointer;
+		}
+	}
+}
+select {
+	height: 32px;
+}
+textarea {
+	height: 80px;
+	width: 91%;
+}
+input, select {
+	width: 90%;
+}
+.choices__list--dropdown {
+	width: 94% !important;
+}
