@@ -69,7 +69,7 @@ down: ## Stop the app
 	@docker-compose down --remove-orphans
 
 semgrep-tf-ci:
-	semgrep --disable-version-check -q --strict --error -o semgrep-tf.json --json --config p/terraform plans/**/*.tf
+	semgrep --disable-version-check -q --strict --error -o semgrep-tf.json --json --config p/terraform plans/*.tf
 
 semgrep-sast-ci:
 	semgrep --disable-version-check -q --strict --error -o semgrep-ci.json --json --config p/r2c-ci --lang=js src/**/*.js
@@ -83,4 +83,22 @@ semgrep-secrets-ci:
 semgrep-tls-ci:
 	semgrep --disable-version-check -q --strict --error -o semgrep-tls.json --json --config p/insecure-transport --lang=js src/**/*.js
 
-lint: semgrep-sast-ci semgrep-nodescan
+lint-ci: semgrep-tf-ci semgrep-sast-ci semgrep-xss-ci semgrep-secrets-ci semgrep-tls-ci
+
+semgrep-tf:
+	semgrep --force-color -q --strict --config p/terraform plans/**/*.tf
+
+semgrep-sast:
+	semgrep --force-color -q --strict --config p/r2c-ci --lang=js src/**/*.js
+
+semgrep-xss:
+	semgrep --force-color -q --strict --config p/xss --lang=js src/**/*.js
+
+semgrep-secrets:
+	semgrep --force-color -q --strict --config p/secrets --lang=js src/**/*.js
+
+semgrep-tls:
+	semgrep --force-color -q --strict --config p/insecure-transport --lang=js src/**/*.js
+
+lint: semgrep-tf semgrep-sast semgrep-xss semgrep-secrets semgrep-tls
+
