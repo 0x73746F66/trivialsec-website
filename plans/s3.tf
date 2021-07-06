@@ -1,4 +1,4 @@
-data "aws_cloudfront_canonical_user_id" "current" {}
+data "aws_canonical_user_id" "current" {}
 
 resource "aws_s3_bucket" "content_s3_bucket" {
   bucket         = local.s3_bucket
