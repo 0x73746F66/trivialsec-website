@@ -4,6 +4,7 @@ variables:
 
 stages:
   - tests
+  - apply
   - deploy
 
 before_script:
@@ -138,7 +139,7 @@ tf:apply:
   retry: 2
   tags:
     - linode
-  stage: deploy
+  stage: apply
   script:
     - make apply
   only:
@@ -154,7 +155,7 @@ tf:apply:
 
 tf:destroy:
   retry: 2
-  stage: deploy
+  stage: apply
   variables:
     GIT_STRATEGY: none
   tags:
