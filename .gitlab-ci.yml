@@ -3,7 +3,7 @@ variables:
   CF_DISTRIBUTION_ID: E32XEUIY96JKX4
 
 stages:
-  - tests
+  - test
   - apply
   - deploy
 
