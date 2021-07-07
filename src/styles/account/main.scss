@@ -33,7 +33,7 @@ a.underline-hover:after {
 	bottom: -10px;
 	width: 0;
 	height: 2px;
-	background-color: var.$main_light;
+	background-color: var.$primary_light;
 	content: "";
 	transition: width 0.2s;
 }
@@ -97,7 +97,7 @@ a.underline-hover:hover {
 		min-height: 50px;
 		&:hover, &.active {
 			cursor: pointer;
-			border-right: solid 5px var.$main_light;
+			border-right: solid 5px var.$primary_light;
 			background: var.$secondary_dark;
 		}
 	}
@@ -179,13 +179,13 @@ a.underline-hover:hover {
 	top: 0.7em;
 	cursor: pointer;
 	i {
-		color: var.$main_lightest;
+		color: var.$primary_lightest;
 		font-size: 30px;
 	}
 }
 .menu-opener i {
 	font-size: 30px;
-	color: var.$main_lightest;
+	color: var.$primary_lightest;
 	cursor: pointer;
 	top: 10px;
 	left: 10px;
@@ -248,7 +248,7 @@ a.underline-hover:hover {
 	position: fixed;
 	right: 0;
 	top: 10px;
-	color: var.$main_light;
+	color: var.$primary_light;
 }
 .backend-switcher a {
 	text-decoration: none;
@@ -266,14 +266,14 @@ a.underline-hover:hover {
 		line-height: 32px;
 		position: relative;
 		bottom: 3px;
-		color: var.$main_light;
+		color: var.$primary_light;
 		font-size: 18px;
 		vertical-align: top;
 	}
 }
 .backend-switcher i {
 	font-size: 32px;
-	color: var.$main_light;
+	color: var.$primary_light;
 }
 #app-messages {
 	position: sticky;
@@ -514,7 +514,7 @@ form:focus-within {
 }
 @keyframes flash-fade {
     0% {
-        background-color: var.$main_light;
+        background-color: var.$primary_light;
         opacity: 1;
     }
     22% {

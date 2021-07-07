@@ -33,7 +33,7 @@ a.underline-hover:after {
 	bottom: -10px;
 	width: 0;
 	height: 2px;
-	background-color: var.$main_light;
+	background-color: var.$primary_light;
 	content: "";
 	transition: width 0.2s;
 }
@@ -460,7 +460,7 @@ input {
 		background-color: var.$http_4xx;
 	}
 	&.main {
-		background-color: var.$main_light;
+		background-color: var.$primary_light;
 	}
 	&.secondary {
 		background-color: var.$secondary;
@@ -481,7 +481,7 @@ input {
 pre.code {
 	background: var.$grey_dark;
 	border: 1px solid var.$secondary;
-	border-left: 3px solid var.$main_light;
+	border-left: 3px solid var.$primary_light;
 	color: rgb(214, 214, 214);
 	page-break-inside: avoid;
 	font-family: monospace;
@@ -496,9 +496,9 @@ pre.code {
 	word-wrap: break-word;
 }
 ::selection {
-	background: var.$main_light;
+	background: var.$primary_light;
 	color: var.$secondary;
-	text-emphasis-color: var.$main_light_alpha80;
+	text-emphasis-color: var.$primary_light_alpha80;
 }
 .breadcrumbs {
 	list-style: none;
@@ -526,7 +526,7 @@ pre.code {
 				content: '';
 				width: 20px;
 				height: 20px;
-				border-color: var.$main_lightest;
+				border-color: var.$primary_lightest;
 				border-style: solid;
 				border-width: 1px 1px 0 0;
 				-webkit-backface-visibility: hidden;
@@ -555,14 +555,14 @@ pre.code {
 
 @keyframes flash-fade {
     0% {
-        background-color: var.$main_light;
+        background-color: var.$primary_light;
         opacity: 1;
     }
     22% {
-        background-color: var.$main_light_alpha50;
+        background-color: var.$primary_light_alpha50;
     }
     77% {
-        background-color: var.$main_light_alpha20;
+        background-color: var.$primary_light_alpha20;
     }
     100% {
         background-color: transparent;
