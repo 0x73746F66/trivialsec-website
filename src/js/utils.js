@@ -1,3 +1,4 @@
+window.app = {...document.head.querySelector('[name=application-name]').dataset}
 const lang = window.navigator.userLanguage || window.navigator.language
 var supportsPassive = false
 try {
