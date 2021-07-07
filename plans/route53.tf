@@ -1,23 +1,23 @@
 resource "aws_route53_record" "www_a" {
     zone_id = local.hosted_zone
-    name    = local.domain_name
+    name    = local.www_domain_name
     type    = "A"
 
     alias {
-        name                   = aws_cloudfront_distribution.static_trivialsec.domain_name
-        zone_id                = aws_cloudfront_distribution.static_trivialsec.hosted_zone_id
+        name                   = aws_cloudfront_distribution.assets_trivialsec.domain_name
+        zone_id                = aws_cloudfront_distribution.assets_trivialsec.hosted_zone_id
         evaluate_target_health = false
     }
 }
 
 resource "aws_route53_record" "www_aaaa" {
     zone_id = local.hosted_zone
-    name    = local.domain_name
+    name    = local.www_domain_name
     type    = "AAAA"
 
     alias {
-        name                   = aws_cloudfront_distribution.static_trivialsec.domain_name
-        zone_id                = aws_cloudfront_distribution.static_trivialsec.hosted_zone_id
+        name                   = aws_cloudfront_distribution.assets_trivialsec.domain_name
+        zone_id                = aws_cloudfront_distribution.assets_trivialsec.hosted_zone_id
         evaluate_target_health = false
     }
 }
@@ -28,8 +28,8 @@ resource "aws_route53_record" "apex_a" {
     type    = "A"
 
     alias {
-        name                   = aws_cloudfront_distribution.static_trivialsec.domain_name
-        zone_id                = aws_cloudfront_distribution.static_trivialsec.hosted_zone_id
+        name                   = aws_cloudfront_distribution.assets_trivialsec.domain_name
+        zone_id                = aws_cloudfront_distribution.assets_trivialsec.hosted_zone_id
         evaluate_target_health = false
     }
 }
@@ -40,8 +40,8 @@ resource "aws_route53_record" "apex_aaaa" {
     type    = "AAAA"
 
     alias {
-        name                   = aws_cloudfront_distribution.static_trivialsec.domain_name
-        zone_id                = aws_cloudfront_distribution.static_trivialsec.hosted_zone_id
+        name                   = aws_cloudfront_distribution.assets_trivialsec.domain_name
+        zone_id                = aws_cloudfront_distribution.assets_trivialsec.hosted_zone_id
         evaluate_target_health = false
     }
 }
