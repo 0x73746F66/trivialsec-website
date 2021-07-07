@@ -7,12 +7,12 @@
     "orientation": "portrait-primary",
     "screenshots" : [
         {
-          "src": "https://www.trivialsec.com/static/images/domain-view.png",
+          "src": "https://www.trivialsec.com/images/domain-view.png",
           "sizes": "545x220",
           "type": "image/png"
         },
         {
-          "src": "https://www.trivialsec.com/static/images/project-view.png",
+          "src": "https://www.trivialsec.com/images/project-view.png",
           "sizes": "545x128",
           "type": "image/png"
         }
