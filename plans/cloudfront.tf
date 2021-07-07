@@ -18,7 +18,7 @@ resource "aws_cloudfront_distribution" "assets_trivialsec" {
 
     enabled             = true
     is_ipv6_enabled     = true
-    default_root_object = "/index.html"
+    default_root_object = "index.html"
     aliases = [local.www_domain_name]
 
     default_cache_behavior {
@@ -67,6 +67,6 @@ resource "aws_cloudfront_distribution" "assets_trivialsec" {
     custom_error_response {
         error_code         = 404
         response_code      = 404
-        response_page_path = "/404.html"
+        response_page_path = "404.html"
     }
 }
