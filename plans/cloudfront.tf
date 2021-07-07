@@ -1,13 +1,15 @@
 resource "aws_cloudfront_origin_access_identity" "default" {
-  comment = local.s3_bucket
+  comment = "assets-${local.domain}"
 }
 
-resource "aws_cloudfront_distribution" "static_trivialsec" {
+resource "aws_cloudfront_distribution" "assets_trivialsec" {
     wait_for_deployment = false
 
     origin {
-        domain_name = "${local.s3_bucket}.s3.${local.default_region}.amazonaws.com"
-        origin_id   = local.s3_origin_id
+        domain_name             = "assets-${local.domain}.s3.${local.default_region}.amazonaws.com"
+        origin_id               = local.s3_origin_id
+        connection_timeout      = 2
+        connection_attempts     = 3
 
         s3_origin_config {
             origin_access_identity = aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path
@@ -17,7 +19,7 @@ resource "aws_cloudfront_distribution" "static_trivialsec" {
     enabled             = true
     is_ipv6_enabled     = true
     default_root_object = "/index.html"
-    aliases = [local.domain_name]
+    aliases = [local.www_domain_name]
 
     default_cache_behavior {
         allowed_methods  = ["GET", "HEAD"]
@@ -64,7 +66,7 @@ resource "aws_cloudfront_distribution" "static_trivialsec" {
 
     custom_error_response {
         error_code         = 404
-        response_code      = 200
-        response_page_path = "/index.html"
+        response_code      = 404
+        response_page_path = "/404.html"
     }
 }

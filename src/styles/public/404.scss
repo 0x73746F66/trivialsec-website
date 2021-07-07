@@ -1,0 +1,31 @@
+@use "../var";
+@import "main";
+
+.footer__spacer {
+	min-height: 30px;
+	height: 5vh;
+	flex: 0 0 100%;
+}
+
+.footer {
+	min-height: 30px;
+	height: 5vh;
+	background: rgba(42, 63, 84, 1);
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	text-align: center;
+	z-index: 2;
+	color: #fff;
+	font-size: 13px;
+	display: flex;
+	& > div {
+		&:first-of-type {
+			margin: auto 0;
+			flex: 0 0 100%;
+		}
+	}
+	a {
+		color: rgba(17, 138, 114, 0.9);
+	}
+}

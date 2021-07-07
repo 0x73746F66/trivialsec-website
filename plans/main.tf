@@ -15,7 +15,7 @@ provider "aws" {
 
 terraform {
     backend "s3" {
-        bucket = "trivialsec-assets"
+        bucket = "tfplans-trivialsec"
         key    = "terraform/statefiles/website"
         region = "ap-southeast-2"
     }
