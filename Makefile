@@ -40,18 +40,18 @@ ifdef AWS_PROFILE
 	aws --profile $(AWS_PROFILE) \
 		cloudfront create-invalidation \
 		--distribution-id ${CF_DISTRIBUTION_ID} \
-		--paths "/static/"
+		--paths "/" "/index.html" "/privacy.html" "/terms.html" "/404.html"
 else
 	aws cloudfront create-invalidation \
 		--distribution-id ${CF_DISTRIBUTION_ID} \
-		--paths "/static/"
+		--paths "/" "/index.html" "/privacy.html" "/terms.html" "/404.html"
 endif
 
 publish-s3:
 ifdef AWS_PROFILE
-	aws --profile $(AWS_PROFILE) s3 sync --only-show-errors public/ s3://static-trivialsec/static/
+	aws --profile $(AWS_PROFILE) s3 sync --only-show-errors public/ s3://assets-trivialsec/
 else
-	aws s3 sync --only-show-errors public/ s3://static-trivialsec/static/
+	aws s3 sync --only-show-errors public/ s3://assets-trivialsec/
 endif
 
 build: ## Build compressed container
