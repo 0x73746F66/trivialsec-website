@@ -1,9 +1,9 @@
 const saveBillingEmail = async() => {
     const billing_email = document.getElementById('billing_email').value
-    const password = document.getElementById('billing_password').value
+    const assertion_response
     const json = await Api.post_async('/v1/account', [
         {prop: 'billing_email', value: billing_email},
-        {prop: 'password', value: password}
+        assertion_response
     ]).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
     appMessage(json.status, json.message)
 }

@@ -131,8 +131,8 @@ const verifyWebauthn = async () => {
             successEl.classList.remove('hide')
             successEl.classList.add('success-checkmark')
             document.getElementById('retry-webauthn').remove()
-            document.querySelector('.Card__card.confirm-webauthn h1').remove()
-            document.querySelector('.Card__card.confirm-webauthn h2').textContent = 'Successfully Registered'
+            document.querySelector('.Card__card.confirm-webauthn h1').textContent = json.message
+            document.querySelector('.Card__card.confirm-webauthn h2').textContent = json.description
             document.querySelector('.Card__card.confirm-webauthn img').remove()
             document.querySelector('.Card__card.confirm-webauthn .ChooseMfa__parra').remove()
         }
