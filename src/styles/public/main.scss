@@ -8,7 +8,7 @@ body {
 	font-family: "Helvetica Neue", Helvetica, Arial;
 }
 .grecaptcha-badge {
-	display: none !important;
+	visibility: hidden;
 }
 .container {
 	display: flex;
@@ -19,13 +19,6 @@ body {
 }
 .bg-light {
 	background: rgba(106, 168, 155, 0.9);
-}
-.main {
-	z-index: 1;
-	border-top-right-radius: 8px;
-	border-bottom-right-radius: 8px;
-	color: #fff;
-	flex: 0 0 60%;
 }
 .vh70 {
 	min-height: 70vh;
@@ -39,25 +32,6 @@ body {
 	top: 0;
 	z-index: 2;
 	background: rgb(42, 63, 84);
-}
-.main__jumbo {
-	margin: 10%;
-	color: rgba(255, 255, 255, 1);
-	z-index: 1;
-	position: relative;
-	background: rgb(42, 63, 84);
-}
-.main__jumbo-title {
-	text-align: left;
-	font-size: 5rem;
-	max-width: 40rem;
-}
-.main__blurb {
-	margin: 10% 0 0 0;
-}
-.main__blurb--parra {
-	text-align: left;
-	font-size: 1.3rem;
 }
 a {
 	&.main__logo {
@@ -95,201 +69,6 @@ a {
 			color: rgba(26, 187, 156, 0.9);
 		}
 	}
-}
-.main__section {
-	flex: 0 0 52%;
-	border-top-right-radius: 5px;
-	border-bottom-right-radius: 5px;
-	color: rgba(255, 255, 255, 1);
-	display: flex;
-	padding: 2% 4%;
-}
-.section__spacer {
-	flex: 0 0 5%;
-}
-.section__text--screenshot {
-	flex: 0 0 55%;
-	img {
-		width: 100%;
-	}
-}
-.section__text {
-	flex: 0 0 40%;
-}
-.aside {
-	z-index: 1;
-	background: rgb(232 232 232);
-	color: rgba(42, 63, 84, 1);
-	flex: 0 0 40%;
-	display: flex;
-}
-.aside--spacer {
-	background: rgb(232 232 232);
-	flex: 0 0 40%;
-}
-.aside__links {
-	position: fixed;
-	top: 1vh;
-	display: flex;
-	width: 40%;
-	width: -moz-available;
-	& > a {
-		margin: 0 auto;
-		font-size: large;
-		font-weight: 600;
-		flex: 0 0 50%;
-		text-align: center;
-		text-decoration: none;
-		color: rgba(17, 138, 114, 1);
-	}
-	a {
-		&:hover {
-			color: rgba(45, 151, 130, 0.7);
-		}
-	}
-}
-.aside__forms {
-	position: fixed;
-	top: 5vh;
-	padding: 2% 3%;
-	display: flex;
-	flex-flow: row wrap;
-}
-.aside__forms--heading {
-	font-size: large;
-	font-weight: 600;
-	margin: 0 0 2vh 0;
-	flex: 0 0 100%;
-}
-.aside__forms a,
-.aside__forms a:visited {
-	color: rgb(19, 130, 110);
-	text-decoration-style: dotted;
-}
-.input-group {
-	flex: 0 0 100%;
-	label {
-		display: block;
-		margin: 1vh 0 0 0;
-		font-weight: 600;
-	}
-	textarea {
-		line-height: 4vh;
-		padding: 0 2%;
-		&:focus {
-			outline: none;
-		}
-	}
-	input {
-		&:focus {
-			border-color: rgb(26, 187, 156);
-			outline: none;
-		}
-	}
-	&.half {
-		flex: 0 0 45%;
-	}
-	&.spacer {
-		flex: 0 0 10%;
-	}
-	.invalid {
-		color: rgb(255, 99, 71);
-		margin: 1vh 0 0 0;
-		visibility: hidden;
-	}
-}
-.input-group input[type="text"],
-.input-group input[type="password"],
-.input-group input[type="email"],
-.input-group textarea {
-	width: 100%;
-	border-radius: 5px;
-	border-style: hidden;
-	background-color: rgb(255, 255, 255);
-}
-.input-group input[type="text"],
-.input-group input[type="password"],
-.input-group input[type="email"] {
-	line-height: 4vh;
-	padding: 0 0 0 10px;
-}
-.magic-link {
-	text-align: center;
-	margin: 0 0 2em 0;
-}
-#privacy-acceptance {
-	display: inline-block;
-	position: relative;
-	top: 16px;
-}
-label[for="privacy-acceptance"] {
-	display: inline;
-}
-input[type="checkbox"]::-ms-check {
-	display: none;
-}
-input[type="checkbox"] {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	height: 1.5em;
-	width: 1.5em;
-	border: 1px solid silver;
-	outline: none;
-}
-input[type="checkbox"]:checked {
-	background-color: rgb(26, 187, 156);
-	outline: none;
-}
-.submit__btn {
-	flex: 0 0 100%;
-	background-color: rgb(26, 187, 156);
-	color: rgb(244, 244, 244);
-	line-height: 4vh;
-	font-size: large;
-	font-weight: 600;
-	margin: 2vh 0 0 0;
-	border: 0;
-	outline: none;
-	border-radius: 5px;
-	box-shadow: 0px 5px 0px rgb(16, 163, 134);
-	position: relative;
-	top: 0px;
-	transition: all ease 0.3s;
-	&:hover {
-		background-color: rgba(26, 187, 156, .9);
-	}
-	&:focus {
-		border: 0;
-		outline: none;
-		box-shadow: 0 3px 0 rgb(16, 163, 134);
-		top: 3px;
-	}
-}
-.open-sign-up {
-	display: none;
-	position: fixed;
-	top: 2px;
-	right: 2px;
-}
-.close-sign-up {
-	position: fixed;
-}
-.sign-up-icon {
-	color: rgba(117, 117, 117, .9);
-	font-size: 30px;
-	z-index: 9;
-	cursor: pointer;
-	height: max-content;
-	&:hover {
-		color: rgba(117, 117, 117, .7);
-	}
-}
-label[for=password-reset] {
-	display: inline-block;
-}
-#password-reset {
-	vertical-align: top;
-	font-size: 18px;
 }
 .footer__spacer {
 	min-height: 30px;

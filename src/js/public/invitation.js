@@ -1,5 +1,4 @@
 const saveFields = async() => {
-    const recaptcha_token = document.getElementById('recaptcha_token').value
     const confirmation_url = document.getElementById('confirmation_url').value
     const password1 = document.getElementById('new_password').value
     const password2 = document.getElementById('repeat_password').value
@@ -15,17 +14,11 @@ const saveFields = async() => {
     }).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
     appMessage(json.status, json.message)
     if (json.status == 'error') {
-        console.log(json)
-        refresh_recaptcha_token('invitation_action')
+        await refresh_recaptcha_token('invitation_action')
     }
     if (json.status == 'success') {
         setTimeout(()=>{window.location.href = '/'}, 5000)
     }
-}
-if (app.recaptchaSiteKey) {
-    grecaptcha.ready(() => {
-        refresh_recaptcha_token('invitation_action')
-    })
 }
 document.addEventListener('DOMContentLoaded', () => {
     if (location.pathname != '/invitation') {

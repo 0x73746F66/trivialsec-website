@@ -1,40 +1,11 @@
 @use "../var";
-@import "main";
 
-.container {
-	display: flex;
-	flex-flow: wrap row;
-}
-.bg-dark {
-	background: rgb(42, 63, 84);
-}
-.bg-light {
-	background: rgba(106, 168, 155, 0.9);
-}
 .main {
 	z-index: 1;
+	color: #fff;
 	border-top-right-radius: 8px;
 	border-bottom-right-radius: 8px;
-	color: #fff;
-}
-.flex40 {
-	flex: 0 0 40%;
-}
-.flex60 {
 	flex: 0 0 60%;
-}
-.vh70 {
-	min-height: 70vh;
-	height: max-content;
-}
-.main__top {
-	max-height: 64px;
-	display: flex;
-	margin: 0 5%;
-	position: sticky;
-	top: 0;
-	z-index: 2;
-	background: rgb(42, 63, 84);
 }
 .main__jumbo {
 	margin: 10%;
@@ -54,43 +25,6 @@
 .main__blurb--parra {
 	text-align: left;
 	font-size: 1.3rem;
-}
-a {
-	&.main__logo {
-		text-decoration: none;
-		flex: 0 0 40%;
-		display: flex;
-	}
-}
-.main__logo {
-	img {
-		height: 64px;
-		width: 64px;
-	}
-	div {
-		&:first-of-type {
-			color: rgba(255, 255, 255, 1);
-			font-size: large;
-			height: inherit;
-			margin: auto 0;
-			font-weight: 700;
-			padding: 0 0 0 5%;
-		}
-	}
-}
-.main__links {
-	height: inherit;
-	position: relative;
-	flex: 0 0 30%;
-	margin: auto 0;
-	& > a {
-		color: rgba(255, 255, 255, 1);
-		font-weight: 300;
-		text-decoration: none;
-		&:hover {
-			color: rgba(26, 187, 156, 0.9);
-		}
-	}
 }
 .main__section {
 	flex: 0 0 52%;
@@ -285,74 +219,4 @@ label[for=password-reset] {
 #password-reset {
 	vertical-align: top;
 	font-size: 18px;
-}
-.footer__spacer {
-	min-height: 30px;
-	height: 5vh;
-	flex: 0 0 100%;
-}
-.footer {
-	min-height: 30px;
-	height: 5vh;
-	background: rgba(42, 63, 84, 1);
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	text-align: center;
-	z-index: 2;
-	color: #fff;
-	font-size: 13px;
-	display: flex;
-	& > div {
-		&:first-of-type {
-			margin: auto 0;
-			flex: 0 0 100%;
-		}
-	}
-	a {
-		color: rgba(17, 138, 114, 0.9);
-	}
-}
-.center {
-	transform: translateX(-50%);
-}
-.alert-container {
-	flex: 0 0 100%;
-	z-index: 2;
-	position: relative;
-}
-.alert {
-	line-height: 40px;
-	border-radius: 3px 3px 3px 3px;
-	&.alert-info {
-		color: #059;
-		background-color: #BEF;
-	}
-	&.alert-success {
-		color: #270;
-		background-color: #DFF2BF;
-	}
-	&.alert-warning {
-		color: #9F6000;
-		background-color: #FEEFB3;
-	}
-	&.alert-error {
-		color: #D8000C;
-		background-color: #FFBABA;
-	}
-	i {
-		font-size: 30px;
-		margin-right: 10px;
-		position: relative;
-		top: 5px;
-	}
-	.icofont-close {
-		color: rgba(27, 27, 27, 1);
-		position: absolute;
-		right: 0;
-		cursor: pointer;
-		&:hover {
-			color: rgba(59, 59, 59, 0.9);
-		}
-	}
 }

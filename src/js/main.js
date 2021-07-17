@@ -46,7 +46,6 @@ const navActions = async event => {
 const signInAction = async() => {
     const appAlert = document.getElementById('sign-in-messages')
     const email = document.getElementById('login_email').value
-    const recaptcha_token = document.getElementById('recaptcha_token').value
     let invalid = false
     document.querySelector('.invalid.login_email').style.visibility = 'hidden'
     if (!email || !email.includes('@')) {
@@ -70,10 +69,6 @@ const signInAction = async() => {
         appMessage(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
         console.log(err)
     })
-    if (json.status == 'retry') {
-        refresh_recaptcha_token('public_action')
-        return signInAction()
-    }
     appMessage(appAlert, json.status, json.message)
 }
 const contactUsAction = async event => {
@@ -83,7 +78,6 @@ const contactUsAction = async event => {
     const company = document.getElementById('contact_company').value
     const email = document.getElementById('contact_email').value
     const message = document.getElementById('message').value
-    const recaptcha_token = document.getElementById('recaptcha_token').value
     let invalid = false
     document.querySelector('.invalid.first_name').style.visibility = 'hidden'
     document.querySelector('.invalid.last_name').style.visibility = 'hidden'
@@ -131,10 +125,6 @@ const contactUsAction = async event => {
         appMessage(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
         console.log(err)
     })
-    if (json.status == 'retry') {
-        refresh_recaptcha_token('public_action')
-        return registerAction(event)
-    }
     appMessage(appAlert, json.status, json.message)
 }
 const registerAction = async event => {
@@ -142,7 +132,6 @@ const registerAction = async event => {
     const company = document.getElementById('register_company').value
     const email = document.getElementById('register_email').value
     const privacy = document.getElementById('privacy-acceptance').checked
-    const recaptcha_token = document.getElementById('recaptcha_token').value
     let invalid = false
     document.querySelector('.invalid.register_company').style.visibility = 'hidden'
     document.querySelector('.invalid.register_email').style.visibility = 'hidden'
@@ -180,19 +169,10 @@ const registerAction = async event => {
         appMessage(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
         console.log(err)
     })
-    if (json.status == 'retry') {
-        refresh_recaptcha_token('public_action')
-        return registerAction(event)
-    }
     appMessage(appAlert, json.status, json.message)
 }
 
 document.addEventListener('DOMContentLoaded', async() => {
-    if (app.recaptchaSiteKey) {
-        grecaptcha.ready(() => {
-            refresh_recaptcha_token('public_action')
-        })
-    }
     for (const el of document.querySelectorAll('.aside__links a')) {
         el.addEventListener('click', navActions, false)
         el.addEventListener('touchstart', navActions, supportsPassive ? { passive: true } : false)

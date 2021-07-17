@@ -10,12 +10,10 @@ const buttonActions = async(event) => {
         selection: event.currentTarget.id
     }).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
     if (json.status != 'success') {
-        console.log(json)
         appMessage(json.status, json.message)
         return;
     }
     if (!json.result || !json.result.hasOwnProperty('id')) {
-        console.log(json)
         appMessage('error', 'Failed to start Checkout with Stripe.com')
         return;
     }

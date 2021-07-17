@@ -6,9 +6,6 @@ const saveBillingEmail = async() => {
         {prop: 'password', value: password}
     ]).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
     appMessage(json.status, json.message)
-    if (json.status == 'error') {
-        console.log(json)
-    }
 }
 
 document.addEventListener('DOMContentLoaded', async() => {

@@ -33,41 +33,28 @@ const eventTabSwitch = async(e) => {
     activeTab.querySelector('.content__wrapper').classList.remove('hide')
     activeTab.querySelector('.content__wrapper').classList.add('show')
 }
-if (app.recaptchaSiteKey) {
-    grecaptcha.ready(() => {
-        refresh_recaptcha_token('login_action')
-    })
-}
 const password_reset_action = async(event, retry_count=0) => {
     if (retry_count === 0) {
         event.preventDefault()
     }
-    const token = document.getElementById('recaptcha_token').value
     const response = await fetch('/password-reset', {
         credentials: 'same-origin',
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-            recaptcha_token: token,
+            recaptcha_token,
             email: document.getElementById('email').value,
         })
-    }).catch(err => {
-        appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.')
-        console.log(err)
     })
     const json = await response.json()
     if (!!json) {
         appMessage(json.status, json.message)
-        if (json.status == 'retry') {
-            refresh_recaptcha_token('login_action')
-            await password_reset_action(event, ++retry_count)
-            return;
-        } else if (json.status == 'success') {
+        if (json.status == 'success') {
             document.querySelector('[data-tab="login"]').click()
             document.getElementById('login_email').value = json.email
         }
     }
-    refresh_recaptcha_token('login_action')
+    await refresh_recaptcha_token('login_action')
 }
 const login_action = async(event, retry_count=0) => {
     if (retry_count === 0) {
@@ -78,33 +65,25 @@ const login_action = async(event, retry_count=0) => {
     if (!login_password || !login_email) {
         return;
     }
-    const token = document.getElementById('recaptcha_token').value
     const response = await fetch('/login', {
         credentials: 'same-origin',
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-            recaptcha_token: token,
+            recaptcha_token,
             email: login_email,
             password: login_password
         })
-    }).catch(err => {
-        appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.')
-        console.log(err)
     })
     const json = await response.json()
     if (!!json) {
         appMessage(json.status, json.message)
-        if (json.status == 'retry') {
-            refresh_recaptcha_token('login_action')
-            await login_action(event, ++retry_count)
-            return;
-        } else if (json.status == 'success') {
+        if (json.status == 'success') {
             localStorage.setItem('hmac-secret', json.hmac_secret)
             window.location.href = json.is_setup ? '/' : '/account/setup/1'
         }
     }
-    refresh_recaptcha_token('login_action')
+    await refresh_recaptcha_token('login_action')
 }
 document.addEventListener('DOMContentLoaded', async() => {
     if (location.pathname != '/login') {

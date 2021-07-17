@@ -1,5 +1,4 @@
 const saveFields = async() => {
-    const recaptcha_token = document.getElementById('recaptcha_token').value
     const confirmation_url = document.getElementById('confirmation_url').value
     const password1 = document.getElementById('new_password').value
     const password2 = document.getElementById('repeat_password').value
@@ -17,25 +16,16 @@ const saveFields = async() => {
             password1,
             password2
         })
-    }).catch(err => {
-        appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.')
-        console.log(err)
     })
     const json = await response.json()
     if (json.status && json.status == 'error') {
         appMessage(json.status, json.message)
-        console.log(json)
-        refresh_recaptcha_token('password_reset_action')
+        await refresh_recaptcha_token('password_reset_action')
     }
     if (json.status && json.status == 'success') {
         appMessage(json.status, json.message)
         setTimeout(()=>{window.location.href = '/login'}, 5000)
     }
-}
-if (app.recaptchaSiteKey) {
-    grecaptcha.ready(() => {
-        refresh_recaptcha_token('password_reset_action')
-    })
 }
 document.addEventListener('DOMContentLoaded', () => {
     if (location.pathname != '/password-reset') {

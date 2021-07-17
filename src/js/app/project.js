@@ -47,7 +47,6 @@ const deleteDomainAction = async event => {
     toggleTd.parent('tr').remove()
 }
 const handleSocket = async data => {
-    console.log(data)
     if (data.service_category == 'crawler' && data.state == 'completed') {
         const trEl = document.querySelector(`tr.disabled-events[data-domain-id="${data.id}"`)
         if (trEl) {

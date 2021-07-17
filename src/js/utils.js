@@ -114,18 +114,107 @@ const htmlDecode = input => {
     e.innerHTML = input // nosemgrep
     return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue
 }
-const refresh_recaptcha_token = async(action) => {
+const init_recaptcha = async(action) => {
     for await(const el of document.querySelectorAll('.wait_recaptcha')) {
         el.disabled = true
     }
-    try {
-        let token = await grecaptcha.execute(app.recaptchaSiteKey, {action})
-        document.getElementById('recaptcha_token').value = token
-        
-    } catch (error) {
-        console.error(error)
-    }
+    let token = await grecaptcha.execute(app.recaptchaSiteKey, {action})
     for await(const el of document.querySelectorAll('.wait_recaptcha')) {
         el.disabled = false
     }
+    window.recaptcha_token = token
+    return token
 }
+const refresh_recaptcha_token = async(action) => {
+    await grecaptcha.reset(app.recaptchaSiteKey)
+    return init_recaptcha(action)
+}
+const arrayBufferToBase64 = bufferArray => btoa([].reduce.call(new Uint8Array(bufferArray),(p,c)=>p+String.fromCharCode(c),''));
+const base64ToArrayBuffer = base64 => Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+const hexEncode = bufUint8Array => Array.from(bufUint8Array).map(x => ("0" + x.toString(16)).substr(-2)).join("");
+const COSE_Key_Types = [
+    void 0,
+    'OKP, Octet Key Pair - Elliptic Curve',
+    'EC2, Elliptic Curve Keys w/ x- and y-coordinate pair',
+    'RSA, RSA Key',
+    'Symmetric, Symmetric Keys',
+    'HSS-LMS, Public key for HSS/LMS hash-based digital signature',
+    'WalnutDSA, WalnutDSA public key',
+]
+const COSE_Elliptic_Curves = [
+    void 0,
+    'P-256, EC2, NIST P-256 also known as secp256r1	',
+    'P-384, EC2, NIST P-384 also known as secp384r1	',
+    'P-521, EC2, NIST P-521 also known as secp521r1	',
+    'X25519, OKP, X25519 for use w/ ECDH only',
+    'X448, OKP, X448 for use w/ ECDH only',
+    'Ed25519, OKP, Ed25519 for use w/ EdDSA only',
+    'Ed448, OKP, Ed448 for use w/ EdDSA only',
+    'secp256k1, EC2, SECG secp256k1 curve',
+]
+const COSE_Algorithms = Object.assign({}, {
+    '-65535': 'RS1',
+    '-260': 'WalnutDSA',
+    '-259': 'RS512',
+    '-258': 'RS384',
+    '-257': 'RS256',
+    '-47': 'ES256K',
+    '-46': 'HSS-LMS',
+    '-45': 'SHAKE256',
+    '-44': 'SHA-512',
+    '-43': 'SHA-384',
+    '-42': 'RSAES-OAEP-SHA-512',
+    '-41': 'RSAES-OAEP-SHA-256',
+    '-40': 'RSAES-OAEP-SHA-1',
+    '-39': 'RSASSA-PSS-SHA-512',
+    '-38': 'RSASSA-PSS-SHA-384',
+    '-37': 'RSASSA-PSS-SHA-256',
+    '-36': 'ECDSA-SHA-512',
+    '-35': 'ECDSA-SHA-384',
+    '-34': 'ECDH-SS-A256KW',
+    '-33': 'ECDH-SS-A192KW',
+    '-32': 'ECDH-SS-A128KW',
+    '-31': 'ECDH-ES-A256KW',
+    '-30': 'ECDH-ES-A192KW',
+    '-29': 'ECDH-ES-A128KW',
+    '-28': 'ECDH-SS-HKDF-512',
+    '-27': 'ECDH-SS-HKDF-256',
+    '-26': 'ECDH-ES-HKDF-512',
+    '-25': 'ECDH-ES-HKDF-256',
+    '-18': 'SHAKE128',
+    '-17': 'SHA-512/256',
+    '-16': 'SHA-256',
+    '-15': 'SHA-256/64',
+    '-14': 'SHA-1',
+    '-13': 'HKDF-AES-256',
+    '-12': 'HKDF-AES-128',
+    '-11': 'HKDF-SHA-512',
+    '-10': 'HKDF-SHA-256',
+    '-8': 'EdDSA',
+    '-7': 'ECDSA-SHA-256',
+    '-6': 'CEK',
+    '-5': 'A256KW',
+    '-4': 'A192KW',
+    '-3': 'A128KW',
+    1: 'AES-GCM-128',
+    2: 'AES-GCM-192',
+    3: 'AES-GCM-256',
+    4: 'HMAC-SHA256/64',
+    5: 'HMAC-SHA256',
+    6: 'HMAC-SHA-384',
+    7: 'HMAC-SHA-512',
+    10: 'AES-CCM-16-64-128',
+    11: 'AES-CCM-16-64-256',
+    12: 'AES-CCM-64-64-128',
+    13: 'AES-CCM-64-64-256',
+    14: 'AES-MAC 128/64',
+    15: 'AES-MAC 256/64',
+    24: 'ChaCha20/Poly1305',
+    25: 'AES-MAC 128/128',
+    26: 'AES-MAC 256/128',
+    30: 'AES-CCM-16-128-128',
+    31: 'AES-CCM-16-128-256',
+    32: 'AES-CCM-64-128-128',
+    33: 'AES-CCM-64-128-256',
+    34: 'IV-GENERATION'
+})

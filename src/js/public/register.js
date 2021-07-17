@@ -1,11 +1,5 @@
-if (app.recaptchaSiteKey) {
-    grecaptcha.ready(() => {
-        refresh_recaptcha_token('register_action')
-    })
-}
 const register_action = async(e) => {
     e.preventDefault()
-    const token = document.getElementById('recaptcha_token').value
     const alias = document.querySelector('#company_name').value
     const email = document.querySelector('#email').value
     const password = document.querySelector('#password').value
@@ -27,22 +21,16 @@ const register_action = async(e) => {
             recaptcha_token: token
         }),
         headers: {'Content-Type': 'application/json'},
-    }).catch(err => {
-        appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.')
-        console.log(err)
     })
     const json = await response.json()
     if (!!json) {
         appMessage(json.status, json.message)
-        if (json.status == 'retry') {
-            refresh_recaptcha_token('register_action')
-            return await register_action(e)
-        } else if (json.status == 'success') {
+        if (json.status == 'success') {
             setTimeout(()=>{window.location.href = '/login'}, 5000)
             return;
         }
     }
-    refresh_recaptcha_token('register_action')
+    await refresh_recaptcha_token('register_action')
 }
 document.addEventListener('DOMContentLoaded', () => {
     if (location.pathname != '/register') {
