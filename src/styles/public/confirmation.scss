@@ -129,6 +129,11 @@
 .invisible {
 	visibility: hidden;
 }
+.scratch-code {
+    background-color: var.$grey_dark;
+    color: var.$secondary_light;
+    padding: 1em 0;
+}
 /**
  * success checkmark
  */

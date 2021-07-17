@@ -134,7 +134,9 @@ const verifyWebauthn = async () => {
             document.querySelector('.Card__card.confirm-webauthn h1').textContent = json.message
             document.querySelector('.Card__card.confirm-webauthn h2').textContent = json.description
             document.querySelector('.Card__card.confirm-webauthn img').remove()
-            document.querySelector('.Card__card.confirm-webauthn .ChooseMfa__parra').remove()
+            const scratchEl = document.querySelector('.Card__card.confirm-webauthn .ChooseMfa__parra')
+            scratchEl.classList.add('scratch-code')
+            scratchEl.textContent = json.scratch_code
         }
     }
 }
