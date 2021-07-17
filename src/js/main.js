@@ -62,7 +62,7 @@ const signInAction = async() => {
     if (invalid == true) {
         return;
     }
-    const json = await Api.post(`/login`, {
+    const json = await Api.post(`/magic-link`, {
         recaptcha_token,
         email
     }).catch(err => {
