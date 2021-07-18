@@ -1,5 +1,8 @@
 @use "../var";
 
+body.loading {
+    cursor: progress;
+}
 .main {
 	flex: 0 0 100%;
 	min-height: 95vh;
@@ -11,9 +14,9 @@
 }
 .main__jumbo-title {
 	font-size: 3rem;
+    text-align: center;
 }
 .main__jumbo {
-	margin: 3rem 0 0 8rem;
 	color: rgba(255, 255, 255, 1);
 	z-index: 1;
 	position: relative;
@@ -24,7 +27,7 @@
     margin: 0 auto;
     max-width: 440px;
     min-width: 320px;
-    padding-top: 4rem;
+    padding-top: 0.5rem;
     text-align: center;
 }
 .Card__card {
@@ -97,7 +100,6 @@
     font-size: .875rem;
     font-weight: 600;
     line-height: 1;
-    margin: 1.5rem 0;
     opacity: 1;
     outline: none;
     padding: .75rem 1rem;
@@ -134,6 +136,38 @@
     color: var.$secondary_light;
     padding: 1em 0;
 }
+.img-wrapper {
+    width: 100%;
+    &--container {
+        display: flex;
+        justify-content: center;
+    }
+    &--inner {
+        text-align: center;
+    }
+}
+.qr-code {
+    width: 80%;
+}
+a .ChooseMfa__subheader {
+    text-decoration: none;
+}
+.totp__fieldset {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    .verify-code {
+        font-size: 2.7em;
+        width: 1em;
+        padding: .3em 0 .3em .4em;
+        margin: .2em 0;
+    }
+}
+.ChooseMfa__parra {
+    font-size: 1.2em;
+}
+
 /**
  * success checkmark
  */

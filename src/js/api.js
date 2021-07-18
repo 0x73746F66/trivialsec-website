@@ -110,6 +110,7 @@ const Hawk = Object.assign({}, {
 
 const PublicApi = Object.assign(BaseApi, {
     get: async (options) => {
+        document.body.classList.add('loading')
         const config = Object.assign({
             target,
             headers,
@@ -122,12 +123,14 @@ const PublicApi = Object.assign(BaseApi, {
             method: "GET",
             headers: Object.assign({}, config.headers)
         })
+        document.body.classList.remove('loading')
         if (json.error) {
             console.error(json.error)
         }
         return json
     },
     post: async (options) => {
+        document.body.classList.add('loading')
         const config = Object.assign({
             target: undefined,
             body: undefined,
@@ -170,6 +173,7 @@ const PublicApi = Object.assign(BaseApi, {
             body: content,
             headers: config.headers
         })
+        document.body.classList.remove('loading')
         if (json.status && json.action && json.status == 'retry') {
             content.recaptcha_token = await refresh_recaptcha_token(json.action)
             json = await BaseApi._do_request(url, {
