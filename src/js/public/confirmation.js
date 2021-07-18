@@ -84,6 +84,21 @@ const verifyTotp = async event => {
     }
 }
 
+const nameWebauthn = async event => {
+    const deviceEl = document.getElementById('name-device')
+    const device_name = deviceEl.value
+    const device_id = deviceEl.getAttribute('data-device-id')
+    return PublicApi.post({
+        target: '/webauthn/device-name',
+        body: {
+            recaptcha_token,
+            device_id,
+            device_name,
+        },
+        hawk: false,
+    })
+}
+
 const createWebauthn = async () => {
     let credential = await navigator.credentials.create({
         publicKey: {
@@ -191,11 +206,19 @@ const verifyWebauthn = async () => {
             hawk: false,
         })
         if (json.status && json.status == "success") {
+            init_recaptcha('name_device_action')
+            document.getElementById('name-device').setAttribute('data-device-id', json.device_id)
             const successEl = document.querySelector('.confirm-webauthn .success-checkmark_off')
             successEl.classList.remove('success-checkmark_off')
             successEl.classList.remove('hide')
             successEl.classList.add('success-checkmark')
-            document.getElementById('retry-webauthn').remove()
+            const retryBtn = document.getElementById('retry-webauthn')
+            retryBtn.removeEventListener('click', verifyWebauthn, false)
+            retryBtn.removeEventListener('touchstart', verifyWebauthn, supportsPassive ? { passive: true } : false)
+            retryBtn.textContent = 'Save'
+            retryBtn.addEventListener('click', nameWebauthn, false)
+            retryBtn.addEventListener('touchstart', nameWebauthn, supportsPassive ? { passive: true } : false)
+            document.getElementById('name-webauthn').classList.remove('hide')
             document.querySelector('.Card__card.confirm-webauthn h1').textContent = json.message
             document.querySelector('.Card__card.confirm-webauthn h2').textContent = json.description
             document.querySelector('.Card__card.confirm-webauthn img').remove()
@@ -243,7 +266,8 @@ const handle_totp_paste = async event => {
                 thisEl = thisEl.nextElementSibling
             } else {
                 break;
-            }
+            retryBtn.removeEventListener('click', verifyWebauthn, false)
+        }
         }
         const verifyTotpBtn = document.getElementById('verify-totp')
         verifyTotpBtn.setAttribute('disabled', true)
