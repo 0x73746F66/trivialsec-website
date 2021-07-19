@@ -36,12 +36,20 @@ const verifyTotp = async event => {
         successEl.classList.add('success-checkmark')
         document.querySelector('.totp__fieldset').classList.add('invisible')
         document.getElementById('totp-message').textContent = json.message
+        localStorage.setItem('_apiKeySecret', json.hawk_key)
         setTimeout(()=>{document.getElementById('app-link').click()}, 3000)
     }
 }
 
 const verifyWebauthn = async () => {
-    return;
+    const allowCredentials = []
+    for await(const key of JSON.parse(app.keys)) {
+        allowCredentials.push({
+            id: base64ToArrayBuffer(key.webauthn_id),
+            type: 'public-key',
+            transports: ['usb', 'ble', 'nfc', 'internal'],
+        })
+    }
     let credentialId = localStorage.getItem('_WebAuthn_credentialId')
     if (!credentialId) {
         alert('No device registered')
@@ -52,11 +60,7 @@ const verifyWebauthn = async () => {
             challenge: enc.encode(app.apiKeyId),
             rpId: app.domainName,
             userVerification: "discouraged",
-            allowCredentials: [{
-                id: base64ToArrayBuffer(credentialId),
-                type: 'public-key',
-                transports: ['usb', 'ble', 'nfc', 'internal'],
-            }],
+            allowCredentials,
             timeout: 90000,
         }
     }).catch(console.error)
@@ -76,35 +80,24 @@ const verifyWebauthn = async () => {
           signature: hexEncode(sig),
           assertionClientExtensions: JSON.stringify(assertionClientExtensions),
         }
-        const json = await PublicApi.post({
-            target: '/authorization/webauthn',
+        const json = await Api.post({
+            target: '/verify/webauthn',
             body: {
                 recaptcha_token,
                 auth_hash,
                 assertion_response,
             },
-            hawk: false,
         })
         if (json.status && json.status == "success") {
-            init_recaptcha('name_device_action')
-            document.getElementById('name-device').setAttribute('data-device-id', json.device_id)
             const successEl = document.querySelector('.confirm-webauthn .success-checkmark_off')
             successEl.classList.remove('success-checkmark_off')
             successEl.classList.remove('hide')
             successEl.classList.add('success-checkmark')
-            const retryBtn = document.getElementById('retry-webauthn')
-            retryBtn.removeEventListener('click', verifyWebauthn, false)
-            retryBtn.removeEventListener('touchstart', verifyWebauthn, supportsPassive ? { passive: true } : false)
-            retryBtn.textContent = 'Save'
-            retryBtn.addEventListener('click', nameWebauthn, false)
-            retryBtn.addEventListener('touchstart', nameWebauthn, supportsPassive ? { passive: true } : false)
-            document.getElementById('name-webauthn').classList.remove('hide')
-            document.querySelector('.Card__card.confirm-webauthn h1').textContent = json.message
-            document.querySelector('.Card__card.confirm-webauthn h2').textContent = json.description
-            document.querySelector('.Card__card.confirm-webauthn img').remove()
-            const scratchEl = document.querySelector('.Card__card.confirm-webauthn .ChooseMfa__parra')
-            scratchEl.classList.add('source-code')
-            scratchEl.textContent = json.scratch_code
+            document.querySelector('.confirm-webauthn .ChooseMfa__subheader').textContent = json.message
+            document.querySelector('.confirm-webauthn img').remove()
+            document.querySelector('.confirm-webauthn .ChooseMfa__parra').classList.add('invisible')
+            localStorage.setItem('_apiKeySecret', json.hawk_key)
+            setTimeout(()=>{document.getElementById('app-link').click()}, 3000)
         }
     }
 }

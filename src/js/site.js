@@ -16,7 +16,10 @@ const toggler = () => {
 }
 const logout_action = async(e) => {
     e.preventDefault()
-    localStorage.removeItem('hmac-secret')
+    localStorage.removeItem('_apiKeySecret')
+    if (navigator.credentials && navigator.credentials.preventSilentAccess) {
+        navigator.credentials.preventSilentAccess()
+    }
     window.location.href = '/logout'
 }
 document.addEventListener('DOMContentLoaded', async() => {
