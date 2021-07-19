@@ -117,10 +117,35 @@ const PublicApi = Object.assign(BaseApi, {
             hawk: true
         }, options)
         const url = `${app.apiScheme}${app.apiDomain}/${BaseApi.version}${config.target}`
+        const method = 'GET'
+        if (config.hawk) {
+            let apiKeySecret
+            if (!('apiKeyId' in app)) {
+                console.error(`Hawk requires an apiKeyId`)
+                return;
+            }
+            if (!('apiKeyId' in app)) {
+                apiKeySecret = localStorage.getItem('_apiKeySecret')
+                if (!apiKeySecret) {
+                    console.error(`Hawk requires an apiKeySecret`)
+                    return;
+                }
+            }
+            config.headers['Authorization'] = Hawk.header({
+                credentials: {
+                    id: app.apiKeyId,
+                    key: apiKeySecret,
+                    alg: Hawk.default_algorithm
+                },
+                uri: `/${BaseApi.version}${config.target}`,
+                method: method,
+                contentType: config.headers['Content-Type']
+            })
+        }
         const json = await BaseApi._do_request(url, {
             mode: "cors",
             credentials: "omit",
-            method: "GET",
+            method: method,
             headers: Object.assign({}, config.headers)
         })
         document.body.classList.remove('loading')
@@ -162,7 +187,7 @@ const PublicApi = Object.assign(BaseApi, {
                 },
                 uri: `/${BaseApi.version}${config.target}`,
                 body: content,
-                method: 'POST',
+                method: method,
                 contentType: config.headers['Content-Type']
             })
         }
@@ -179,6 +204,62 @@ const PublicApi = Object.assign(BaseApi, {
             json = await BaseApi._do_request(url, {
                 mode: "cors",
                 credentials: "omit",
+                method: method,
+                body: content,
+                headers: config.headers
+            })
+        }
+        if (json.error) {
+            console.error(json.error)
+        }
+        return json
+    }
+})
+
+const Api = Object.assign(BaseApi, {
+    get: async (options) => {
+        document.body.classList.add('loading')
+        const config = Object.assign({
+            target,
+            headers
+        }, options)
+        const url = `${app.appScheme}${app.appDomain}${config.target}`
+        const json = await BaseApi._do_request(url, {
+            mode: "same-origin",
+            credentials: "same-origin",
+            method: "GET",
+            headers: Object.assign({}, config.headers)
+        })
+        document.body.classList.remove('loading')
+        if (json.error) {
+            console.error(json.error)
+        }
+        return json
+    },
+    post: async (options) => {
+        document.body.classList.add('loading')
+        const config = Object.assign({
+            target: undefined,
+            body: undefined,
+            headers: {"Content-Type": Hawk.default_content_type}
+        }, options)
+        const url = `${app.domainScheme}${app.domainName}${config.target}`
+        const content = JSON.stringify(config.body)
+        const method = 'POST'
+        let json
+        json = await BaseApi._do_request(url, {
+            mode: "same-origin",
+            credentials: "same-origin",
+            method: method,
+            body: content,
+            headers: config.headers
+        })
+        document.body.classList.remove('loading')
+        if (json.status && json.action && json.status == 'retry') {
+            content.recaptcha_token = await refresh_recaptcha_token(json.action)
+            json = await BaseApi._do_request(url, {
+                mode: "same-origin",
+                credentials: "same-origin",
                 method: method,
                 body: content,
                 headers: config.headers

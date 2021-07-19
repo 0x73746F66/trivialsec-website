@@ -1,4 +1,4 @@
-const confirmation_hash = document.getElementById('confirmation_hash').value
+const auth_hash = document.getElementById('auth_hash').value
 const decoder = (new TextDecoder)
 const enc = (new TextEncoder)
 const chooseMfa = async event => {
@@ -8,160 +8,40 @@ const chooseMfa = async event => {
     const mfaTypeArr = Array.from(document.getElementsByName('mfaType')).filter(e => e.checked)
     const mfaType = mfaTypeArr.length == 1 ? mfaTypeArr.pop().value : null
     if (mfaType == 'webauthn') {
-        event.currentTarget.textContent = 'Retry'
-        document.querySelector('.choose-mfa h1').textContent = 'Setup U2F'
-        document.querySelector('.choose-mfa h2').classList.add('invisible')
-        document.querySelector('.ChooseMfa__label.totp').classList.add('invisible')
-        return createWebauthn()
+        document.querySelector('.LoginCard__card.choose-mfa').classList.add('hide')
+        document.querySelector('.LoginCard__card.confirm-webauthn').classList.remove('hide')
+        return verifyWebauthn()
     }
     if (mfaType == 'totp') {
-        event.currentTarget.remove()
-        document.querySelector('.choose-mfa h1').textContent = 'Setup TOTP'
+        document.querySelectorAll('.totp__fieldset input')[0].focus()
         document.querySelector('.LoginCard__card.choose-mfa').classList.add('hide')
         document.querySelector('.LoginCard__card.verify-totp').classList.remove('hide')
-        document.querySelector('button.verify-code').classList.remove('hide')
-        return generateTotp()
-    }
-}
-
-const generateTotp = async () => {
-    const json = await PublicApi.post({
-        target: '/registration/totp',
-        body: {
-            recaptcha_token,
-            confirmation_hash
-        },
-        hawk: false,
-    })
-    if (json.status && json.status == 'success') {
-        init_recaptcha('authorization_action')
-        document.getElementById('totp-secret-code').textContent = json.totp_code
-        const image = document.createElement('img')
-        image.src = `data:image/png;base64,${json.qr_code}`
-        image.id = 'register-qr'
-        image.classList.add('qr-code')
-        document.querySelector('.img-wrapper--container').insertAdjacentElement('afterend', image)
-        const registerQREl = document.getElementById('register-qr')
-        const canvas = document.createElement("canvas")
-        canvas.width = image.width
-        canvas.height = image.height
-        canvas.getContext("2d").drawImage(image, 0, 0)
-        const url = canvas.toDataURL("image/png")    
-        const triggerDownload = document.getElementById("temporary")
-        triggerDownload.setAttribute("href", url)
-        triggerDownload.setAttribute("download", "QR code.png")
-        registerQREl.addEventListener('click', triggerDownload.click, false)
-        registerQREl.addEventListener('touchstart', triggerDownload.click, supportsPassive ? { passive: true } : false)
-        document.getElementById('totp-message').textContent = json.message
     }
 }
 
 const verifyTotp = async event => {
     const totp_code = Array.from(document.querySelectorAll('.totp__fieldset input')).map(n=>n.value).join('')
-    const json = await PublicApi.post({
-        target: '/authorization/totp',
+    const json = await Api.post({
+        target: '/verify/totp',
         body: {
             recaptcha_token,
-            confirmation_hash,
+            auth_hash,
             totp_code,
         },
-        hawk: false,
     })
     if (json.status && json.status == "success") {
         const successEl = document.querySelector('.verify-totp .success-checkmark_off')
         successEl.classList.remove('success-checkmark_off')
         successEl.classList.remove('hide')
         successEl.classList.add('success-checkmark')
-        const scratchEl = document.getElementById('totp-secret-code')
-        scratchEl.textContent = json.scratch_code
-        document.getElementById('verify-totp').remove()
-        document.querySelector('.verify-totp .img-wrapper--container').remove()
-        document.querySelector('.verify-totp .totp__fieldset').remove()
-        document.getElementById('register-qr').remove()
-        document.getElementById('totp-message').remove()
-        document.querySelector('.verify-totp h1').textContent = json.message
-        document.querySelector('.verify-totp .ChooseMfa__parra').textContent = json.description
+        document.querySelector('.totp__fieldset').classList.add('invisible')
+        document.getElementById('totp-message').textContent = json.message
+        setTimeout(()=>{document.getElementById('app-link').click()}, 3000)
     }
 }
 
-const nameWebauthn = async event => {
-    const deviceEl = document.getElementById('name-device')
-    const device_name = deviceEl.value
-    const device_id = deviceEl.getAttribute('data-device-id')
-    return PublicApi.post({
-        target: '/webauthn/device-name',
-        body: {
-            recaptcha_token,
-            device_id,
-            device_name,
-        },
-        hawk: false,
-    })
-}
-
-const createWebauthn = async () => {
-    let credential = await navigator.credentials.create({
-        publicKey: {
-            challenge: enc.encode(app.apiKeyId),
-            rp: {
-                name: app.domainName,
-            },
-            user: {
-                id: enc.encode(app.accountEmail),
-                name: app.accountEmail,
-                displayName: app.accountEmail,
-            },
-            pubKeyCredParams: [{
-                alg: -7,
-                type: "public-key"
-            }, {
-                alg: -257,
-                type: "public-key"
-            }],
-            authenticatorSelection: {
-                authenticatorAttachment: "cross-platform",
-                requireResidentKey: false,
-                userVerification: "discouraged"
-            },
-            timeout: 90000,
-            attestation: "direct"
-        }
-    }).catch(console.error)
-    if (credential) {
-        const decodedClientData = decoder.decode(credential.response.clientDataJSON)
-        const webauthn_challenge = JSON.parse(decodedClientData).challenge
-        const webauthn_id = arrayBufferToBase64(credential.rawId)
-        const clientDataJSON = arrayBufferToBase64(credential.response.clientDataJSON)
-        const attestationObject = arrayBufferToBase64(credential.response.attestationObject)
-        const dataView = new DataView(new ArrayBuffer(2))
-        const decodedAttestationObj = CBOR.decode(credential.response.attestationObject)
-        const idLenBytes = decodedAttestationObj.authData.slice(53, 55)
-        idLenBytes.forEach((value, index) => dataView.setUint8(index, value))
-        const credentialIdLength = dataView.getUint16()
-        const webauthn_public_key = arrayBufferToBase64(decodedAttestationObj.authData.slice(55 + credentialIdLength))
-        const json = await PublicApi.post({
-            target: '/registration/webauthn',
-            body: {
-                recaptcha_token,
-                confirmation_hash,
-                webauthn_id,
-                webauthn_public_key,
-                webauthn_challenge,
-                clientDataJSON,
-                attestationObject,
-            },
-            hawk: false,
-        })
-        if (json.status && json.status == 'success') {
-            init_recaptcha('authorization_action')
-            document.querySelector('.LoginCard__card.choose-mfa').hide()
-            document.querySelector('.LoginCard__card.confirm-webauthn').show()
-            localStorage.setItem('_WebAuthn_credentialId', webauthn_id)
-            return verifyWebauthn()
-        }
-    }
-}
 const verifyWebauthn = async () => {
+    return;
     let credentialId = localStorage.getItem('_WebAuthn_credentialId')
     if (!credentialId) {
         alert('No device registered')
@@ -200,7 +80,7 @@ const verifyWebauthn = async () => {
             target: '/authorization/webauthn',
             body: {
                 recaptcha_token,
-                confirmation_hash,
+                auth_hash,
                 assertion_response,
             },
             hawk: false,
@@ -230,7 +110,7 @@ const verifyWebauthn = async () => {
 }
 
 grecaptcha.ready(() => {
-    init_recaptcha('confirmation_action')
+    init_recaptcha('login_action')
 })
 const check_totp_fieldset = async event => {
     event.preventDefault()
@@ -278,8 +158,8 @@ const handle_totp_paste = async event => {
 }
 
 document.addEventListener('DOMContentLoaded', async() => {
-    if (location.pathname != '/confirmation') {
-        history.pushState({}, document.title, '/confirmation')
+    if (location.pathname != '/login') {
+        history.pushState({}, document.title, '/login')
     }
     if (!('credentials' in navigator)) {
         document.querySelector('.ChooseMfa__label.webauthn').title = 'Hardware Security Keys are not supported on this browser'
