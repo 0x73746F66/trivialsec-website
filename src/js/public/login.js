@@ -21,7 +21,7 @@ const chooseMfa = async event => {
 
 const verifyTotp = async event => {
     const totp_code = Array.from(document.querySelectorAll('.totp__fieldset input')).map(n=>n.value).join('')
-    const json = await Api.post({
+    const json = await Fetch.post({
         target: '/verify/totp',
         body: {
             recaptcha_token,
@@ -80,7 +80,7 @@ const verifyWebauthn = async () => {
           signature: hexEncode(sig),
           assertionClientExtensions: JSON.stringify(assertionClientExtensions),
         }
-        const json = await Api.post({
+        const json = await Fetch.post({
             target: '/verify/webauthn',
             body: {
                 recaptcha_token,

@@ -1,4 +1,4 @@
-const BaseApi = Object.assign({}, {
+const BaseApi = Object.assign({
     version: "v1",
     _do_request: async (url, options) => {
         const response = await fetch(url, options).catch(err => {
@@ -7,7 +7,7 @@ const BaseApi = Object.assign({}, {
         return response.json()
     }
 })
-const Hawk = Object.assign({}, {
+const Hawk = Object.assign({
     version: 1,
     supported_algorithms: ['SHA1', 'SHA256'],
     default_algorithm: 'SHA256',
@@ -20,7 +20,6 @@ const Hawk = Object.assign({}, {
             !credentials.id ||
             !credentials.key ||
             !credentials.algorithm) {
-
             throw new Error('Invalid credentials');
         }
     },
@@ -108,7 +107,62 @@ const Hawk = Object.assign({}, {
     }
 })
 
-const PublicApi = Object.assign(BaseApi, {
+const Fetch = Object.assign({
+    get: async (options) => {
+        document.body.classList.add('loading')
+        const config = Object.assign({
+            target,
+            headers
+        }, options)
+        const url = `${app.appScheme}${app.appDomain}${config.target}`
+        const json = await BaseApi._do_request(url, {
+            mode: "same-origin",
+            credentials: "same-origin",
+            method: "GET",
+            headers: Object.assign({}, config.headers)
+        })
+        document.body.classList.remove('loading')
+        if (json.error) {
+            console.error(json.error)
+        }
+        return json
+    },
+    post: async (options) => {
+        document.body.classList.add('loading')
+        const config = Object.assign({
+            target: undefined,
+            body: undefined,
+            headers: {"Content-Type": Hawk.default_content_type}
+        }, options)
+        const url = `${app.domainScheme}${app.domainName}${config.target}`
+        const content = JSON.stringify(config.body)
+        const method = 'POST'
+        let json
+        json = await BaseApi._do_request(url, {
+            mode: "same-origin",
+            credentials: "same-origin",
+            method: method,
+            body: content,
+            headers: config.headers
+        })
+        document.body.classList.remove('loading')
+        if (json.status && json.action && json.status == 'retry') {
+            content.recaptcha_token = await refresh_recaptcha_token(json.action)
+            json = await BaseApi._do_request(url, {
+                mode: "same-origin",
+                credentials: "same-origin",
+                method: method,
+                body: content,
+                headers: config.headers
+            })
+        }
+        if (json.error) {
+            console.error(json.error)
+        }
+        return json
+    }
+})
+const PublicApi = Object.assign({
     get: async (options) => {
         document.body.classList.add('loading')
         const config = Object.assign({
@@ -204,62 +258,6 @@ const PublicApi = Object.assign(BaseApi, {
             json = await BaseApi._do_request(url, {
                 mode: "cors",
                 credentials: "omit",
-                method: method,
-                body: content,
-                headers: config.headers
-            })
-        }
-        if (json.error) {
-            console.error(json.error)
-        }
-        return json
-    }
-})
-
-const Api = Object.assign(BaseApi, {
-    get: async (options) => {
-        document.body.classList.add('loading')
-        const config = Object.assign({
-            target,
-            headers
-        }, options)
-        const url = `${app.appScheme}${app.appDomain}${config.target}`
-        const json = await BaseApi._do_request(url, {
-            mode: "same-origin",
-            credentials: "same-origin",
-            method: "GET",
-            headers: Object.assign({}, config.headers)
-        })
-        document.body.classList.remove('loading')
-        if (json.error) {
-            console.error(json.error)
-        }
-        return json
-    },
-    post: async (options) => {
-        document.body.classList.add('loading')
-        const config = Object.assign({
-            target: undefined,
-            body: undefined,
-            headers: {"Content-Type": Hawk.default_content_type}
-        }, options)
-        const url = `${app.domainScheme}${app.domainName}${config.target}`
-        const content = JSON.stringify(config.body)
-        const method = 'POST'
-        let json
-        json = await BaseApi._do_request(url, {
-            mode: "same-origin",
-            credentials: "same-origin",
-            method: method,
-            body: content,
-            headers: config.headers
-        })
-        document.body.classList.remove('loading')
-        if (json.status && json.action && json.status == 'retry') {
-            content.recaptcha_token = await refresh_recaptcha_token(json.action)
-            json = await BaseApi._do_request(url, {
-                mode: "same-origin",
-                credentials: "same-origin",
                 method: method,
                 body: content,
                 headers: config.headers
