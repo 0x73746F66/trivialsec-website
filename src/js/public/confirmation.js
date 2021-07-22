@@ -228,10 +228,6 @@ const verifyWebauthn = async () => {
         }
     }
 }
-
-grecaptcha.ready(() => {
-    init_recaptcha('confirmation_action')
-})
 const check_totp_fieldset = async event => {
     event.preventDefault()
     const input = event.currentTarget.value
@@ -277,6 +273,9 @@ const handle_totp_paste = async event => {
     }
 }
 
+grecaptcha.ready(() => {
+    init_recaptcha('confirmation_action')
+})
 document.addEventListener('DOMContentLoaded', async() => {
     if (location.pathname != '/confirmation') {
         history.pushState({}, document.title, '/confirmation')

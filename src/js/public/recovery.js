@@ -64,6 +64,38 @@ const recoverEmail = async event => {
         messageEl.textContent = json.message
     }
 }
+const check_scratch_code = async event => {
+    event.preventDefault()
+    const input = event.currentTarget.value
+    if (!input) return;
+    if (input.length >= 28) {
+        event.currentTarget.value = input.substring(0, 27)
+        return;
+    }
+    let newChar = Array.from(input).pop()
+    if (newChar === '-' || newChar === ' ') return;
+    let prevString = Array.from(input)
+    prevString.pop()
+    if (typeof newChar === 'string') {
+        newChar = newChar.toUpperCase()
+    }
+    let newInput = prevString.join('') + newChar
+    if (newInput.length === 4 || newInput.length === 11 || newInput.length === 20) {
+        newInput = newInput + '-'
+    }
+    event.currentTarget.value = newInput
+}
+const handle_scratch_paste = async event => {
+    event.stopPropagation()
+    event.preventDefault()
+    let clipboardData = event.clipboardData || window.clipboardData
+    const scratch_code = clipboardData.getData('Text')
+    if (!scratch_code) return;
+    const arr = Array.from(scratch_code)
+    if (arr[4] !== '-' || arr[11] !== '-' || arr[20] !== '-') return;
+    document.getElementById('scratch-code').value = scratch_code.toUpperCase()
+}
+
 grecaptcha.ready(() => {
     init_recaptcha('recovery_action')
 })
@@ -83,5 +115,8 @@ document.addEventListener('DOMContentLoaded', async() => {
         recoverEmailEl.addEventListener('click', recoverEmail, false)
         recoverEmailEl.addEventListener('touchstart', recoverEmail, supportsPassive ? { passive: true } : false)
     }
+    const scratchCodeEl = document.getElementById('scratch-code')
+    scratchCodeEl.addEventListener('input', check_scratch_code, false)
+    scratchCodeEl.addEventListener('paste', handle_scratch_paste, false)
 
 }, false)
