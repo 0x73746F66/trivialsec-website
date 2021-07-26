@@ -24,6 +24,24 @@
 .projects-container {
 	margin: 15px 0 0 15px;
 }
+.new-project {
+	position: relative;
+	margin-left: 45px;
+	width: 150px;
+	display: inline-block;
+	top: 9px;
+	background-color: transparent;
+	width: unset;
+	div {
+		display: inline-block;
+		line-height: 32px;
+		position: relative;
+		bottom: 3px;
+		color: var.$primary_light;
+		font-size: 18px;
+		vertical-align: top;
+	}
+}
 section.fields {
 	width: 90%;
 	margin: 2% 10% 0 0;

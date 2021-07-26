@@ -80,7 +80,7 @@ a.underline-hover:hover {
 	width: 230px;
 }
 .sidenav-closed .sidebar-column {
-	width: 50px;
+	width: 40px;
 }
 .sidenav-closed .menu-opener, .sidenav-open a.title-link-side, .sidenav-open .sidebar-footer, .sidenav-open .toggle-sidenav {
 	display: block;
@@ -95,6 +95,8 @@ a.underline-hover:hover {
 	li {
 		list-style: none;
 		min-height: 50px;
+		display: flex;
+  		align-items: center;
 		&:hover, &.active {
 			cursor: pointer;
 			border-right: solid 5px var.$primary_light;
@@ -104,21 +106,16 @@ a.underline-hover:hover {
 	span {
 		text-align: center;
 		font-size: 14px;
-		margin: 0 0 0 10px;
 		color: #ffffff;
-		top: 8px;
-		position: relative;
+		vertical-align: middle;
 	}
 	a {
 		color: var.$grey_medium;
-		padding: 0 0 0 10px;
-		min-height: 50px;
 	}
-	i {
-		font-size: 25px;
-		position: relative;
-		top: 10px;
-		color: #ffffff;
+	img {
+		width: 1.1em;
+		min-width: 28px;
+		vertical-align: middle;
 	}
 }
 .sidenav-open .navigation-menu span {
@@ -129,7 +126,7 @@ a.underline-hover:hover {
 	display: inline-block;
 	visibility: visible;
 }
-.sidenav-open .menu-opener, .sidenav-open a.title-link-top, .sidenav-closed a.title-link-side, .sidenav-closed .sidebar-footer a:nth-child(3), .sidenav-closed .toggle-sidenav, .sidenav-closed .navigation-menu span {
+.sidenav-open .menu-opener, .sidenav-open a.title-link-top, .sidenav-closed a.title-link-side, .sidenav-closed .sidebar-footer a:nth-child(3), .sidenav-closed .menu-closer, .sidenav-closed .navigation-menu span {
 	display: none;
 	visibility: hidden;
 }
@@ -161,47 +158,48 @@ a.underline-hover:hover {
 	}
 }
 .sidenav-closed .navigation-menu li {
-	width: 45px;
+	width: 35px;
 	&:hover, &.active {
-		width: 45px;
+		width: 35px;
 	}
 }
 .sidenav-open .navigation-menu a {
 	width: 230px;
 }
 .sidenav-closed .navigation-menu a {
-	width: 45px;
+	width: 35px;
 }
-.toggle-sidenav {
+.menu-closer {
 	position: absolute;
 	z-index: 1;
 	left: 230px;
-	top: 0.7em;
-	cursor: pointer;
-	i {
-		color: var.$primary_lightest;
-		font-size: 30px;
+	img {
+		cursor: pointer;
+		width: 1.8em;
+		display: block;
+		margin: 0 auto;
 	}
 }
-.menu-opener i {
-	font-size: 30px;
-	color: var.$primary_lightest;
-	cursor: pointer;
-	top: 10px;
-	left: 10px;
-	position: relative;
+.menu-opener {
+	width: 100%;
+	height: fit-content;
+	object-fit: fill;
+	img {
+		cursor: pointer;
+		width: 1.8em;
+		display: block;
+		margin: 0 auto;
+	}
 }
+
 .sidebar-footer {
 	bottom: 0px;
 	clear: both;
 	display: block;
-	padding: 5px 0 0 0;
 	position: fixed;
 	background: var.$secondary;
 	a {
-		padding: 7px 0 3px;
 		text-align: center;
-		font-size: 21px;
 		display: block;
 		float: left;
 		background: var.$secondary_dark;
@@ -209,17 +207,26 @@ a.underline-hover:hover {
 			background: var.$secondary_grey_shift;
 		}
 	}
+	img {
+		width: 1.5em;
+	}
 }
 .sidenav-open .sidebar-footer {
 	width: 230px;
+	display: flex;
+	align-items: center;
+	line-height: 0;
 	a {
-		width: 25%;
+		flex: 25%;
 	}
 }
 .sidenav-closed .sidebar-footer {
-	width: 50px;
+	width: 40px;
+	display: flex;
+	align-items: center;
+    flex-flow: wrap;
 	a {
-		width: 50px;
+		flex: 100%;
 		min-height: 22px;
 	}
 }
@@ -231,9 +238,6 @@ a.underline-hover:hover {
 	bottom: 80px;
 	left: 0;
 	width: 80px;
-	i {
-		margin: auto;
-	}
 }
 .nav-alert:hover, .active.nav-alerts {
 	color: #fff;
@@ -253,9 +257,9 @@ a.underline-hover:hover {
 .backend-switcher a {
 	text-decoration: none;
 }
-.backend-switcher, .new-project {
+.backend-switcher {
 	position: relative;
-	margin-left: 50px;
+	margin-left: 40px;
 	width: 150px;
 	display: inline-block;
 	top: 9px;
@@ -270,10 +274,6 @@ a.underline-hover:hover {
 		font-size: 18px;
 		vertical-align: top;
 	}
-}
-.backend-switcher i {
-	font-size: 32px;
-	color: var.$primary_light;
 }
 #app-messages {
 	position: sticky;
@@ -299,8 +299,7 @@ a.underline-hover:hover {
 		color: #D8000C;
 		background-color: #FFBABA;
 	}
-	i {
-		font-size: 30px;
+	img {
 		margin-right: 10px;
 		position: relative;
 		top: 5px;

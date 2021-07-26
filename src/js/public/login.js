@@ -36,7 +36,7 @@ const verifyTotp = async event => {
         successEl.classList.add('success-checkmark')
         document.querySelector('.totp__fieldset').classList.add('invisible')
         document.getElementById('totp-message').textContent = json.message
-        localStorage.setItem('_apiKeySecret', json.hawk_key)
+        localStorage.setItem('_apiKeySecret', json.api_key_secret)
         setTimeout(()=>{document.getElementById('app-link').click()}, 3000)
     }
 }
@@ -96,7 +96,7 @@ const verifyWebauthn = async () => {
             document.querySelector('.confirm-webauthn .ChooseMfa__subheader').textContent = json.message
             document.querySelector('.confirm-webauthn img').remove()
             document.querySelector('.confirm-webauthn .ChooseMfa__parra').classList.add('invisible')
-            localStorage.setItem('_apiKeySecret', json.hawk_key)
+            localStorage.setItem('_apiKeySecret', json.api_key_secret)
             setTimeout(()=>{document.getElementById('app-link').click()}, 3000)
         }
     }

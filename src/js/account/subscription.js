@@ -1,42 +1,32 @@
 const saveBillingEmail = async() => {
     const billing_email = document.getElementById('billing_email').value
-    const assertion_response
-    const json = await Api.post_async('/v1/account', [
-        {prop: 'billing_email', value: billing_email},
-        assertion_response
-    ]).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    const json = await PublicApi.post({
+        target: '/account/update-billing-email',
+        body: {billing_email}
+    })
     appMessage(json.status, json.message)
 }
 
 document.addEventListener('DOMContentLoaded', async() => {
-    if (location.pathname != '/account/subscription') {
-        history.pushState({}, document.title, '/account/subscription')
-    }
     sidebar()
     livetime()
     setInterval(livetime, 1000)
-    document.querySelectorAll('select').forEach(el => { new Choices(el, { searchEnabled: true }) })
-    for await(const el of document.querySelectorAll('.toggle-sidenav')) {
-        el.addEventListener('click', toggler, false)
-        el.addEventListener('touchstart', toggler, supportsPassive ? { passive: true } : false)
-    }
-    for await(const el of document.querySelectorAll('.menu-opener')) {
-        el.addEventListener('click', toggler, false)
-        el.addEventListener('touchstart', toggler, supportsPassive ? { passive: true } : false)
-    }
     const emailChangeEl = document.getElementById('billing_email')
     emailChangeEl.addEventListener("change", saveBillingEmail, false)
+    const live_charts = {}
     for await(const ctx of document.querySelectorAll('.chart.half-doughnut canvas')) {
-        data = charts_data[ctx.getAttribute('data-key')]
-        new Chart(ctx, {
+        const chart_key = ctx.getAttribute('data-key')
+        const data_used = document.querySelector(`[name=${chart_key}-used]`).value
+        const data_total = document.querySelector(`[name=${chart_key}-total]`).value
+        live_charts[chart_key] = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: [`${data.used} Used`, `${data.total - data.used} Remain`],
+                labels: [`${data_used} Used`, `${data_total - data_used} Remain`],
                 datasets: [{
                     data: [
-                        data.used,
-                        data.total - data.used,
-                        data.total,
+                        data_used,
+                        data_total - data_used,
+                        data_total,
                     ],
                     backgroundColor: [
                         'rgb(42 63 84)',

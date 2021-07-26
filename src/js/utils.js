@@ -138,6 +138,7 @@ const refresh_recaptcha_token = async(action) => {
 const arrayBufferToBase64 = bufferArray => btoa([].reduce.call(new Uint8Array(bufferArray),(p,c)=>p+String.fromCharCode(c),''));
 const base64ToArrayBuffer = base64 => Uint8Array.from(atob(base64), c => c.charCodeAt(0));
 const hexEncode = bufUint8Array => Array.from(bufUint8Array).map(x => ("0" + x.toString(16)).substr(-2)).join("");
+const utf8Bytes = str => new Uint8Array([...unescape(encodeURIComponent(str))].map(c => c.charCodeAt(0)));
 const COSE_Key_Types = [
     void 0,
     'OKP, Octet Key Pair - Elliptic Curve',

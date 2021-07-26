@@ -28,4 +28,8 @@ document.addEventListener('DOMContentLoaded', async() => {
         appLogoutAction.addEventListener('click', logout_action, false)
         appLogoutAction.addEventListener('touchstart', logout_action, supportsPassive ? { passive: true } : false)
     }
+    for await(const el of document.querySelectorAll('.toggle-sidenav .toggler')) {
+        el.addEventListener('click', toggler, false)
+        el.addEventListener('touchstart', toggler, supportsPassive ? { passive: true } : false)
+    }
 }, false)

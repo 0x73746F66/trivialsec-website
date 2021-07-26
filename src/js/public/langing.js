@@ -68,7 +68,7 @@ const signInAction = async() => {
             recaptcha_token,
             email,
         },
-        hawk: false,
+        sign: false,
     })
     appMessage(appAlert, json.status, json.message)
 }

@@ -21,7 +21,7 @@ const recoverScratch = async event => {
             recaptcha_token,
             scratch_code,
         },
-        hawk: false,
+        sign: false,
     })
     if (json.status && json.status == "success") {
         const successEl = document.querySelector('.confirm-scratch .success-checkmark_off')
@@ -47,7 +47,7 @@ const recoverEmail = async event => {
             old_email,
             new_email,
         },
-        hawk: false,
+        sign: false,
     })
     if (json.status && json.status == "success") {
         const successEl = document.querySelector('.request-email .success-checkmark_off')

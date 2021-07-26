@@ -36,14 +36,6 @@ document.addEventListener('DOMContentLoaded', async() => {
             duplicateItemsAllowed: false
         }).clearChoices().setChoices(choices)
     }
-    for await(const el of document.querySelectorAll('.toggle-sidenav')) {
-        el.addEventListener('click', toggler, false)
-        el.addEventListener('touchstart', toggler, supportsPassive ? { passive: true } : false)
-    }
-    for await(const el of document.querySelectorAll('.menu-opener')) {
-        el.addEventListener('click', toggler, false)
-        el.addEventListener('touchstart', toggler, supportsPassive ? { passive: true } : false)
-    }
     const memberBtnEl = document.getElementById('member-button')
     memberBtnEl.addEventListener('click', memberAction, false)
     memberBtnEl.addEventListener('touchstart', memberAction, supportsPassive ? { passive: true } : false)

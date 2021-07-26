@@ -31,7 +31,7 @@ const generateTotp = async () => {
             recaptcha_token,
             confirmation_hash
         },
-        hawk: false,
+        sign: false,
     })
     if (json.status && json.status == 'success') {
         init_recaptcha('authorization_action')
@@ -65,7 +65,7 @@ const verifyTotp = async event => {
             confirmation_hash,
             totp_code,
         },
-        hawk: false,
+        sign: false,
     })
     if (json.status && json.status == "success") {
         const successEl = document.querySelector('.verify-totp .success-checkmark_off')
@@ -95,7 +95,7 @@ const nameWebauthn = async event => {
             device_id,
             device_name,
         },
-        hawk: false,
+        sign: false,
     })
 }
 
@@ -150,7 +150,7 @@ const createWebauthn = async () => {
                 clientDataJSON,
                 attestationObject,
             },
-            hawk: false,
+            sign: false,
         })
         if (json.status && json.status == 'success') {
             init_recaptcha('authorization_action')
@@ -203,7 +203,7 @@ const verifyWebauthn = async () => {
                 confirmation_hash,
                 assertion_response,
             },
-            hawk: false,
+            sign: false,
         })
         if (json.status && json.status == "success") {
             init_recaptcha('name_device_action')
@@ -262,8 +262,7 @@ const handle_totp_paste = async event => {
                 thisEl = thisEl.nextElementSibling
             } else {
                 break;
-            retryBtn.removeEventListener('click', verifyWebauthn, false)
-        }
+            }
         }
         const verifyTotpBtn = document.getElementById('verify-totp')
         verifyTotpBtn.setAttribute('disabled', true)
