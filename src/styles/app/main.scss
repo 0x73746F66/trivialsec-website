@@ -11,6 +11,9 @@ body {
 	background: linear-gradient(0deg, rgb(255, 255, 255), rgb(247, 247, 247));
 	overflow-x: hidden;
 	overflow-y: hidden;
+	&.loading {
+		cursor: progress;
+	}
 }
 .navigation-bar a, .sidebar-footer a {
 	color: var.$secondary_light;
@@ -70,7 +73,7 @@ a.underline-hover:hover {
 	&:after {
 		content: '';
 		width: 10px;
-		background: radial-gradient(ellipse farthest-side at 70% bottom, var.$secondary_alpha50 0%, var.$secondary_alpha0 100%);
+		background: radial-gradient(ellipse farthest-side at 70% bottom, var.$secondary_alpha50 0%, var.$secondary_alpha20 100%);
 		position: absolute;
 		height: 100%;
 		right: -5px;

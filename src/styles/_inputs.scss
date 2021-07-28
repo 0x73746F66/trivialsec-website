@@ -1,6 +1,6 @@
-input[type=button],
-input[type=submit],
-input[type=reset] {
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
 	border: none;
 	color: #3a3a3a;
 	padding: 15px 80px;
@@ -9,28 +9,19 @@ input[type=reset] {
 	display: inline-block;
 	text-transform: uppercase;
 	font-size: 13px;
-	-webkit-border-radius: 5px 5px 5px 5px;
 	border-radius: 5px 5px 5px 5px;
 	margin: 5px 20px 40px 20px;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-ms-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
-	background-color: #1ABB9C;
+	background-color: var.$primary;
 }
-input[type=button]:hover,
-input[type=submit]:hover,
-input[type=reset]:hover {
-	background-color: #1ABB9C;
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover {
+	background-color: var.$primary;
 }
-input[type=button]:active,
-input[type=submit]:active,
-input[type=reset]:active {
-	-moz-transform: scale(0.95);
-	-webkit-transform: scale(0.95);
-	-o-transform: scale(0.95);
-	-ms-transform: scale(0.95);
+input[type="button"]:active,
+input[type="submit"]:active,
+input[type="reset"]:active {
 	transform: scale(0.95);
 }
 input[disabled],
@@ -38,22 +29,22 @@ button[disabled] {
 	cursor: not-allowed;
 }
 button,
-input[type=button],
-input[type=submit] {
+input[type="button"],
+input[type="submit"] {
 	cursor: pointer;
 }
 button {
-	background-color: #36ccaf;
+	background-color: var.$primary_light;
 	border: 0;
 	min-height: 32px;
 	width: 130px;
 	cursor: pointer;
-	color: #3a3a3a;
+	color: #fff;
 	&:active {
 		transform: translateX(1px) translateY(2px);
 	}
 	&:hover {
-		background: rgb(54 204 175);
+		background: var.$primary_light;
 	}
 	&::-moz-focus-inner {
 		border: 0;
@@ -62,11 +53,20 @@ button {
 label {
 	cursor: pointer;
 	display: block;
-	-webkit-transition: 125ms color ease-out;
 	transition: 125ms color ease-out;
 	&:focus-within {
-		color: rgb(54 204 175);
+		color: var.$primary_lightest;
 	}
+}
+form:focus-within {
+    box-shadow: 0px 0.2em 2.5em #c4c4c4;
+    transform: scale(1.025);
+  }
+  @media screen and (prefers-reduced-motion: reduce) {
+    form:focus-within {
+      box-shadow: none;
+      transform: none;
+    }
 }
 input[type="email"],
 input[type="password"],
@@ -77,16 +77,13 @@ textarea {
 	-moz-appearance: none;
 	appearance: none;
 	border: 1px solid #e0e0e0;
-	border-bottom-color: #444444;
+	border-bottom-color: var.$grey_dark;
 	border-radius: 0;
 	display: block;
-	color: #3a3a3a;
+	color: var.$grey_dark;
 	line-height: 2;
-	margin-top: 0.5em;
-	margin-bottom: 1.5em;
 	padding: 0.85em 0.75em 0.75em 0.75em;
 	width: calc(100% - 2.25em);
-	-webkit-transition: 125ms border-color ease-out;
 	transition: 125ms border-color ease-out;
 }
 input[type="email"]:hover,
@@ -94,20 +91,82 @@ input[type="password"]:hover,
 input[type="text"]:hover,
 input[type="number"]:hover,
 textarea:hover {
-	border-color: #444444;
+	border-color: var.$grey_medium;
 }
 input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="text"]:focus:not(.choices__input),
 input[type="number"]:focus,
 textarea:focus {
-	border-color: rgb(54 204 175);
-	outline: 1px solid rgb(54 204 175);
+	border-color: var.$primary_lightest;
+	outline: 1px solid var.$primary_lightest;
 }
 textarea {
 	line-height: 1.5;
-	margin-bottom: 0.5em;
+	margin: 0 0 0.5em 0;
 	min-height: 4em;
 	overflow: auto;
 	resize: vertical;
+}
+@keyframes shake {
+	from,
+	to {
+		transform: translate3d(0, 0, 0);
+	}
+
+	10%,
+	30%,
+	50%,
+	70%,
+	90% {
+		transform: translate3d(-5px, 0, 0);
+	}
+
+	20%,
+	40%,
+	60%,
+	80% {
+		transform: translate3d(5px, 0, 0);
+	}
+}
+input.error, .error[contenteditable] {
+	animation-duration: .2s;
+	animation-fill-mode: both;
+	animation-iteration-count: 2;
+	animation-name: shake;
+	border: 1px dashed var.$alert_error !important;
+}
+input.error ~ .msg, .error[contenteditable] {
+	position: relative;
+	&:before {
+		content: "\2717";
+		bottom: 1rem;
+		position: absolute;
+		color: var.$alert_error;
+		right: .5em;
+		font-size: 2em;
+	}
+}
+input.success, .success[contenteditable] {
+	border: 1px dashed var.$alert_success !important;
+}
+input.success ~ .msg, .success[contenteditable] {
+	position: relative;
+	&:before {
+		content: "\2713";
+		bottom: 1rem;
+		position: absolute;
+		color: var.$alert_success;
+		right: .5em;
+		font-size: 2em;
+	}
+}
+[contenteditable] {
+	cursor: text;
+	&:after {
+		content: '\270E';
+		font-size: 1.6em;
+		float: left;
+		color: var.$primary_lightest;
+	}
 }

@@ -1,10 +1,19 @@
 const BaseApi = Object.assign({
     version: "v1",
+    handle_error: async error => {
+        // TODO
+        console.error(error)
+    },
+    handle_debug: async error => {// Server DEBUG=on
+        console.error(error)
+    },
     request: async (url, options) => {
-        const response = await fetch(url, options).catch(err => {
-            console.error(err)
-        })
-        return response.json()
+        const response = await fetch(url, options).catch(BaseApi.handle_error)
+        const json = await response.json()
+        if (json.error) {
+            BaseApi.handle_debug(json.error)
+        }
+        return json
     },
     authorization: async target => {
         const apiKeySecret = localStorage.getItem('_apiKeySecret')
@@ -28,14 +37,12 @@ const BaseApi = Object.assign({
                 })
             }
         })
-        console.log(json)
         if (!('transaction_id' in json && typeof json['transaction_id'] === 'string')) {
             return false
         }
-        let credentialId = localStorage.getItem('_WebAuthn_credentialId')
-        if (!!credentialId) {
+        if (app.keys.length >= 1) {
             const allowCredentials = []
-            for await(const key of JSON.parse(app.keys)) {
+            for await(const key of app.keys) {
                 allowCredentials.push({
                     id: base64ToArrayBuffer(key.webauthn_id),
                     type: 'public-key',
@@ -50,7 +57,7 @@ const BaseApi = Object.assign({
                     allowCredentials,
                     timeout: 90000,
                 }
-            }).catch(console.error)
+            }).catch(BaseApi.handle_error)
             if (assertion) {
                 const response = assertion.response
                 const authData = new Uint8Array(response.authenticatorData)
@@ -91,7 +98,6 @@ const BaseApi = Object.assign({
                         })
                     }
                 })
-                console.log(authz)
                 if (!('authorization_token' in authz && typeof authz.authorization_token === 'string')) {
                     return false
                 }
@@ -129,7 +135,6 @@ const HMAC = Object.assign({
             !credentials.id ||
             !credentials.key ||
             !credentials.alg) {
-            console.log(credentials)
             throw new Error(`Invalid credentials`);
         }
     },
@@ -147,12 +152,10 @@ const HMAC = Object.assign({
             nonce: ''.random(8),
         }, options)
         HMAC.valid_credentials(config.credentials)
-        console.log('HMAC.header', config)
         if (config.payload_verification !== false) {
             config.payload = btoa(config.body)
         }
         const mac = await HMAC.sign(config)
-        console.log('mac', mac)
         return 'HMAC id="' + config.credentials.id +
                      '", ts="' + config.timestamp +
                      '", nonce="' + config.nonce +
@@ -182,9 +185,7 @@ const HMAC = Object.assign({
         }
         const cryptoKey = await crypto.subtle.importKey('raw', utf8Bytes(config.credentials.key), { name: 'HMAC', hash: config.credentials.alg }, true, ['sign'])
         const canonical_string = HMAC.canonical_string(config)
-        console.log('canonical_string', canonical_string)
         const encoded = utf8Bytes(canonical_string)
-        console.log('encoded', encoded)
         const hmac = await crypto.subtle.sign('HMAC', cryptoKey, encoded)
         return [...new Uint8Array(hmac)].map(b => b.toString(16).padStart(2, '0')).join('')
     },
@@ -217,9 +218,6 @@ const Fetch = Object.assign({
             headers: Object.assign({}, config.headers)
         })
         document.body.classList.remove('loading')
-        if (json.error) {
-            console.error(json.error)
-        }
         return json
     },
     post: async (options) => {
@@ -251,9 +249,6 @@ const Fetch = Object.assign({
                 headers: config.headers
             })
         }
-        if (json.error) {
-            console.error(json.error)
-        }
         return json
     }
 })
@@ -268,18 +263,11 @@ const PublicApi = Object.assign({
         const url = `${app.apiScheme}${app.apiDomain}/${BaseApi.version}${config.target}`
         const method = 'GET'
         if (config.sign !== false) {
-            let apiKeySecret
             if (!('apiKeyId' in app)) {
-                console.error(`HMAC requires an apiKeyId`)
+                BaseApi.handle_error(`HMAC requires an apiKeyId`)
                 return;
             }
-            if (!('apiKeyId' in app)) {
-                apiKeySecret = localStorage.getItem('_apiKeySecret')
-                if (!apiKeySecret) {
-                    console.error(`HMAC requires an apiKeySecret`)
-                    return;
-                }
-            }
+            const apiKeySecret = localStorage.getItem('_apiKeySecret')
             config.headers['Authorization'] = await HMAC.header({
                 credentials: {
                     id: app.apiKeyId,
@@ -297,9 +285,6 @@ const PublicApi = Object.assign({
             headers: Object.assign({}, config.headers)
         })
         document.body.classList.remove('loading')
-        if (json.error) {
-            console.error(json.error)
-        }
         return json
     },
     post: async (options) => {
@@ -321,7 +306,7 @@ const PublicApi = Object.assign({
         let json
         if (config.sign !== false) {
             if (!('apiKeyId' in app)) {
-                console.error(`HMAC requires an apiKeyId`)
+                BaseApi.handle_error(`HMAC requires an apiKeyId`)
                 return;
             }
             config.headers['Authorization'] = await HMAC.header({
@@ -352,9 +337,6 @@ const PublicApi = Object.assign({
                 body: content,
                 headers: config.headers
             })
-        }
-        if (json.error) {
-            console.error(json.error)
         }
         return json
     }

@@ -156,17 +156,17 @@ const createWebauthn = async () => {
             init_recaptcha('authorization_action')
             document.querySelector('.LoginCard__card.choose-mfa').hide()
             document.querySelector('.LoginCard__card.confirm-webauthn').show()
-            localStorage.setItem('_WebAuthn_credentialId', webauthn_id)
+            app.keys = [{webauthn_id}]
             return verifyWebauthn()
         }
     }
 }
 const verifyWebauthn = async () => {
-    let credentialId = localStorage.getItem('_WebAuthn_credentialId')
-    if (!credentialId) {
+    if (app.keys.length === 0) {
         alert('No device registered')
         return;
     }
+    const credentialId = app.keys[0].webauthn_id
     const assertion = await navigator.credentials.get({
         publicKey: {
             challenge: enc.encode(app.apiKeyId),

@@ -1,4 +1,5 @@
 window.app = {...document.head.querySelector('[name=application-name]').dataset}
+app.keys = 'keys' in app ?JSON.parse(app.keys):[]
 const lang = window.navigator.userLanguage || window.navigator.language
 var supportsPassive = false
 try {

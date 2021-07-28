@@ -1,10 +1,19 @@
 const saveBillingEmail = async() => {
-    const billing_email = document.getElementById('billing_email').value
+    const billingEmailEl = document.getElementById('billing_email')
+    billingEmailEl.classList.remove('error')
+    billingEmailEl.classList.remove('success')
+    const billing_email = billingEmailEl.value
     const json = await PublicApi.post({
         target: '/account/update-billing-email',
         body: {billing_email}
     })
-    appMessage(json.status, json.message)
+    if (json.status == 'success') {
+        billingEmailEl.classList.add('success')
+    }
+    if (json.status == 'error') {
+        billingEmailEl.classList.add('error')
+        alert(json.message)
+    }
 }
 
 document.addEventListener('DOMContentLoaded', async() => {
@@ -13,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     setInterval(livetime, 1000)
     const emailChangeEl = document.getElementById('billing_email')
     emailChangeEl.addEventListener("change", saveBillingEmail, false)
+    emailChangeEl.addEventListener('keypress', async event => event.key === 'Enter' ? saveBillingEmail() : void 0)
     const live_charts = {}
     for await(const ctx of document.querySelectorAll('.chart.half-doughnut canvas')) {
         const chart_key = ctx.getAttribute('data-key')

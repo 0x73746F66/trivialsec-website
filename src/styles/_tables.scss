@@ -1,5 +1,3 @@
-@use "../var";
-
 .table-wrapper {
 	position: relative;
 	overflow: hidden;
@@ -17,7 +15,7 @@
 			&-thumb {
 				border-radius: 5px;
 				border: 1px solid rgba(0, 0, 0, 0.25);
-				background-color: #8e9eab;
+				background-color: var.$secondary_grey_shift;
 			}
 		}
 	}
@@ -28,56 +26,38 @@ table {
 	overflow: hidden;
 	color: #212529;
 	border-collapse: collapse;
-	border: solid 1px #dee2e6;
+	border: solid 1px var.$grey_lightest;
 	width: 98%;
+
 	th, td {
 		text-align: center;
 		padding: .75rem;
 		vertical-align: top;
-		border-top: 1px solid #dee2e6;
+		border-top: 1px solid var.$grey_lightest;
 	}
 	th {
-		background: #34495ef0;
+		background-color: var.$secondary_light;
 		color: #ECF0F1;
 	}
 	td:first-child {
 		font-weight: bold;
 	}
-	tr:nth-child(even) td {
-		background: white;
+	&.striped tbody tr:nth-child(even) td {
+		background-color: var.$grey_lightest;
 	}
-	tr:hover td {
-		background-color: #0000000d;
+	&.hover tbody tr:hover td {
+		background-color: var.$primary_light_alpha20;
 	}
-}
-.pagination {
-	width: 100%;
-	text-align: center;
-	li {
-		list-style: none;
-		display: inline-block;
-		background: #456686;
-		background: #456686f0;
-		border-radius: 3px;
-		&.active {
-			background: #34495e;
-			background: #34495ef0;
-		}
-		&:hover, a:hover {
-			background: #4574a3;
-			background: #4574a3f0;
-			cursor: pointer;
-			border-radius: 3px;
-		}
+	&.actions tbody td:last-child {
+		text-align: right;
+		width: 10px;
 	}
-	a {
-		color: #fff;
-		padding: 4px 8px;
-		min-width: 20px;
-		display: inline-block;
-		text-decoration: none;
+	&.checkboxes tbody td:first-child {
+		text-align: left;
+		width: 10px;
 	}
 }
+
 tr a {
 	color: #66a3d8;
 	display: inline-block;

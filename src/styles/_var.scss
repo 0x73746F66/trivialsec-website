@@ -1,15 +1,15 @@
-$primary: rgba(26, 188, 156, 1);
-$primary_alpha80: rgba(26, 188, 156, 0.8);
-$primary_alpha50: rgba(26, 188, 156, 0.5);
-$primary_alpha20: rgba(26, 188, 156, 0.2);
+$primary_lightest: rgba(136, 210, 196, 1);
+$primary_lightest_alpha80: rgba(136, 210, 196, 0.8);
 
 $primary_light: rgba(26, 188, 156, 1);
 $primary_light_alpha80: rgba(26, 188, 156, 0.8);
 $primary_light_alpha50: rgba(26, 188, 156, 0.5);
 $primary_light_alpha20: rgba(26, 188, 156, 0.2);
 
-$primary_lightest: rgba(136, 210, 196, 1);
-$primary_lightest_alpha80: rgba(136, 210, 196, 0.8);
+$primary: rgba(26, 188, 156, 1);
+$primary_alpha80: rgba(26, 188, 156, 0.8);
+$primary_alpha50: rgba(26, 188, 156, 0.5);
+$primary_alpha20: rgba(26, 188, 156, 0.2);
 
 $primary_dark: rgb(8, 167, 135);
 
@@ -18,16 +18,21 @@ $primary_darkest: rgb(0, 121, 96);
 $secondary: rgba(42, 63, 84, 1);
 $secondary_alpha80: rgba(42, 63, 84, 0.8);
 $secondary_alpha50: rgba(42, 63, 84, 0.5);
-$secondary_alpha0: rgba(42, 63, 84, 0);
+$secondary_alpha20: rgba(42, 63, 84, 0.2);
 
-$secondary_light: rgba(146, 186, 221, 1);
-$secondary_light_alpha80: rgba(146, 186, 221, 0.8);
+$secondary_light: rgba(52, 73, 94, 1);
+$secondary_light_alpha80: rgba(52, 73, 94, 0.8);
+
+$secondary_lightest: rgba(146, 186, 221, 1);
+$secondary_lightest_alpha80: rgba(146, 186, 221, 0.8);
 
 $secondary_dark: rgba(23, 45, 68, 1);
 $secondary_grey_shift: rgba(66, 85, 103, 1);
 
-$grey_medium: rgba(109, 109, 109, 1);
 $grey_dark: rgba(58, 58, 58, 1);
+$grey_medium: rgba(109, 109, 109, 1);
+$grey_light: rgba(199, 199, 199, 1);
+$grey_lightest: rgba(222, 226, 230, 1);
 
 $alert_info: rgba(40, 111, 204, 1);
 $alert_success: rgba(26, 140, 39, 1);

@@ -42,18 +42,17 @@ const verifyTotp = async event => {
 }
 
 const verifyWebauthn = async () => {
+    if (app.keys.length === 0) {
+        alert('No device registered')
+        return;
+    }
     const allowCredentials = []
-    for await(const key of JSON.parse(app.keys)) {
+    for await(const key of app.keys) {
         allowCredentials.push({
             id: base64ToArrayBuffer(key.webauthn_id),
             type: 'public-key',
             transports: ['usb', 'ble', 'nfc', 'internal'],
         })
-    }
-    let credentialId = localStorage.getItem('_WebAuthn_credentialId')
-    if (!credentialId) {
-        alert('No device registered')
-        return;
     }
     const assertion = await navigator.credentials.get({
         publicKey: {
