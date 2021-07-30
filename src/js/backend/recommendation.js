@@ -1,14 +1,20 @@
 const changeNamespaceList = async(event) => {
     const el = event.currentTarget
     const categoryList = el.value.replace(/ /g, '').toLowerCase()
-    if (!categoryList) return;
+    if (!categoryList) {
+        toast('warning', 'This feature is not currently available', 'Sorry')
+        return;
+    }
     const review_id = el.id.replace('type_namespace', '')
     document.getElementById(`type_category${review_id}`).setAttribute('list', categoryList)
 }
 const changeCategoryList = async(event) => {
     const el = event.currentTarget
     const classifierList = el.value.replace(/ /g, '').toLowerCase()
-    if (!classifierList) return;
+    if (!classifierList) {
+        toast('warning', 'This feature is not currently available', 'Sorry')
+        return;
+    }
     const review_id = el.id.replace('type_category', '')
     document.getElementById(`type_classifier${review_id}`).setAttribute('list', classifierList)
 }

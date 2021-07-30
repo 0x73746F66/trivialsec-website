@@ -333,39 +333,6 @@ a {
 		vertical-align: top;
 	}
 }
-#app-messages {
-	position: sticky;
-	top: 0;
-	z-index: 2;
-}
-.alert {
-	margin: 10px 0;
-	line-height: 40px;
-	border-radius: 3px 3px 3px 3px;
-	&.alert-info {
-		color: #059;
-		background-color: #BEF;
-	}
-	&.alert-success {
-		color: #270;
-		background-color: #DFF2BF;
-	}
-	&.alert-warning {
-		color: #9F6000;
-		background-color: #FEEFB3;
-	}
-	&.alert-error {
-		color: #D8000C;
-		background-color: #FFBABA;
-	}
-	i {
-		font-size: 30px;
-		margin-right: 10px;
-		position: relative;
-		top: 5px;
-		left: 5px;
-	}
-}
 input[type=button],
 input[type=submit],
 input[type=reset] {

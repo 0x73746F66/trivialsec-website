@@ -2,8 +2,8 @@ const addDomain = async () => {
     const domain_el = document.getElementById('domain_search_input')
     const project_el = document.getElementById('project_select')
     const json = await Api.post_async('/domains', { 'domain': domain_el.value, 'project_id': project_el.value })
-        .catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
-    appMessage(json)
+        .catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    toast(json)
     if ('id' in json['domain']) {
         let tr = `<tr class="highlight" data-domain-id="${json['domain']['id']}">
         <td><input type="checkbox" name="table_domains" value="${json['domain']['id']}"></td>
@@ -23,7 +23,7 @@ const addDomain = async () => {
 const searchDomain = async event => {
     const domain_name = event.currentTarget.value
     const json = await Api.get_async(`/domains/search/${domain_name}`)
-        .catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+        .catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
     const el = document.getElementById('add_domain')
     if (json.hasOwnProperty('id') && json['id']) {
         const row = document.querySelector(`[data-domain-id="${json['id']}"]`)
@@ -31,10 +31,10 @@ const searchDomain = async event => {
             row.classList.add('flash-row')
             setTimeout(() => row.classList.remove('flash-row'), 2000)
         }
-        appMessage('warning', `${domain_name} is already registered`)
+        toast('warning', `${domain_name} is already registered`)
         el.disabled = true
     } else {
-        appMessage(json)
+        toast(json)
         el.disabled = false
     }
 }

@@ -2,24 +2,24 @@ const stripe = Stripe(app.stripePublishableKey)
 
 const buttonActions = async(event) => {
     if (event.currentTarget.id == 'plan_enterprise') {
-        appMessage('info', 'Please contact us to activate your Enterprise plan')
+        toast('info', 'Please contact us to activate your Enterprise plan')
         return;
     }
     
     const json = await Api.post_async('/v1/checkout', {
         selection: event.currentTarget.id
-    }).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    }).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    toast(json.status, json.message)
     if (json.status != 'success') {
-        appMessage(json.status, json.message)
         return;
     }
     if (!json.result || !json.result.hasOwnProperty('id')) {
-        appMessage('error', 'Failed to start Checkout with Stripe.com')
+        toast('error', 'Failed to start Checkout with Stripe.com')
         return;
     }
     stripe.redirectToCheckout({sessionId: json.result['id']}).then(result => {
         if (result.error.message) {
-            appMessage('error', result.error.message)
+            toast('error', result.error.message)
         }
     })
 }

@@ -3,6 +3,7 @@ const decoder = (new TextDecoder)
 const enc = (new TextEncoder)
 const chooseMfa = async event => {
     if (event.currentTarget.id != 'choose-mfa') {
+        toast('warning', 'This feature is not currently available', 'Sorry')
         return;
     }
     const mfaTypeArr = Array.from(document.getElementsByName('mfaType')).filter(e => e.checked)
@@ -43,7 +44,7 @@ const verifyTotp = async event => {
 
 const verifyWebauthn = async () => {
     if (app.keys.length === 0) {
-        alert('No device registered')
+        toast('warning', 'No device registered')
         return;
     }
     const allowCredentials = []
@@ -128,7 +129,10 @@ const handle_totp_paste = async event => {
     event.preventDefault()
     let clipboardData = event.clipboardData || window.clipboardData
     const totp_code = clipboardData.getData('Text')
-    if (!totp_code) return;
+    if (!totp_code) {
+        toast('warning', 'The copy/paste did not work, please try to type your recovery code', 'Sorry')
+        return;
+    }
     const firstEl = document.querySelectorAll('.totp__fieldset input')[0]
     if (totp_code.length === 6) {
         let thisEl = firstEl
@@ -138,8 +142,7 @@ const handle_totp_paste = async event => {
                 thisEl = thisEl.nextElementSibling
             } else {
                 break;
-            retryBtn.removeEventListener('click', verifyWebauthn, false)
-        }
+            }
         }
         const verifyTotpBtn = document.getElementById('verify-totp')
         verifyTotpBtn.setAttribute('disabled', true)

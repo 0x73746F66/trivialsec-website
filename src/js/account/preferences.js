@@ -7,21 +7,36 @@ const save_email = async() => {
         target: '/account/update-email',
         body: {new_email}
     })
-    if (json.status == 'success') {
-        emailEl.classList.add('success')
-    }
-    if (json.status == 'error') {
-        emailEl.classList.add('error')
-        alert(json.message)
-    }
+    emailEl.classList.add(json.status)
+    toast(json.status, json.message)
 }
 
 const regenerate_scratch = async() => {
-    console.log('regenerate_scratch')
+    const scratchEl = document.getElementById('scratch_code')
+    const json = await PublicApi.get({target: '/recovery/regenerate-scratch'})
+    if (json.status == 'success') {
+        scratchEl.value = json.scratch_code
+        scratchEl.disabled = false
+        document.getElementById('regenerate').remove()
+    }
+    scratchEl.classList.add(json.status)
+    toast(json.status, json.message)
 }
-
-const setup_totp = async() => {
-    console.log('setup_totp')
+const remove_device = async event => {
+    const device_id = event.currentTarget.parent('tr').dataset.mfaId
+    if (!device_id) {
+        toast('info', 'This feature is not currently available', 'Sorry')
+        return;
+    }
+    const json = await PublicApi.post({
+        target: '/mfa/remove-device',
+        body: {device_id},
+    })
+    event.target.classList.add(json.status)
+    toast(json.status, json.message)
+    if (json.status === 'success') {
+        document.querySelector(`tr[data-mfa-id="${device_id}"]`).remove()
+    }
 }
 const change_name = async event => {
     event.preventDefault()
@@ -29,7 +44,7 @@ const change_name = async event => {
         clearTimeout(inputHandle)
     }
     const device_name = event.target.textContent
-    const device_id = event.target.parent('tr').getAttribute('data-mfa-id')
+    const device_id = event.target.parent('tr').dataset.mfaId
     const json = await PublicApi.post({
         target: '/mfa/rename-device',
         body: {
@@ -37,13 +52,8 @@ const change_name = async event => {
             device_name,
         },
     })
-    if (json.status == 'success') {
-        event.target.classList.add('success')
-    }
-    if (json.status == 'error') {
-        event.target.classList.add('error')
-        alert(json.message)
-    }
+    event.target.classList.add(json.status)
+    toast(json.status, json.message)
 }
 var inputHandle;
 const handle_input = async event => {
@@ -68,14 +78,13 @@ document.addEventListener('DOMContentLoaded', async() => {
         regenerateEl.addEventListener("click", regenerate_scratch, false)
         regenerateEl.addEventListener("touchstart", regenerate_scratch, supportsPassive ? { passive: true } : false)
     }
-    const setupEl = document.getElementById('setup_totp')
-    if (setupEl) {
-        setupEl.addEventListener("click", setup_totp, false)
-        setupEl.addEventListener("touchstart", setup_totp, supportsPassive ? { passive: true } : false)
-    }
     for (const el of document.querySelectorAll('.u2fkeyname')) {
         el.addEventListener("input", handle_input, false)
         el.addEventListener("keypress", async event => event.key === 'Enter' ? change_name(event) : void 0)
+    }
+    for (const el of document.querySelectorAll('.remove-device')) {
+        el.addEventListener("click", remove_device, false)
+        el.addEventListener("touchstart", remove_device, supportsPassive ? { passive: true } : false)
     }
 
 }, false)

@@ -80,11 +80,8 @@ const subdomainsAction = async() => {
     },{
         prop: 'zoomeye',
         value: document.querySelector('[name="zoomeye"]').value
-    }]).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
-    appMessage(json.status, json.message)
-    if (json.status == 'error') {
-        return;
-    }
+    }])
+    toast(json.status, json.message)
 }
 const reposAction = async() => {
     const json = await Api.post_async('/v1/account-config', [{
@@ -96,11 +93,9 @@ const reposAction = async() => {
     },{
         prop: 'gitlab',
         value: document.querySelector('[name="gitlab"]').value
-    }]).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
-    appMessage(json.status, json.message)
-    if (json.status == 'error') {
-        return;
-    }
+    }])
+    toast(json.status, json.message)
+
 }
 document.addEventListener('DOMContentLoaded', async() => {
     if (location.pathname != '/account/integrations') {

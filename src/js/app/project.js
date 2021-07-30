@@ -1,18 +1,18 @@
 const domainsAction = async event => {
-    const domain_id = event.currentTarget.parent('tr').getAttribute('data-domain-id')
+    const domain_id = event.currentTarget.parent('tr').dataset.domainId
     location.href = `/domain/${domain_id}`
 }
 const projectArchiveButton = async event => {
     document.body.insertAdjacentHTML('afterbegin', `<div class="loading"></div>`) // nosemgrep
-    const project_id = event.currentTarget.parent('.project-actions').getAttribute('data-project-id')
+    const project_id = event.currentTarget.parent('.project-actions').dataset.projectId
     const json = await Api.post_async(`/v1/archive-project`, {
         project_id
     }).catch(() => {
-        appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.')
+        toast('error', 'An unexpected error occurred. Please refresh the page and try again.')
         document.querySelector('.loading').remove()
     })
     document.querySelector('.loading').remove()
-    appMessage(json.status, json.message)
+    toast(json.status, json.message)
     if (json.status == 'error') {
         return;
     }
@@ -20,16 +20,16 @@ const projectArchiveButton = async event => {
 const toggleDomainAction = async event => {
     const toggleTd = event.currentTarget
     const toggleIconEl = toggleTd.querySelector('i')
-    const domain_id = toggleTd.parent('tr').getAttribute('data-domain-id')
+    const domain_id = toggleTd.parent('tr').dataset.domainId
     let action = 'enable-domain'
     let classNameAlt = 'icofont-toggle-on'
     if (toggleIconEl.classList.contains('icofont-toggle-on')) {
         classNameAlt = 'icofont-toggle-off'
         action = 'disable-domain'
     }
-    const json = await Api.post_async(`/v1/${action}`, {domain_id}).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    const json = await Api.post_async(`/v1/${action}`, {domain_id}).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    toast(json.status, json.message)
     if (json.status != 'success') {
-        appMessage(json.status, json.message)
         return;
     }
     toggleIconEl.classList.remove(toggleIconEl.className)
@@ -38,9 +38,9 @@ const toggleDomainAction = async event => {
 }
 const deleteDomainAction = async event => {
     const toggleTd = event.currentTarget
-    const domain_id = toggleTd.parent('tr').getAttribute('data-domain-id')
-    const json = await Api.post_async(`/v1/delete-domain`, {domain_id}).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
-    appMessage(json.status, json.message)
+    const domain_id = toggleTd.parent('tr').dataset.domainId
+    const json = await Api.post_async(`/v1/delete-domain`, {domain_id}).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    toast(json.status, json.message)
     if (json.status != 'success') {
         return;
     }

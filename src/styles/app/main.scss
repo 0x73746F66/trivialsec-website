@@ -16,7 +16,7 @@ body {
 	}
 }
 .navigation-bar a, .sidebar-footer a {
-	color: var.$secondary_light;
+	color: var.$secondary_lightest;
 	display: inline-block;
 	text-decoration: none;
 	font-weight: 400;
@@ -277,46 +277,6 @@ a.underline-hover:hover {
 .backend-switcher i {
 	font-size: 32px;
 	color: #1ABB9C;
-}
-#app-messages {
-	position: sticky;
-	top: 0;
-	z-index: 2;
-}
-.alert {
-	line-height: 40px;
-	border-radius: 3px 3px 3px 3px;
-	padding: 0 1% 0 0;
-	&.alert-info {
-		color: #059;
-		background-color: #BEF;
-	}
-	&.alert-success {
-		color: #270;
-		background-color: #DFF2BF;
-	}
-	&.alert-warning {
-		color: #9F6000;
-		background-color: #FEEFB3;
-	}
-	&.alert-error {
-		color: #D8000C;
-		background-color: #FFBABA;
-	}
-	i {
-		font-size: 30px;
-		margin-right: 10px;
-		position: relative;
-		top: 5px;
-		left: 5px;
-	}
-	.icofont-close {
-		float: right;
-		cursor: pointer;
-		&:hover {
-			filter: grayscale(100%) sepia(100%) hue-rotate(90deg);
-		}
-	}
 }
 input[type=button], input[type=submit], input[type=reset] {
 	border: none;

@@ -60,6 +60,7 @@ const signInAction = async() => {
         }
     }
     if (invalid === true) {
+        toast('warning', 'This feature is not currently available', 'Sorry')
         return;
     }
     const json = await PublicApi.post({
@@ -70,7 +71,7 @@ const signInAction = async() => {
         },
         sign: false,
     })
-    appMessage(appAlert, json.status, json.message)
+    toast(appAlert, json.status, json.message)
 }
 const contactUsAction = async event => {
     const appAlert = document.getElementById('contact-us-messages')
@@ -113,6 +114,7 @@ const contactUsAction = async event => {
         invalid = true
     }
     if (invalid == true) {
+        toast('warning', 'This feature is not currently available', 'Sorry')
         return;
     }
     const json = await PublicApi.post(`/contact-form`, {
@@ -123,10 +125,10 @@ const contactUsAction = async event => {
         email,
         message
     }).catch(err => {
-        appMessage(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
+        toast(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
         console.log(err)
     })
-    appMessage(appAlert, json.status, json.message)
+    toast(appAlert, json.status, json.message)
 }
 const registerAction = async event => {
     const appAlert = document.getElementById('register-messages')
@@ -157,6 +159,7 @@ const registerAction = async event => {
         invalid = true
     }
     if (invalid === true) {
+        toast('warning', 'This feature is not currently available', 'Sorry')
         return;
     }
     const json = await PublicApi.post(`/register`, {
@@ -167,10 +170,10 @@ const registerAction = async event => {
         email,
         privacy
     }).catch(err => {
-        appMessage(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
+        toast(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
         console.log(err)
     })
-    appMessage(appAlert, json.status, json.message)
+    toast(appAlert, json.status, json.message)
 }
 
 document.addEventListener('DOMContentLoaded', async() => {

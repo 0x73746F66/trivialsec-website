@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     emailChangeEl.addEventListener('keypress', async event => event.key === 'Enter' ? saveBillingEmail() : void 0)
     const live_charts = {}
     for await(const ctx of document.querySelectorAll('.chart.half-doughnut canvas')) {
-        const chart_key = ctx.getAttribute('data-key')
+        const chart_key = ctx.dataset.key
         const data_used = document.querySelector(`[name=${chart_key}-used]`).value
         const data_total = document.querySelector(`[name=${chart_key}-total]`).value
         live_charts[chart_key] = new Chart(ctx, {

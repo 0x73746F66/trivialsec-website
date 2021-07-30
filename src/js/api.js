@@ -1,14 +1,23 @@
 const BaseApi = Object.assign({
     version: "v1",
     handle_error: async error => {
-        // TODO
-        console.error(error)
+        toast('error', error)
     },
     handle_debug: async error => {// Server DEBUG=on
         console.error(error)
     },
     request: async (url, options) => {
-        const response = await fetch(url, options).catch(BaseApi.handle_error)
+        const response = await fetch(url, options).catch(BaseApi.handle_debug)
+        if (!response || response.status === 404) {
+            return {'status': 'warning', 'message': 'The server is currently not available.<br>Please try again in a few moments'};
+        }
+        if (response.status === 401) {
+            return {'status': 'error', 'message': 'Request was cancelled as being unauthorised'}
+        }
+        if (response.status !== 200) {
+            console.log(response)
+            return {'status': 'info', 'message': 'This feature is not currently available'};
+        }
         const json = await response.json()
         if (json.error) {
             BaseApi.handle_debug(json.error)
@@ -38,7 +47,7 @@ const BaseApi = Object.assign({
             }
         })
         if (!('transaction_id' in json && typeof json['transaction_id'] === 'string')) {
-            return false
+            return json
         }
         if (app.keys.length >= 1) {
             const allowCredentials = []
@@ -256,15 +265,26 @@ const PublicApi = Object.assign({
     get: async (options) => {
         document.body.classList.add('loading')
         const config = Object.assign({
-            target,
-            headers,
-            sign: true
+            target: undefined,
+            headers: {},
+            sign: true,
         }, options)
         const url = `${app.apiScheme}${app.apiDomain}/${BaseApi.version}${config.target}`
         const method = 'GET'
+        let authorization_token
+        const authz_resp = await BaseApi.authorization(config.target)
+        if (typeof authz_resp === 'string') {
+            authorization_token = authz_resp
+            config.headers['X-Authorization-Token'] = authorization_token
+        } else if (typeof authz_resp === 'object' && 'status' in authz_resp && authz_resp.message != 'ok') {
+            document.body.classList.remove('loading')
+            return authz_resp
+        }
         if (config.sign !== false) {
             if (!('apiKeyId' in app)) {
-                BaseApi.handle_error(`HMAC requires an apiKeyId`)
+                BaseApi.handle_debug(`HMAC requires an apiKeyId`)
+                toast('warning', 'This feature is not currently available', 'Sorry')
+                document.body.classList.remove('loading')
                 return;
             }
             const apiKeySecret = localStorage.getItem('_apiKeySecret')
@@ -295,9 +315,14 @@ const PublicApi = Object.assign({
             headers: {"Content-Type": HMAC.default_content_type},
             sign: true
         }, options)
-        const authorization_token = await BaseApi.authorization(config.target)
-        if (typeof authorization_token === 'string') {
-            config.body.authorization_token = authorization_token
+        let authorization_token;
+        const authz_resp = await BaseApi.authorization(config.target)
+        if (typeof authz_resp === 'string') {
+            authorization_token = authz_resp
+            config.headers['X-Authorization-Token'] = authorization_token
+        } else if (typeof authz_resp === 'object' && 'status' in authz_resp && authz_resp.message != 'ok') {
+            document.body.classList.remove('loading')
+            return authz_resp
         }
         const url = `${app.apiScheme}${app.apiDomain}/${BaseApi.version}${config.target}`
         const content = JSON.stringify(config.body)
@@ -306,7 +331,9 @@ const PublicApi = Object.assign({
         let json
         if (config.sign !== false) {
             if (!('apiKeyId' in app)) {
-                BaseApi.handle_error(`HMAC requires an apiKeyId`)
+                BaseApi.handle_debug(`HMAC requires an apiKeyId`)
+                toast('warning', 'This feature is not currently available', 'Sorry')
+                document.body.classList.remove('loading')
                 return;
             }
             config.headers['Authorization'] = await HMAC.header({
@@ -327,7 +354,6 @@ const PublicApi = Object.assign({
             body: content,
             headers: config.headers
         })
-        document.body.classList.remove('loading')
         if (json.status && json.action && json.status == 'retry') {
             content.recaptcha_token = await refresh_recaptcha_token(json.action)
             json = await BaseApi.request(url, {
@@ -338,6 +364,7 @@ const PublicApi = Object.assign({
                 headers: config.headers
             })
         }
+        document.body.classList.remove('loading')
         return json
     }
 })

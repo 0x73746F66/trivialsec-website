@@ -6,13 +6,12 @@ const setupActions = async(event) => {
         }, {
             prop: 'default_role_id',
             value: document.querySelector('[name="default_role_id"]').value
-        }]).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+        }])
+        toast(json.status, json.message)
         if (json.status == 'success') {
-            appMessage(json.status, json.message)
             setTimeout(()=>{window.location.href = '/account/setup/2'}, 2000)
             return;
         }
-        appMessage(json.status, json.message)
     }
 }
 

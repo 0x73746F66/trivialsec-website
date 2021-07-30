@@ -5,7 +5,7 @@ const editRow = event => {
     form.querySelector('[name="key"]').value = row.querySelector('.key-cell').textContent
     form.querySelector('[name="type"]').value = row.querySelector('.type-cell').textContent
     form.querySelector('[name="active_date"]').value = row.querySelector('.active_date-cell').textContent
-    form.querySelector('[name="id"]').value = row.getAttribute('data-kv-id')
+    form.querySelector('[name="id"]').value = row.dataset.kvId
     form.querySelector('[name="hidden"]').value = row.querySelector('[name="hidden"]').value
 }
 

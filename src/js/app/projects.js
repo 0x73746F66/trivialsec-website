@@ -1,6 +1,6 @@
 window.choices_rendered = {}
 const projectsAction = async event => {
-    const project_id = event.currentTarget.parent('tr').getAttribute('data-project-id')
+    const project_id = event.currentTarget.parent('tr').dataset.projectId
     location.href = `/scope/${project_id}`
 }
 const handleSocket = async data => {
@@ -16,9 +16,9 @@ const createProject = async event => {
     const json = await Api.post_async('/v1/create-project', {
         project_name,
         domain_name
-    }).catch(() => appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    }).catch(() => toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
     console.debug(json)
-    appMessage(json.status, json.message)
+    toast(json.status, json.message)
     if (!!json['domain']) {
         const noProjectsEl = document.getElementById('no-projects')
         if (noProjectsEl) {

@@ -1,6 +1,7 @@
 const update_service_state = data => {
     if (!('service' in data)) {
         console.log(data)
+        toast('warning', 'This feature is not currently available', 'Sorry')
         return;
     }
     const el = document.querySelector(`[data-category="${data.service}"] .service-status`)

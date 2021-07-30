@@ -2,12 +2,12 @@ const project_id = document.getElementById('project-id').value
 const page_domain_id = document.getElementById('domain-id').value
 let socket, socketio_token, findings_chart;
 const subdomainsAction = async event => {
-    const id = event.currentTarget.parent('tr').getAttribute('data-domain-id')
+    const id = event.currentTarget.parent('tr').dataset.domainId
     location.href = `/domain/${id}`
 }
 const toggleDomain = async toggleEl => {
     const toggleIconEl = toggleEl.querySelector('i')
-    const domain_id = toggleEl.id == 'toggle-domain' ? document.getElementById('domain-id').value : toggleEl.parent('tr').getAttribute('data-domain-id')
+    const domain_id = toggleEl.id == 'toggle-domain' ? document.getElementById('domain-id').value : toggleEl.parent('tr').dataset.domainId
     let action = 'enable-domain'
     let classNameAlt = 'icofont-toggle-on'
     if (toggleIconEl.classList.contains('icofont-toggle-on')) {
@@ -16,9 +16,9 @@ const toggleDomain = async toggleEl => {
     }
     const json = await Api.post_async(`/v1/${action}`, {
         domain_id
-    }).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    }).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
     if (json.status != 'success') {
-        appMessage(json.status, json.message)
+        toast(json.status, json.message)
         return json
     }
     toggleIconEl.classList.remove(toggleIconEl.className)
@@ -29,8 +29,8 @@ const toggleDomain = async toggleEl => {
 const deleteDomain = async domain_id => {
     const json = await Api.post_async(`/v1/delete-domain`, {
         domain_id
-    }).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
-    appMessage(json.status, json.message)
+    }).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    toast(json.status, json.message)
     return json
 }
 const toggleDomainAction = async() => {
@@ -44,11 +44,9 @@ const deleteDomainAction = async() => {
 }
 const deleteDomainRowAction = async event => {
     const domainRow = event.currentTarget.parent('tr')
-    const domain_id = domainRow.getAttribute('data-domain-id')
+    const domain_id = domainRow.dataset.domainId
     const json = await deleteDomain(domain_id)
-    if (json.status != 'success') {
-        return;
-    }
+    toast(json.status, json.message)
     domainRow.remove()
 }
 
@@ -56,8 +54,8 @@ const runDomainAction = async event => {
     const action = document.getElementById('scan-action').value
     const json = await Api.post_async(`/v1/${action}`, {
         domain_id: page_domain_id
-    }).catch(()=>appMessage('error', 'An unexpected error occurred. Please refresh the page and try again.'))
-    appMessage(json.status, json.message)
+    }).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    toast(json.status, json.message)
 }
 const handleSocket = async data => {
     console.debug(data)

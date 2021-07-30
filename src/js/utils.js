@@ -30,13 +30,13 @@ String.prototype.random = (len=16) => {
 EventTarget.prototype.siblings = siblings
 Element.prototype.siblings = siblings
 Element.prototype.show = function(cb) {
-    this.style.display = this.getAttribute('data-css-display') || 'block'
+    this.style.display = this.dataset.cssDisplay || 'block'
     if (cb) {
         cb.call(this)
     }
 }
 Element.prototype.hide = function(cb) {
-    let originalDisplay = this.getAttribute('data-css-display')
+    let originalDisplay = this.dataset.cssDisplay
     if (!originalDisplay && this.style.display != 'none') {
         originalDisplay = this.style.display
     }
@@ -57,7 +57,6 @@ Element.prototype.parent = function(selector) {
 	for ( ; elem && elem !== document && elem !== Window; elem = elem.parentNode ) {
 		if (elem.matches( selector )) return elem
 	}
-	return;
 }
 Array.prototype.clone = function() {
 	return this.slice(0)
@@ -70,36 +69,34 @@ Number.prototype.between = function(a, b, inclusive) {
 
 const createUTCDate = d => new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()))
 const convertDateToUTC = d => new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds())
-
-const appMessage = (appAlert, type, str) => {
-    const messageTypes = ['warning', 'error', 'info', 'success']
-    let obj;
-    if (str && messageTypes.includes(type)) {
-        obj = {
-            status: type,
-            message: str
-        }
-    } else if (type.hasOwnProperty('status') && messageTypes.includes(type['status'])) {
-        obj = type
+window.toasts = {}
+const toast = async (type, message, heading, noFade) => {
+    const headings = {
+        info: 'Information',
+        error: 'Error',
+        warning: 'Warning',
+        success: 'Success',
     }
-    if (obj) {
-        let font;
-        if (obj['status'] == 'success') {
-            font = 'tick-mark'
-        } else if (obj['status'] == 'error') {
-            font = 'exclamation-square'
-        } else {
-            font = obj['status']
-        }
-        if (appAlert) {
-            const msgId = String().random()
-            appAlert.innerHTML = `<div id="${msgId}" class="alert alert-${obj['status']}"><i class="icofont-${font}"></i>${obj['message']}<i class="icofont-close" title="Dismiss"></i></div>` // nosemgrep
-            const alertEl = document.getElementById(msgId)
-            const closeEl = alertEl.querySelector('.icofont-close')
-            closeEl.addEventListener('click', event => event.currentTarget.parent('.alert').remove(), false)
-            closeEl.addEventListener('touchstart', event => event.currentTarget.parent('.alert').remove(), supportsPassive ? { passive: true } : false)
-        }
+    const uid = ''.random()
+    const template_raw = document.getElementById(`tmpl-toast`)
+    if (!template_raw) {
+        alert(message)
+        return;
     }
+    const container = document.querySelector(`.toast__container`)
+    const template = htmlDecode(template_raw.innerHTML)
+    heading = heading || headings[type]
+    const alert = micromustache.render(template, {message, type, heading, uid})
+    container.insertAdjacentHTML('beforeend', alert)
+    const closeToast = async() => {
+        alertEl.remove()
+        clearTimeout(window.toasts[uid])
+        delete window.toasts[uid]
+    }
+    const alertEl = document.getElementById(uid)
+    alertEl.addEventListener('click', closeToast, false)
+    alertEl.addEventListener('touchstart', closeToast, supportsPassive ? { passive: true } : false)
+    window.toasts[uid] = !!noFade ? message : setTimeout(closeToast, 5000)
 }
 const livetime = async() => {
     for await(const el of document.querySelectorAll('time')) {
