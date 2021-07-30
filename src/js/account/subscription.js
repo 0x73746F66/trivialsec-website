@@ -1,4 +1,6 @@
-const saveBillingEmail = async() => {
+const saveBillingEmail = async event => {
+    if (event.key && event.key !== 'Enter') return;
+    event.preventDefault()
     const billingEmailEl = document.getElementById('billing_email')
     billingEmailEl.classList.remove('error')
     billingEmailEl.classList.remove('success')
@@ -7,12 +9,9 @@ const saveBillingEmail = async() => {
         target: '/account/update-billing-email',
         body: {billing_email}
     })
-    if (json.status == 'success') {
-        billingEmailEl.classList.add('success')
-    }
-    if (json.status == 'error') {
-        billingEmailEl.classList.add('error')
-        alert(json.message)
+    if (json) {
+        billingEmailEl.classList.add(json.status)
+        toast(json.status, json.message)
     }
 }
 
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     setInterval(livetime, 1000)
     const emailChangeEl = document.getElementById('billing_email')
     emailChangeEl.addEventListener("change", saveBillingEmail, false)
-    emailChangeEl.addEventListener('keypress', async event => event.key === 'Enter' ? saveBillingEmail() : void 0)
+    emailChangeEl.addEventListener('keypress', saveBillingEmail, false)
     const live_charts = {}
     for await(const ctx of document.querySelectorAll('.chart.half-doughnut canvas')) {
         const chart_key = ctx.dataset.key

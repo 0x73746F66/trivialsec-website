@@ -1,7 +1,14 @@
 const BaseApi = Object.assign({
     version: "v1",
-    handle_error: async error => {
-        toast('error', error)
+    handle_webauthn_error: async error => {
+        if (['InvalidStateError'].includes(error.name) && error.message.startsWith('A request is already pending')) {
+            return;
+        }
+        if (['NotAllowedError'].includes(error.name)) {
+            toast('warning', 'The operation either timed out or was cancelled', 'Cancelled')
+            return;
+        }
+        toast('error', error.message, error.name, true)
     },
     handle_debug: async error => {// Server DEBUG=on
         console.error(error)
@@ -24,7 +31,7 @@ const BaseApi = Object.assign({
         }
         return json
     },
-    authorization: async target => {
+    authorization_transaction: async target => {
         const apiKeySecret = localStorage.getItem('_apiKeySecret')
         const endpoint_authz_body = JSON.stringify({target})
         const json = await BaseApi.request(
@@ -46,10 +53,72 @@ const BaseApi = Object.assign({
                 })
             }
         })
-        if (!('transaction_id' in json && typeof json['transaction_id'] === 'string')) {
-            return json
+        if (typeof json === 'object') {
+            if ('transaction_id' in json && typeof json.transaction_id === 'string') {
+                return json.transaction_id
+            }
+            if (json.status && json.message && json.status !== 'success') {
+                toast(json.status, json.message)
+            }
         }
-        if (app.keys.length >= 1) {
+        return json
+    },
+    prompt_webauthn: async (credentials, target, transaction_id) => {
+        const assertion = await navigator.credentials.get({
+            publicKey: {
+                challenge: HMAC.enc.encode(app.apiKeyId),
+                rpId: app.domainName,
+                userVerification: "discouraged",
+                allowCredentials: credentials,
+                timeout: 90000,
+            }
+        }).catch(BaseApi.handle_webauthn_error)
+        if (assertion && assertion.response) {
+            const apiKeySecret = localStorage.getItem('_apiKeySecret')
+            const authData = new Uint8Array(assertion.response.authenticatorData)
+            const clientDataJSON = new Uint8Array(assertion.response.clientDataJSON)
+            const rawId = new Uint8Array(assertion.rawId)
+            const sig = new Uint8Array(assertion.response.signature)
+            const assertionClientExtensions = assertion.getClientExtensionResults()
+            const assertion_response = {
+              id: assertion.id,
+              rawId: arrayBufferToBase64(rawId),
+              type: assertion.type,
+              authData: arrayBufferToBase64(authData),
+              clientData: arrayBufferToBase64(clientDataJSON),
+              signature: hexEncode(sig),
+              assertionClientExtensions: JSON.stringify(assertionClientExtensions),
+            }
+            const authz_body = JSON.stringify({
+                assertion_response,
+                target,
+                transaction_id
+            })
+            return BaseApi.request(
+                `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/authorization`, {
+                mode: "cors",
+                credentials: "omit",
+                method: "POST",
+                body: authz_body,
+                headers: {
+                    'Authorization': await HMAC.header({
+                        credentials: {
+                            id: app.apiKeyId,
+                            key: apiKeySecret,
+                            alg: HMAC.default_algorithm
+                        },
+                        uri: `/${BaseApi.version}/authorization`,
+                        body: authz_body,
+                        method: "POST"
+                    })
+                }
+            })
+        }
+    },
+    authorization: async (target, transaction_id) => {
+        const try_webauthn = app.keys.length >= 1
+        const try_totp = !!app.mfaId
+        if (try_webauthn) {
             const allowCredentials = []
             for await(const key of app.keys) {
                 allowCredentials.push({
@@ -58,61 +127,13 @@ const BaseApi = Object.assign({
                     transports: ['usb', 'ble', 'nfc', 'internal'],
                 })
             }
-            const assertion = await navigator.credentials.get({
-                publicKey: {
-                    challenge: HMAC.enc.encode(app.apiKeyId),
-                    rpId: app.domainName,
-                    userVerification: "discouraged",
-                    allowCredentials,
-                    timeout: 90000,
-                }
-            }).catch(BaseApi.handle_error)
-            if (assertion) {
-                const response = assertion.response
-                const authData = new Uint8Array(response.authenticatorData)
-                const clientDataJSON = new Uint8Array(response.clientDataJSON)
-                const rawId = new Uint8Array(assertion.rawId)
-                const sig = new Uint8Array(response.signature)
-                const assertionClientExtensions = assertion.getClientExtensionResults()
-                const assertion_response = {
-                  id: assertion.id,
-                  rawId: arrayBufferToBase64(rawId),
-                  type: assertion.type,
-                  authData: arrayBufferToBase64(authData),
-                  clientData: arrayBufferToBase64(clientDataJSON),
-                  signature: hexEncode(sig),
-                  assertionClientExtensions: JSON.stringify(assertionClientExtensions),
-                }
-                const authz_body = JSON.stringify({
-                    assertion_response,
-                    target,
-                    transaction_id: json.transaction_id
-                })
-                const authz = await BaseApi.request(
-                    `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/authorization`, {
-                    mode: "cors",
-                    credentials: "omit",
-                    method: "POST",
-                    body: authz_body,
-                    headers: {
-                        'Authorization': await HMAC.header({
-                            credentials: {
-                                id: app.apiKeyId,
-                                key: apiKeySecret,
-                                alg: HMAC.default_algorithm
-                            },
-                            uri: `/${BaseApi.version}/authorization`,
-                            body: authz_body,
-                            method: "POST"
-                        })
-                    }
-                })
-                if (!('authorization_token' in authz && typeof authz.authorization_token === 'string')) {
-                    return false
-                }
-                return authz.authorization_token
+            const prompt_resp = await BaseApi.prompt_webauthn(allowCredentials, target, transaction_id)
+            if (typeof prompt_resp === 'object' && 'authorization_token' in prompt_resp && typeof prompt_resp.authorization_token === 'string') {
+                return prompt_resp.authorization_token
             }
-        } else {
+            return prompt_resp
+        }
+        if (try_totp) {
             // const totp_code = Array.from(document.querySelectorAll('.totp__fieldset input')).map(n=>n.value).join('')
             // const json = await PublicApi.post({
             //     target: '/authorization/totp',
@@ -271,14 +292,17 @@ const PublicApi = Object.assign({
         }, options)
         const url = `${app.apiScheme}${app.apiDomain}/${BaseApi.version}${config.target}`
         const method = 'GET'
-        let authorization_token
-        const authz_resp = await BaseApi.authorization(config.target)
-        if (typeof authz_resp === 'string') {
-            authorization_token = authz_resp
-            config.headers['X-Authorization-Token'] = authorization_token
-        } else if (typeof authz_resp === 'object' && 'status' in authz_resp && authz_resp.message != 'ok') {
-            document.body.classList.remove('loading')
-            return authz_resp
+        const transaction_id = await BaseApi.authorization_transaction(config.target)
+        if (typeof transaction_id === 'string') {
+            const authz_resp = await BaseApi.authorization(config.target, transaction_id)
+            if (!authz_resp) {
+                return;
+            } else if (typeof authz_resp === 'string') {
+                config.headers['X-Authorization-Token'] = authz_resp
+            } else if (typeof authz_resp === 'object' && 'status' in authz_resp && authz_resp.message != 'ok') {
+                document.body.classList.remove('loading')
+                return authz_resp
+            }
         }
         if (config.sign !== false) {
             if (!('apiKeyId' in app)) {
@@ -315,14 +339,17 @@ const PublicApi = Object.assign({
             headers: {"Content-Type": HMAC.default_content_type},
             sign: true
         }, options)
-        let authorization_token;
-        const authz_resp = await BaseApi.authorization(config.target)
-        if (typeof authz_resp === 'string') {
-            authorization_token = authz_resp
-            config.headers['X-Authorization-Token'] = authorization_token
-        } else if (typeof authz_resp === 'object' && 'status' in authz_resp && authz_resp.message != 'ok') {
-            document.body.classList.remove('loading')
-            return authz_resp
+        const transaction_id = await BaseApi.authorization_transaction(config.target)
+        if (typeof transaction_id === 'string') {
+            const authz_resp = await BaseApi.authorization(config.target, transaction_id)
+            if (!authz_resp) {
+                return;
+            } else if (typeof authz_resp === 'string') {
+                config.headers['X-Authorization-Token'] = authz_resp
+            } else if (typeof authz_resp === 'object' && 'status' in authz_resp && authz_resp.message != 'ok') {
+                document.body.classList.remove('loading')
+                return authz_resp
+            }
         }
         const url = `${app.apiScheme}${app.apiDomain}/${BaseApi.version}${config.target}`
         const content = JSON.stringify(config.body)

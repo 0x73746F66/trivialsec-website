@@ -1,4 +1,6 @@
-const save_email = async() => {
+const save_email = async event => {
+    if (event.key && event.key !== 'Enter') return;
+    event.preventDefault()
     const emailEl = document.getElementById('email')
     emailEl.classList.remove('error')
     emailEl.classList.remove('success')
@@ -39,6 +41,7 @@ const remove_device = async event => {
     }
 }
 const change_name = async event => {
+    if (event.key && event.key !== 'Enter') return;
     event.preventDefault()
     if (inputHandle) {
         clearTimeout(inputHandle)
@@ -72,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     setInterval(livetime, 1000)
     const emailChangeEl = document.getElementById('email')
     emailChangeEl.addEventListener("change", save_email, false)
-    emailChangeEl.addEventListener('keypress', async event => event.key === 'Enter' ? save_email() : void 0)
+    emailChangeEl.addEventListener('keypress', save_email, false)
     const regenerateEl = document.getElementById('regenerate')
     if (regenerateEl) {
         regenerateEl.addEventListener("click", regenerate_scratch, false)
@@ -80,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     }
     for (const el of document.querySelectorAll('.u2fkeyname')) {
         el.addEventListener("input", handle_input, false)
-        el.addEventListener("keypress", async event => event.key === 'Enter' ? change_name(event) : void 0)
+        el.addEventListener("keypress", change_name, false)
     }
     for (const el of document.querySelectorAll('.remove-device')) {
         el.addEventListener("click", remove_device, false)

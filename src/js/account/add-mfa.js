@@ -103,7 +103,7 @@ const createWebauthn = async () => {
             timeout: 90000,
             attestation: "direct"
         }
-    }).catch(BaseApi.handle_error)
+    }).catch(BaseApi.handle_webauthn_error)
     if (credential && credential.response) {
         const decodedClientData = decoder.decode(credential.response.clientDataJSON)
         const webauthn_challenge = JSON.parse(decodedClientData).challenge
@@ -157,7 +157,7 @@ const verifyWebauthn = async () => {
             }],
             timeout: 90000,
         }
-    }).catch(BaseApi.handle_error)
+    }).catch(BaseApi.handle_webauthn_error)
     if (assertion) {
         const response = assertion.response
         const authData = new Uint8Array(response.authenticatorData)
