@@ -134,7 +134,7 @@ const BaseApi = Object.assign({
             return prompt_resp
         }
         if (try_totp) {
-            const authorization_token = localStorage.getItem('_authzToken')
+            const authorization_token = sessionStorage.getItem(`_totp_${target}`)
             if (authorization_token) {
                 return authorization_token
             }
@@ -186,7 +186,7 @@ const BaseApi = Object.assign({
                 }
             })
             if (json.status && json.status == "success") {
-                localStorage.setItem('_authzToken', json.authorization_token)
+                sessionStorage.setItem(`_totp_${target}`, json.authorization_token)
                 document.querySelector('.totp-container .totp-message').remove()
                 document.querySelector('.totp-container .totp__fieldset').remove()
                 document.getElementById('verify-totp').remove()
