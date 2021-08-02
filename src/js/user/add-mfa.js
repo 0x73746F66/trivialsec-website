@@ -240,8 +240,8 @@ const handle_totp_paste = async event => {
 }
 
 document.addEventListener('DOMContentLoaded', async() => {
-    if (location.pathname != '/account/add-mfa') {
-        history.pushState({}, document.title, '/account/add-mfa')
+    if (location.pathname != '/me/add-mfa') {
+        history.pushState({}, document.title, '/me/add-mfa')
     }
     if (!('credentials' in navigator)) {
         document.querySelector('.ChooseMfa__label.webauthn').title = 'Hardware Security Keys are not supported on this browser'

@@ -1,0 +1,112 @@
+@use "../var";
+@import "../inputs";
+@import "../tables";
+
+h2 {
+	color: #666;
+	margin: 0 0 20px 0;
+}
+section.fields {
+	width: 90%;
+	margin: 2% 9% 0 1%;
+	.fields--message {
+		margin: auto 0;
+	}
+}
+.fields {
+	&-row {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		margin: 0 0 1rem 0;
+	}
+	.heading {
+		font-size: 1.5em;
+		text-align: left;
+		img {
+			vertical-align: sub;
+			width: 30px;
+		}
+	}
+}
+.column {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 100%;
+	flex: 1;
+}
+.label-column {
+	flex: 30%;
+	label {
+		margin: auto 0;
+	}
+}
+.input-column {
+	flex: 70%;
+}
+.profile {
+	margin: 0 auto;
+	position: relative;
+	overflow: hidden;
+	&__header {
+		position: relative;
+	}
+	&__roles, &__info  {
+		color: var.$grey_lightest;
+		position: absolute;
+		top: 0;
+		width: 20%;
+		h3 {
+			color: #fff;
+		}
+		img {
+			width: 20px;
+			vertical-align: middle;
+		}
+		li {
+			list-style: none;
+		}
+	}
+	&__roles {
+		left: calc(5% + 208px);
+	}
+	&__info {
+		left: calc(30% + 208px);
+		span {
+			display: inline-block;
+			font-weight: 600;
+			width: 30%;
+		}
+	}
+	.backdrop {
+		width: 100%;
+		height: 230px;
+		background-image: url("/images/ddos.jpeg");
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center;
+		&:after {
+			content: '';
+			backdrop-filter: blur(8px);
+			position: absolute;
+			width: 100%;
+			height: 100%;
+		}
+	}
+	.avatar {
+		width: 200px;
+		border-radius: 200px;
+		border: 4px solid rgba(255, 255, 255, 0.2);
+		position: absolute;
+		top: calc(50% - 104px);
+		left: 2rem;
+		z-index: 2;
+		background-color: rgba(255, 255, 255, 0.2);
+		backdrop-filter: blur(10px);
+		overflow: hidden;
+		svg {
+			display: block;
+			margin: auto;
+		}
+	}
+}

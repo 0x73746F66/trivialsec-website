@@ -1,18 +1,3 @@
-const save_email = async event => {
-    if (event.key && event.key !== 'Enter') return;
-    event.preventDefault()
-    const emailEl = document.getElementById('email')
-    emailEl.classList.remove('error')
-    emailEl.classList.remove('success')
-    const new_email = emailEl.value
-    const json = await PublicApi.post({
-        target: '/account/update-email',
-        body: {new_email}
-    })
-    emailEl.classList.add(json.status)
-    toast(json.status, json.message)
-}
-
 const regenerate_scratch = async() => {
     const scratchEl = document.getElementById('scratch_code')
     const json = await PublicApi.get({target: '/recovery/regenerate-scratch'})
@@ -67,15 +52,13 @@ const handle_input = async event => {
 }
 
 document.addEventListener('DOMContentLoaded', async() => {
-    if (location.pathname != '/account/preferences') {
-        history.pushState({}, document.title, '/account/preferences')
+    if (location.pathname != '/me/security') {
+        history.pushState({}, document.title, '/me/security')
     }
     sidebar()
     livetime()
     setInterval(livetime, 1000)
-    const emailChangeEl = document.getElementById('email')
-    emailChangeEl.addEventListener("change", save_email, false)
-    emailChangeEl.addEventListener('keypress', save_email, false)
+
     const regenerateEl = document.getElementById('regenerate')
     if (regenerateEl) {
         regenerateEl.addEventListener("click", regenerate_scratch, false)

@@ -51,9 +51,6 @@ a {
 		}
 	}
 }
-.grecaptcha-badge {
-	visibility: hidden;
-}
 .container,
 .navigation-top {
 	padding-left: 0.5em;
@@ -308,181 +305,6 @@ a {
 	top: 10px;
 	color: #1ABB9C;
 }
-.backend-switcher {
-	position: relative;
-	margin-left: 50px;
-	width: 150px;
-	display: inline-block;
-	top: 9px;
-	background-color: transparent;
-	width: unset;
-	a {
-		text-decoration: none;
-	}
-	i {
-		font-size: 32px;
-		color: #1ABB9C;
-	}
-	div {
-		display: inline-block;
-		line-height: 32px;
-		position: relative;
-		bottom: 3px;
-		color: #1ABB9C;
-		font-size: 18px;
-		vertical-align: top;
-	}
-}
-input[type=button],
-input[type=submit],
-input[type=reset] {
-	border: none;
-	color: #3a3a3a;
-	padding: 15px 80px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	text-transform: uppercase;
-	font-size: 13px;
-	-webkit-border-radius: 5px 5px 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	margin: 5px 20px 40px 20px;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-ms-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
-	transition: all 0.3s ease-in-out;
-	background-color: #1ABB9C;
-}
-input[type=button]:hover,
-input[type=submit]:hover,
-input[type=reset]:hover {
-	background-color: #1ABB9C;
-}
-input[type=button]:active,
-input[type=submit]:active,
-input[type=reset]:active {
-	-moz-transform: scale(0.95);
-	-webkit-transform: scale(0.95);
-	-o-transform: scale(0.95);
-	-ms-transform: scale(0.95);
-	transform: scale(0.95);
-}
-input[disabled],
-button[disabled] {
-	cursor: not-allowed;
-}
-button,
-input[type=button],
-input[type=submit] {
-	cursor: pointer;
-}
-button {
-	background-color: #36ccaf;
-	border: 0;
-	min-height: 32px;
-	width: 130px;
-	cursor: pointer;
-	color: #3a3a3a;
-	&:active {
-		transform: translateX(1px) translateY(2px);
-	}
-	&:hover {
-		background: rgb(54 204 175);
-	}
-	&::-moz-focus-inner {
-		border: 0;
-	}
-}
-label {
-	cursor: pointer;
-	display: block;
-	-webkit-transition: 125ms color ease-out;
-	transition: 125ms color ease-out;
-	&:focus-within {
-		color: rgb(54 204 175);
-	}
-}
-input[type="email"],
-input[type="password"],
-input[type="text"]:not(.choices__input),
-input[type="number"],
-textarea {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	border: 1px solid #e0e0e0;
-	border-bottom-color: #444444;
-	border-radius: 0;
-	display: block;
-	color: #3a3a3a;
-	line-height: 2;
-	margin-top: 0.5em;
-	margin-bottom: 1.5em;
-	padding: 0.85em 0.75em 0.75em 0.75em;
-	width: calc(100% - 2.25em);
-	-webkit-transition: 125ms border-color ease-out;
-	transition: 125ms border-color ease-out;
-}
-input[type="email"]:hover,
-input[type="password"]:hover,
-input[type="text"]:hover,
-input[type="number"]:hover,
-textarea:hover {
-	border-color: #444444;
-}
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="text"]:focus:not(.choices__input),
-input[type="number"]:focus,
-textarea:focus {
-	border-color: rgb(54 204 175);
-	outline: 1px solid rgb(54 204 175);
-}
-.choices__list--multiple {
-	.choices__item {
-		background-color: #36ccaf;
-		border: 1px solid #2bbda0;
-		color: #3a3a3a;
-	}
-}
-textarea {
-	line-height: 1.5;
-	margin-bottom: 0.5em;
-	min-height: 4em;
-	overflow: auto;
-	resize: vertical;
-}
-.flash-row {
-	td {
-		animation-name: flash-fade;
-		animation-duration: 800ms;
-		animation-iteration-count: 1;
-		animation-timing-function: linear;
-		-webkit-animation-name: flash-fade;
-		-webkit-animation-duration: 800ms;
-		-webkit-animation-iteration-count: 1;
-		-webkit-animation-timing-function: linear;
-		-moz-animation-name: flash-fade;
-		-moz-animation-duration: 800ms;
-		-moz-animation-iteration-count: 1;
-		-moz-animation-timing-function: linear;
-	}
-}
-.flash-input {
-	animation-name: flash-fade;
-	animation-duration: 800ms;
-	animation-iteration-count: 1;
-	animation-timing-function: linear;
-	-webkit-animation-name: flash-fade;
-	-webkit-animation-duration: 800ms;
-	-webkit-animation-iteration-count: 1;
-	-webkit-animation-timing-function: linear;
-	-moz-animation-name: flash-fade;
-	-moz-animation-duration: 800ms;
-	-moz-animation-iteration-count: 1;
-	-moz-animation-timing-function: linear;
-}
 .user-profile-wrapper {
 	float: right;
 	position: relative;
@@ -572,38 +394,11 @@ textarea {
 	}
 }
 
-form:focus-within {
-    box-shadow: 0px 0.2em 2.5em #c4c4c4;
-    -webkit-transform: scale(1.025);
-            transform: scale(1.025);
-  }
-  @media screen and (prefers-reduced-motion: reduce) {
-    form:focus-within {
-      box-shadow: none;
-      -webkit-transform: none;
-              transform: none;
-    }
-}
 @keyframes rotation {
     from {
       transform: rotate(0deg);
     }
     to {
       transform: rotate(359deg);
-    }
-}
-@keyframes flash-fade {
-    0% {
-        background-color: #1abb9c;
-        opacity: 1;
-    }
-    22% {
-        background-color: #1ABB9C8f;
-    }
-    77% {
-        background-color: #1ABB9C34;
-    }
-    100% {
-        background-color: transparent;
     }
 }

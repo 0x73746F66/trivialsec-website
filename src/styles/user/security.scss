@@ -13,11 +13,21 @@ section.fields {
 		margin: auto 0;
 	}
 }
-.fields-row {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	margin: 0 0 1rem 0;
+.fields {
+	&-row {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		margin: 0 0 1rem 0;
+	}
+	.heading {
+		font-size: 1.5em;
+		text-align: left;
+		img {
+			vertical-align: sub;
+			width: 30px;
+		}
+	}
 }
 .column {
 	display: flex;
@@ -41,10 +51,11 @@ section.fields {
 	}
 }
 .mfa-list caption {
+	font-size: 2em;
 	text-align: left;
-	margin: 1rem 0 0 0;
 	img {
-		vertical-align: bottom;
+		vertical-align: middle;
+		width: 35px;
 	}
 }
 .add-mfa {
