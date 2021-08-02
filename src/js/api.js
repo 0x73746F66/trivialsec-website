@@ -115,7 +115,57 @@ const BaseApi = Object.assign({
             })
         }
     },
-    authorization: async (transaction_id) => {
+    authorization: async (transaction_id, target) => {
+        const authorization_token = sessionStorage.getItem(`_totp_${transaction_id}`)
+        if (typeof authorization_token === 'string') {
+
+            const apiKeySecret = localStorage.getItem('_apiKeySecret')
+            const authz_body = JSON.stringify({
+                target,
+                transaction_id,
+                authorization_token,
+            })
+            const json = await BaseApi.request(
+                `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/authorization/check`, {
+                mode: "cors",
+                credentials: "omit",
+                method: "POST",
+                body: authz_body,
+                headers: {
+                    'Authorization': await HMAC.header({
+                        credentials: {
+                            id: app.apiKeyId,
+                            key: apiKeySecret,
+                            alg: HMAC.default_algorithm
+                        },
+                        uri: `/${BaseApi.version}/authorization/check`,
+                        body: authz_body,
+                        method: "POST"
+                    })
+                }
+            })
+            // First handle any errors, info is expected when something is not fresh
+            json.status ??= 'error'
+            json.message ??= 'Authorization Failed'
+            if (json.status === "error") {
+                toast(json.status, json.message, undefined, true)
+                return json
+            }
+            // Then check transaction_id freshness
+            const old_transaction_id = transaction_id
+            transaction_id = json?.transaction_id || old_transaction_id
+            if (old_transaction_id === transaction_id) {
+                // transaction_id is fresh
+                return authorization_token
+            } else {
+                sessionStorage.setItem(`_authz_${target}`, transaction_id)
+            }
+            if (json.status === "success" && json.message === "ok") {
+                // both authorization_token and transaction_id are fresh
+                return authorization_token
+            }
+        }
+        // authorization_token is stale
         const try_webauthn = app.keys.length >= 1
         const try_totp = !!app.mfaId
         if (try_webauthn) {
@@ -129,15 +179,12 @@ const BaseApi = Object.assign({
             }
             const prompt_resp = await BaseApi.prompt_webauthn(allowCredentials, transaction_id)
             if (typeof prompt_resp === 'object' && 'authorization_token' in prompt_resp && typeof prompt_resp.authorization_token === 'string') {
+                sessionStorage.setItem(`_totp_${transaction_id}`, prompt_resp.authorization_token)
                 return prompt_resp.authorization_token
             }
             return prompt_resp
         }
         if (try_totp) {
-            const authorization_token = sessionStorage.getItem(`_totp_${transaction_id}`)
-            if (authorization_token) {
-                return authorization_token
-            }
             const overlay = document.createElement('div')
             overlay.classList.add('totp-overlay')
             document.body.insertAdjacentElement('afterbegin', overlay)
@@ -390,7 +437,7 @@ const PublicApi = Object.assign({
             transaction_id = await BaseApi.authorization_transaction(config.target)
         }
         if (typeof transaction_id === 'string') {
-            const authz_resp = await BaseApi.authorization(transaction_id)
+            const authz_resp = await BaseApi.authorization(transaction_id, config.target)
             if (!authz_resp) {
                 return;
             } else if (typeof authz_resp === 'string') {
@@ -440,7 +487,7 @@ const PublicApi = Object.assign({
             transaction_id = await BaseApi.authorization_transaction(config.target)
         }
         if (typeof transaction_id === 'string') {
-            const authz_resp = await BaseApi.authorization(transaction_id)
+            const authz_resp = await BaseApi.authorization(transaction_id, config.target)
             if (!authz_resp) {
                 return;
             } else if (typeof authz_resp === 'string') {

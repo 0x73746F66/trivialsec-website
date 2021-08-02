@@ -18,8 +18,6 @@ document.addEventListener('DOMContentLoaded', async() => {
         history.pushState({}, document.title, '/me')
     }
     sidebar()
-    livetime()
-    setInterval(livetime, 1000)
     const emailChangeEl = document.getElementById('email')
     emailChangeEl.addEventListener("change", save_email, false)
     emailChangeEl.addEventListener('keypress', save_email, false)
