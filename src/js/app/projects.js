@@ -1,7 +1,7 @@
 window.choices_rendered = {}
 const projectsAction = async event => {
     const project_id = event.currentTarget.parent('tr').dataset.projectId
-    location.href = `/scope/${project_id}`
+    location.href = `/project/${project_id}`
 }
 const handleSocket = async data => {
     console.debug(data)
@@ -52,21 +52,11 @@ const createProject = async event => {
     iconEl.classList.remove('rotate')
     iconEl.classList.add('icofont-ui-check')
 }
-let socket, socketio_token;
 document.addEventListener('DOMContentLoaded', async () => {
-    socketio_token = document.querySelector('[name=socketio_token]').value
-    socket = io(`${app.websocketScheme}${app.websocketDomain}`)
-    socket.on('disconnect', (reason) => {
-        console.debug(`Disconnected: ${reason}`)
-    })
-    socket.on('connect', () => {
-        console.debug('Connected')
-        socket.emit('checkin', socketio_token)
-    })
-    socket.on('update_job_state', handleSocket)
-    socket.on('dns_changes', handleSocket)
-    socket.on('domain_changes', handleSocket)
-    socket.on('check_domains_tld', handleSocket)
+    app.websocket.on('update_job_state', handleSocket)
+    app.websocket.on('dns_changes', handleSocket)
+    app.websocket.on('domain_changes', handleSocket)
+    app.websocket.on('check_domains_tld', handleSocket)
 
     const createEl = document.getElementById('create_project_input')
     createEl.addEventListener('click', createProject, false)

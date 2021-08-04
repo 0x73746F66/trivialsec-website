@@ -54,18 +54,7 @@ const handleSocket = async data => {
         }
     }
 }
-let socket, socketio_token;
 document.addEventListener('DOMContentLoaded', async() => {
-    socketio_token = document.querySelector('[name=socketio_token]').value
-    socket = io(`${app.websocketScheme}${app.websocketDomain}`)
-    socket.on('disconnect', (reason) => {
-        console.debug(`Disconnected: ${reason}`)
-    })
-    socket.on('connect', () => {
-        console.debug('Connected')
-        socket.emit('checkin', socketio_token)
-
-    })
     socket.on('update_job_state', handleSocket)
     socket.on('dns_changes', handleSocket)
     socket.on('domain_changes', handleSocket)

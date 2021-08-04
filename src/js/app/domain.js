@@ -1,6 +1,6 @@
 const project_id = document.getElementById('project-id').value
 const page_domain_id = document.getElementById('domain-id').value
-let socket, socketio_token, findings_chart;
+let findings_chart;
 const subdomainsAction = async event => {
     const id = event.currentTarget.parent('tr').dataset.domainId
     location.href = `/domain/${id}`
@@ -61,15 +61,6 @@ const handleSocket = async data => {
     console.debug(data)
 }
 document.addEventListener('DOMContentLoaded', async() => {
-    socketio_token = document.querySelector('[name=socketio_token]').value
-    socket = io(`${app.websocketScheme}${app.websocketDomain}`)
-    socket.on('disconnect', (reason) => {
-        console.debug(`Disconnected: ${reason}`)
-    })
-    socket.on('connect', () => {
-        console.debug('Connected')
-        socket.emit('checkin', socketio_token)
-    })
     socket.on('update_job_state', handleSocket)
     socket.on('dns_changes', handleSocket)
     socket.on('domain_changes', handleSocket)

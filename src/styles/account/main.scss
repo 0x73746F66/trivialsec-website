@@ -389,6 +389,9 @@ a.underline-hover:hover {
 		text-decoration: none;
 	}
 }
+/**
+ * TOTP prompt
+ */
 .totp-overlay {
 	z-index: 2;
 	background-color: var.$secondary_light_alpha50;

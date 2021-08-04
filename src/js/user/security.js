@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', async() => {
     if (location.pathname != '/me/security') {
         history.pushState({}, document.title, '/me/security')
     }
-    sidebar()
     livetime()
     setInterval(livetime, 1000)
 

@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', async() => {
     if (location.pathname != '/me') {
         history.pushState({}, document.title, '/me')
     }
-    sidebar()
     const emailChangeEl = document.getElementById('email')
     emailChangeEl.addEventListener("change", save_email, false)
     emailChangeEl.addEventListener('keypress', save_email, false)

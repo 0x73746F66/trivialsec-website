@@ -1,3 +1,7 @@
+const init_services = async() => {
+    socket.on('update_service_state', update_service_state)
+    setTimeout(check_offline, 10000)
+}
 const update_service_state = data => {
     if (!('service' in data)) {
         console.log(data)
@@ -27,7 +31,7 @@ const update_service_state = data => {
     category_el.querySelector('.running span').textContent = data.running_jobs
     category_el.querySelector('.errors span').textContent = data.errored_jobs
     category_el.querySelector('.last-event span').textContent = data.last_event
-    category_el.querySelector('.timestamp span').innerHTML = `<time datetime="${convertDateToUTC(new Date).toISOString()}" title="${(new Date).toLocaleString(window.navigator.userLanguage || window.navigator.language)}"></time>` // nosemgrep
+    category_el.querySelector('.timestamp span').innerHTML = `<time datetime="${convertDateToUTC(new Date).toISOString()}" title="${(new Date).toLocaleString(app.lang)}"></time>` // nosemgrep
 }
 const check_offline = async() => {
     for await(const el of document.querySelectorAll('.service-status-connecting')) {
@@ -36,17 +40,4 @@ const check_offline = async() => {
         el.textContent = 'Offline'
     }
 }
-let socket, socketio_token;
-document.addEventListener('DOMContentLoaded', () => {
-    socketio_token = document.querySelector('[name=socketio_token]').value
-    socket = io(`${app.websocketScheme}${app.websocketDomain}`)
-    socket.on('connect', () => {
-        console.debug('Connected')
-        socket.emit('checkin', socketio_token)
-    })
-    socket.on('disconnect', (reason) => {
-        console.debug(`Disconnected: ${reason}`)
-    })
-    setTimeout(check_offline, 10000)
-    socket.on('update_service_state', update_service_state)
-}, false)
+document.addEventListener('DOMContentLoaded', init_services, false)

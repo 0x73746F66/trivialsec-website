@@ -1,17 +1,3 @@
-window.app = {...document.head.querySelector('[name=application-name]').dataset}
-app.keys = 'keys' in app ?JSON.parse(app.keys):[]
-const lang = window.navigator.userLanguage || window.navigator.language
-var supportsPassive = false
-try {
-  let opts = Object.defineProperty({}, 'passive', {
-    get: function() {
-      supportsPassive = true
-    }
-  })
-  window.addEventListener("testPassive", null, opts)
-  window.removeEventListener("testPassive", null, opts)
-} catch (e) {}
-
 const siblings = function() {
     let elems = []
     let sibling = this.parentNode.firstChild
@@ -66,7 +52,6 @@ Number.prototype.between = function(a, b, inclusive) {
     const max = Math.max(a, b)
     return !!inclusive ? this >= min && this <= max : this > min && this < max
 }
-
 const createUTCDate = d => new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()))
 const convertDateToUTC = d => new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds())
 window.toasts = {}
@@ -101,8 +86,8 @@ const toast = async (type, message, heading, noFade) => {
 const livetime = async() => {
     for await(const el of document.querySelectorAll('time')) {
         const utc = createUTCDate(new Date(el.getAttribute('datetime')))
-        el.setAttribute('title', utc.toLocaleString(window.navigator.userLanguage || window.navigator.language))
-        el.textContent = timeago.format(utc, lang)
+        el.setAttribute('title', utc.toLocaleString(app.lang))
+        el.textContent = timeago.format(utc, app.lang)
     }
 }
 const validDomain = domain_name => {
