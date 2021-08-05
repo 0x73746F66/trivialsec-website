@@ -2,7 +2,7 @@ const decoder = (new TextDecoder)
 const enc = (new TextEncoder)
 const chooseMfa = async event => {
     if (event.currentTarget.id != 'choose-mfa') {
-        toast('warning', 'This feature is not currently available', 'Sorry')
+        void toast('warning', 'This feature is not currently available', 'Sorry')
         return;
     }
     const mfaTypeArr = Array.from(document.getElementsByName('mfaType')).filter(e => e.checked)
@@ -27,7 +27,7 @@ const chooseMfa = async event => {
 const generateTotp = async () => {
     const json = await PublicApi.get({target: '/add-mfa/totp'})
     if (json.status && json.status == 'success') {
-        toast('info', json.message, 'TOTP Setup', true)
+        void toast('info', json.message, 'TOTP Setup', true)
         document.getElementById('totp-secret-code').textContent = json.totp_code
         const image = document.createElement('img')
         image.src = `data:image/png;base64,${json.qr_code}`
@@ -48,7 +48,7 @@ const generateTotp = async () => {
         document.getElementById('totp-message').textContent = json.message
         return;
     }
-    toast(json.status, json.message)
+    void toast(json.status, json.message)
 }
 
 const verifyTotp = async() => {
@@ -57,7 +57,7 @@ const verifyTotp = async() => {
         target: '/add-mfa/totp',
         body: {totp_code}
     })
-    toast(json.status, json.message)
+    void toast(json.status, json.message)
     if (json.status && json.status == "success") {
         const successEl = document.querySelector('.verify-totp .success-checkmark_off')
         successEl.classList.remove('success-checkmark_off')
@@ -127,7 +127,7 @@ const createWebauthn = async () => {
             }
         })
         if (json.status && json.status == 'error' && json.message == 'Unauthorised') {
-            toast('warning', json.error, 'Cancelled', false)
+            void toast('warning', json.error, 'Cancelled', false)
             return;
         }
         if (json.status && json.status == 'success') {
@@ -136,12 +136,12 @@ const createWebauthn = async () => {
             app.keys = [{webauthn_id}]
             return verifyWebauthn()
         }
-        toast(json.status, json.message)
+        void toast(json.status, json.message)
     }
 }
 const verifyWebauthn = async () => {
     if (app.keys.length === 0) {
-        toast('error', 'No device registered')
+        void toast('error', 'No device registered')
         return;
     }
     const credentialId = app.keys[0].webauthn_id
@@ -178,7 +178,7 @@ const verifyWebauthn = async () => {
             target: '/add-mfa/webauthn',
             body: {assertion_response},
         })
-        toast(json.status, json.message)
+        void toast(json.status, json.message)
         if (json.status && json.status == "success") {
             const successEl = document.querySelector('.confirm-webauthn .success-checkmark_off')
             successEl.classList.remove('success-checkmark_off')
@@ -217,7 +217,7 @@ const handle_totp_paste = async event => {
     let clipboardData = event.clipboardData || window.clipboardData
     const totp_code = clipboardData.getData('Text')
     if (!totp_code) {
-        toast('warning', 'The copy/paste did not work, please try to type your recovery code', 'Sorry')
+        void toast('warning', 'The copy/paste did not work, please try to type your recovery code', 'Sorry')
         return;
     }
     const firstEl = document.querySelectorAll('.totp__fieldset input')[0]
@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         document.querySelector('.ChooseMfa__label.webauthn').title = 'Hardware Security Keys are not supported on this browser'
         document.querySelector('.ChooseMfa__label.webauthn').classList.add('disabled')
         document.querySelector('.ChooseMfa__label.webauthn input').disabled = true
-        toast('warning', 'This feature is not currently available for your browser', 'Sorry')
+        void toast('warning', 'This feature is not currently available for your browser', 'Sorry')
     }
     const chooseMfaEl = document.getElementById('choose-mfa')
     chooseMfaEl.addEventListener('click', chooseMfa, false)

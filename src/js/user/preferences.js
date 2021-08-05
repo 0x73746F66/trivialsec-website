@@ -10,7 +10,7 @@ const save_email = async event => {
         body: {new_email}
     })
     emailEl.classList.add(json.status)
-    toast(json.status, json.message)
+    void toast(json.status, json.message)
 }
 
 document.addEventListener('DOMContentLoaded', async() => {

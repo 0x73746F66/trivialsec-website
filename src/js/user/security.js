@@ -7,12 +7,12 @@ const regenerate_scratch = async() => {
         document.getElementById('regenerate').remove()
     }
     scratchEl.classList.add(json.status)
-    toast(json.status, json.message)
+    void toast(json.status, json.message)
 }
 const remove_device = async event => {
     const device_id = event.currentTarget.parent('tr').dataset.mfaId
     if (!device_id) {
-        toast('info', 'This feature is not currently available', 'Sorry')
+        void toast('info', 'This feature is not currently available', 'Sorry')
         return;
     }
     const json = await PublicApi.post({
@@ -20,7 +20,7 @@ const remove_device = async event => {
         body: {device_id},
     })
     event.target.classList.add(json.status)
-    toast(json.status, json.message)
+    void toast(json.status, json.message)
     if (json.status === 'success') {
         document.querySelector(`tr[data-mfa-id="${device_id}"]`).remove()
     }
@@ -41,7 +41,7 @@ const change_name = async event => {
         },
     })
     event.target.classList.add(json.status)
-    toast(json.status, json.message)
+    void toast(json.status, json.message)
 }
 var inputHandle;
 const handle_input = async event => {

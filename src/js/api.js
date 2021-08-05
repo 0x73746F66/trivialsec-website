@@ -5,10 +5,10 @@ const BaseApi = Object.assign({
             return;
         }
         if (['NotAllowedError'].includes(error.name)) {
-            toast('warning', 'The operation either timed out or was cancelled', 'Cancelled')
+            void toast('warning', 'The operation either timed out or was cancelled', 'Cancelled')
             return;
         }
-        toast('error', error.message, error.name, true)
+        void toast('error', error.message, error.name, true)
     },
     handle_debug: async error => {// Server DEBUG=on
         console.error(error)
@@ -55,11 +55,11 @@ const BaseApi = Object.assign({
         })
         if (typeof json === 'object') {
             if ('transaction_id' in json && typeof json.transaction_id === 'string') {
-                sessionStorage.setItem(`_authz_${target}`, json.transaction_id)
+                void sessionStorage.setItem(`_authz_${target}`, json.transaction_id)
                 return json.transaction_id
             }
             if (json.status && json.message && json.status !== 'success') {
-                toast(json.status, json.message)
+                void toast(json.status, json.message)
             }
         }
         return json
@@ -118,7 +118,6 @@ const BaseApi = Object.assign({
     authorization: async (transaction_id, target) => {
         const authorization_token = sessionStorage.getItem(`_totp_${transaction_id}`)
         if (typeof authorization_token === 'string') {
-
             const apiKeySecret = localStorage.getItem('_apiKeySecret')
             const authz_body = JSON.stringify({
                 target,
@@ -148,7 +147,7 @@ const BaseApi = Object.assign({
             json.status ??= 'error'
             json.message ??= 'Authorization Failed'
             if (json.status === "error") {
-                toast(json.status, json.message, undefined, true)
+                void toast(json.status, json.message, undefined, true)
                 return json
             }
             // Then check transaction_id freshness
@@ -158,7 +157,7 @@ const BaseApi = Object.assign({
                 // transaction_id is fresh
                 return authorization_token
             } else {
-                sessionStorage.setItem(`_authz_${target}`, transaction_id)
+                void sessionStorage.setItem(`_authz_${target}`, transaction_id)
             }
             if (json.status === "success" && json.message === "ok") {
                 // both authorization_token and transaction_id are fresh
@@ -179,7 +178,7 @@ const BaseApi = Object.assign({
             }
             const prompt_resp = await BaseApi.prompt_webauthn(allowCredentials, transaction_id)
             if (typeof prompt_resp === 'object' && 'authorization_token' in prompt_resp && typeof prompt_resp.authorization_token === 'string') {
-                sessionStorage.setItem(`_totp_${transaction_id}`, prompt_resp.authorization_token)
+                void sessionStorage.setItem(`_totp_${transaction_id}`, prompt_resp.authorization_token)
                 return prompt_resp.authorization_token
             }
             return prompt_resp
@@ -230,7 +229,7 @@ const BaseApi = Object.assign({
                 }
             })
             if (json.status && json.status == "success") {
-                sessionStorage.setItem(`_totp_${transaction_id}`, json.authorization_token)
+                void sessionStorage.setItem(`_totp_${transaction_id}`, json.authorization_token)
                 document.querySelector('.totp-container .totp-message').remove()
                 document.querySelector('.totp-container .totp__fieldset').remove()
                 document.getElementById('verify-totp').remove()
@@ -240,14 +239,14 @@ const BaseApi = Object.assign({
                 successEl.classList.add('success-checkmark')
                 verifyTotpBtn.removeEventListener('click', BaseApi.handle_verify_totp, false)
                 verifyTotpBtn.removeEventListener('touchstart', BaseApi.handle_verify_totp, supportsPassive ? { passive: true } : false)
-                setTimeout(() => {
+                void setTimeout(() => {
                     document.querySelector('.totp-container').classList.remove('open')
                     document.querySelector('.totp-overlay').remove()
-                    toast('success', 'You can now perform elevated privilege actions', 'Authenticated', true)
+                    void toast('success', 'You can now perform elevated privilege actions', 'Authenticated', true)
                 }
                 , 3000)
             } else {
-                toast(json.status, json.message)
+                void toast(json.status, json.message)
             }
         }
     },
@@ -257,7 +256,7 @@ const BaseApi = Object.assign({
         let clipboardData = event.clipboardData || window.clipboardData
         const totp_code = clipboardData.getData('Text')
         if (!totp_code) {
-            toast('warning', 'The copy/paste did not work, please try to type your recovery code', 'Sorry')
+            void toast('warning', 'The copy/paste did not work, please try to type your recovery code', 'Sorry')
             return;
         }
         const firstEl = document.querySelectorAll('.totp-container .totp__fieldset input')[0]
@@ -450,7 +449,7 @@ const PublicApi = Object.assign({
         if (config.sign !== false) {
             if (!('apiKeyId' in app)) {
                 BaseApi.handle_debug(`HMAC requires an apiKeyId`)
-                toast('warning', 'This feature is not currently available', 'Sorry')
+                void toast('warning', 'This feature is not currently available', 'Sorry')
                 document.body.classList.remove('loading')
                 return;
             }
@@ -505,7 +504,7 @@ const PublicApi = Object.assign({
         if (config.sign !== false) {
             if (!('apiKeyId' in app)) {
                 BaseApi.handle_debug(`HMAC requires an apiKeyId`)
-                toast('warning', 'This feature is not currently available', 'Sorry')
+                void toast('warning', 'This feature is not currently available', 'Sorry')
                 document.body.classList.remove('loading')
                 return;
             }

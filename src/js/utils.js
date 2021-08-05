@@ -54,6 +54,21 @@ Number.prototype.between = function(a, b, inclusive) {
 }
 const createUTCDate = d => new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()))
 const convertDateToUTC = d => new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds())
+const renderer = async (template_id, container_selector, data, insert_method) => {
+    insert_method ??= 'beforeend'
+    const template_raw = document.getElementById(template_id)
+    if (!template_raw) {
+        toast('error', template_id, 'Missing Template')
+        return;
+    }
+    const template = htmlDecode(template_raw.innerHTML)
+    const container = document.querySelector(container_selector)
+    if (!template_raw) {
+        toast('error', container_selector, 'Missing Template Container')
+        return;
+    }
+    void container.insertAdjacentHTML(insert_method, micromustache.render(template, data))
+}
 window.toasts = {}
 const toast = async (type, message, heading, noFade) => {
     const headings = {
@@ -70,15 +85,15 @@ const toast = async (type, message, heading, noFade) => {
     }
     const container = document.querySelector(`.toast__container`)
     const template = htmlDecode(template_raw.innerHTML)
-    heading = heading || headings[type]
+    heading ||= headings[type]
     const alert = micromustache.render(template, {message, type, heading, uid})
     container.insertAdjacentHTML('beforeend', alert)
+    const alertEl = document.getElementById(uid)
     const closeToast = async() => {
         alertEl.remove()
         clearTimeout(window.toasts[uid])
         delete window.toasts[uid]
     }
-    const alertEl = document.getElementById(uid)
     alertEl.addEventListener('click', closeToast, false)
     alertEl.addEventListener('touchstart', closeToast, supportsPassive ? { passive: true } : false)
     window.toasts[uid] = !!noFade ? message : setTimeout(closeToast, 5000)

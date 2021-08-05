@@ -12,7 +12,7 @@ const bulkAction = async() => {
             invite_message,
             invite_email,
             invite_role_id: default_role_id
-        }).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
+        }).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
         document.getElementById('invitation-list').style = 'display: inline-block;'
         const tmpl = htmlDecode(document.getElementById('tmpl-invitation-list').innerHTML) // nosemgrep
         json.invited_by = app.accountEmail
@@ -27,21 +27,21 @@ const settingsAction = async() => {
     const json1 = await Api.post_async('/v1/account', [{
         prop: 'alias',
         value: document.getElementById('alias').value
-    }]).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
+    }]).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
     const json2 = await Api.post_async('/v1/account-config', [{
         prop: 'permit_domains',
         value: document.getElementById('permit_domains').value
-    }]).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
+    }]).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
     if (json1.status != 'error' && json2.status != 'error') {
-        toast('success', `${json1.message} ${json2.message}`)
+        void toast('success', `${json1.message} ${json2.message}`)
         return;
     }
     if (json1.status == 'error') {
-        toast('error', json1.message)
+        void toast('error', json1.message)
         return;
     }
     if (json2.status == 'error') {
-        toast('error', json2.message)
+        void toast('error', json2.message)
         return;
     }
 }
@@ -58,8 +58,8 @@ const scannerLists = async() => {
     },{
         prop: 'ignore_list',
         value: ignore_list
-    }]).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
-    toast(json.status, json.message)
+    }]).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    void toast(json.status, json.message)
 }
 
 document.addEventListener('DOMContentLoaded', async() => {

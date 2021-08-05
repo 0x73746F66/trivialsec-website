@@ -1,0 +1,12 @@
+@use "../var";
+@import "../tables";
+
+table caption img {
+    vertical-align: sub;
+    width: 20px;
+    margin: 0 0 0 .2em;
+}
+table caption h2, table caption h3 {
+    min-width: 15rem;
+    text-align: center;
+}

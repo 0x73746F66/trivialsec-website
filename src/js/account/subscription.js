@@ -11,7 +11,7 @@ const saveBillingEmail = async event => {
     })
     if (json) {
         billingEmailEl.classList.add(json.status)
-        toast(json.status, json.message)
+        void toast(json.status, json.message)
     }
 }
 

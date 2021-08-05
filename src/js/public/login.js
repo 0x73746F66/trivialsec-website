@@ -3,7 +3,7 @@ const decoder = (new TextDecoder)
 const enc = (new TextEncoder)
 const chooseMfa = async event => {
     if (event.currentTarget.id != 'choose-mfa') {
-        toast('warning', 'This feature is not currently available', 'Sorry')
+        void toast('warning', 'This feature is not currently available', 'Sorry')
         return;
     }
     const mfaTypeArr = Array.from(document.getElementsByName('mfaType')).filter(e => e.checked)
@@ -37,14 +37,14 @@ const verifyTotp = async event => {
         successEl.classList.add('success-checkmark')
         document.querySelector('.totp__fieldset').classList.add('invisible')
         document.getElementById('totp-message').textContent = json.message
-        localStorage.setItem('_apiKeySecret', json.api_key_secret)
-        setTimeout(()=>{document.getElementById('app-link').click()}, 3000)
+        void localStorage.setItem('_apiKeySecret', json.api_key_secret)
+        void setTimeout(()=>{document.getElementById('app-link').click()}, 3000)
     }
 }
 
 const verifyWebauthn = async () => {
     if (app.keys.length === 0) {
-        toast('warning', 'No device registered')
+        void toast('warning', 'No device registered')
         return;
     }
     const allowCredentials = []
@@ -96,8 +96,8 @@ const verifyWebauthn = async () => {
             document.querySelector('.confirm-webauthn .ChooseMfa__subheader').textContent = json.message
             document.querySelector('.confirm-webauthn img').remove()
             document.querySelector('.confirm-webauthn .ChooseMfa__parra').classList.add('invisible')
-            localStorage.setItem('_apiKeySecret', json.api_key_secret)
-            setTimeout(()=>{document.getElementById('app-link').click()}, 3000)
+            void localStorage.setItem('_apiKeySecret', json.api_key_secret)
+            void setTimeout(()=>{document.getElementById('app-link').click()}, 3000)
         }
     }
 }
@@ -130,7 +130,7 @@ const handle_totp_paste = async event => {
     let clipboardData = event.clipboardData || window.clipboardData
     const totp_code = clipboardData.getData('Text')
     if (!totp_code) {
-        toast('warning', 'The copy/paste did not work, please try to type your recovery code', 'Sorry')
+        void toast('warning', 'The copy/paste did not work, please try to type your recovery code', 'Sorry')
         return;
     }
     const firstEl = document.querySelectorAll('.totp__fieldset input')[0]

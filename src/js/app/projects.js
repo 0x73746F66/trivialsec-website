@@ -1,4 +1,19 @@
-window.choices_rendered = {}
+const init_projects = async () => {
+    void app.websocket.on('update_job_state', handleSocket)
+    void app.websocket.on('dns_changes', handleSocket)
+    void app.websocket.on('domain_changes', handleSocket)
+    void app.websocket.on('check_domains_tld', handleSocket)
+
+    const createEl = document.getElementById('create_project_input')
+    createEl.addEventListener('click', createProject, false)
+    createEl.addEventListener('touchstart', createProject, supportsPassive ? { passive: true } : false)
+    document.getElementById('domain_name_input').addEventListener('keyup', async event => event.keyCode == 13 ? createProject(event) : 0, false)
+
+    for await (const projectsEl of document.querySelectorAll('.projects-list tr')) {
+        projectsEl.addEventListener('click', projectsAction, false)
+        projectsEl.addEventListener('touchstart', projectsAction, supportsPassive ? { passive: true } : false)
+    }
+}
 const projectsAction = async event => {
     const project_id = event.currentTarget.parent('tr').dataset.projectId
     location.href = `/project/${project_id}`
@@ -13,36 +28,23 @@ const createProject = async event => {
     iconEl.classList.remove('icofont-ui-add')
     iconEl.classList.add('icofont-spinner-alt-2')
     iconEl.classList.add('rotate')
-    const json = await Api.post_async('/v1/create-project', {
-        project_name,
-        domain_name
-    }).catch(() => toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    const json = await PublicApi.post({
+        target: '/create-project',
+        body: {project_name, domain_name}
+    })
     console.debug(json)
-    toast(json.status, json.message)
-    if (!!json['domain']) {
-        const noProjectsEl = document.getElementById('no-projects')
-        if (noProjectsEl) {
-            noProjectsEl.remove()
-        }
-        document.getElementById('projects-list').style.display = 'block'
-        const project_id = json['domain']['project_id']
+    void toast(json.status, json.message)
+    if (!!json.domain) {
+        document.querySelector('#projects-list caption').textContent = 'Projects'
+
+        const project_id = json.domain.project_id
         const tr = document.querySelector(`[data-project-id="${project_id}"]`)
         if (tr) {
             const domainsEl = tr.querySelector('[title="Domains"] div')
             domainsEl.textContent = parseInt(domainsEl.textContent) + 1
         } else {
-            const row = document.createElement('tr')
-            row.setAttribute('data-project-id', project_id)
-            row.classList.add('highlight')
-            row.innerHTML = `<td width="5px"><div class="border info"></div></td>`+ // nosemgrep
-                `<td>${json['project_name']}</td>`+ // nosemgrep
-                `<td title="Domains"><i class="icofont-globe"></i><div>1</div></td>
-                <td width="65px"><span title="High Severity Findings" class="label high">0</span></td>
-                <td width="65px"><span title="Medium Severity Findings" class="label medium">0</span></td>
-                <td width="65px"><span title="Low Severity Findings" class="label low">0</span></td>
-                <td width="65px"><span title="Informational Findings" class="label info">0</span></td>
-                <td width="100px"><span class="details">Details</span><i class="icofont-curved-right"></i></td>`
-            document.querySelector('.projects-list tbody').insertAdjacentElement("beforeend", row)
+            row = renderer(`tmpl-project-row`, `.projects-list tbody`, {project_id, project_name})
+            console.log(`row`, row)
             row.addEventListener('click', projectsAction, false)
             row.addEventListener('touchstart', projectsAction, supportsPassive ? { passive: true } : false)
         }
@@ -52,20 +54,4 @@ const createProject = async event => {
     iconEl.classList.remove('rotate')
     iconEl.classList.add('icofont-ui-check')
 }
-document.addEventListener('DOMContentLoaded', async () => {
-    app.websocket.on('update_job_state', handleSocket)
-    app.websocket.on('dns_changes', handleSocket)
-    app.websocket.on('domain_changes', handleSocket)
-    app.websocket.on('check_domains_tld', handleSocket)
-
-    const createEl = document.getElementById('create_project_input')
-    createEl.addEventListener('click', createProject, false)
-    createEl.addEventListener('touchstart', createProject, supportsPassive ? { passive: true } : false)
-    document.getElementById('domain_name_input').addEventListener('keyup', async event => event.keyCode == 13 ? createProject(event) : 0, false)
-
-    for await (const projectsEl of document.querySelectorAll('.projects-list tr')) {
-        projectsEl.addEventListener('click', projectsAction, false)
-        projectsEl.addEventListener('touchstart', projectsAction, supportsPassive ? { passive: true } : false)
-    }
-
-}, false)
+document.addEventListener('DOMContentLoaded', init_projects, false)

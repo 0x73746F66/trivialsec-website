@@ -16,9 +16,9 @@ const toggleDomain = async toggleEl => {
     }
     const json = await Api.post_async(`/v1/${action}`, {
         domain_id
-    }).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    }).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
     if (json.status != 'success') {
-        toast(json.status, json.message)
+        void toast(json.status, json.message)
         return json
     }
     toggleIconEl.classList.remove(toggleIconEl.className)
@@ -29,8 +29,8 @@ const toggleDomain = async toggleEl => {
 const deleteDomain = async domain_id => {
     const json = await Api.post_async(`/v1/delete-domain`, {
         domain_id
-    }).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
-    toast(json.status, json.message)
+    }).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    void toast(json.status, json.message)
     return json
 }
 const toggleDomainAction = async() => {
@@ -46,7 +46,7 @@ const deleteDomainRowAction = async event => {
     const domainRow = event.currentTarget.parent('tr')
     const domain_id = domainRow.dataset.domainId
     const json = await deleteDomain(domain_id)
-    toast(json.status, json.message)
+    void toast(json.status, json.message)
     domainRow.remove()
 }
 
@@ -54,17 +54,17 @@ const runDomainAction = async event => {
     const action = document.getElementById('scan-action').value
     const json = await Api.post_async(`/v1/${action}`, {
         domain_id: page_domain_id
-    }).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
-    toast(json.status, json.message)
+    }).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    void toast(json.status, json.message)
 }
 const handleSocket = async data => {
     console.debug(data)
 }
 document.addEventListener('DOMContentLoaded', async() => {
-    socket.on('update_job_state', handleSocket)
-    socket.on('dns_changes', handleSocket)
-    socket.on('domain_changes', handleSocket)
-    socket.on('check_domains_tld', handleSocket)
+    void app.websocket.on('update_job_state', handleSocket)
+    void app.websocket.on('dns_changes', handleSocket)
+    void app.websocket.on('domain_changes', handleSocket)
+    void app.websocket.on('check_domains_tld', handleSocket)
     const barCanvasEl = document.querySelector('.bar-canvas canvas')
     if (barCanvasEl) {
         findings_chart = new Chart(barCanvasEl.getContext('2d'), {

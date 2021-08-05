@@ -51,12 +51,7 @@ section.fields {
 	}
 }
 .mfa-list caption {
-	font-size: 2em;
-	text-align: left;
-	img {
-		vertical-align: middle;
-		width: 35px;
-	}
+	font-size: 2em !important;
 }
 .add-mfa {
     background-color: var.$primary;

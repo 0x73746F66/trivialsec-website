@@ -1,11 +1,11 @@
 const init_services = async() => {
-    socket.on('update_service_state', update_service_state)
-    setTimeout(check_offline, 10000)
+    void app.websocket.on('update_service_state', update_service_state)
+    void setTimeout(check_offline, 10000)
 }
 const update_service_state = data => {
     if (!('service' in data)) {
         console.log(data)
-        toast('warning', 'This feature is not currently available', 'Sorry')
+        void toast('warning', 'This feature is not currently available', 'Sorry')
         return;
     }
     const el = document.querySelector(`[data-category="${data.service}"] .service-status`)

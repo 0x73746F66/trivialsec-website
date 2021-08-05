@@ -2,18 +2,18 @@ window.choices_rendered = {}
 const memberAction = async() => {
     const cid = document.getElementById('assigned_roles').dataset.cid
     if (!(cid in choices_rendered)) {
-        toast('error', 'Problem encountered gathering assigned roles, please try refreshing the page')
+        void toast('error', 'Problem encountered gathering assigned roles, please try refreshing the page')
     }
     const json = await Api.post_async('/v1/organisation/member', {
         member_id: document.querySelector('section[data-member-id]').dataset.memberId,
         email: document.getElementById('member_email').value,
         roles: choices_rendered[cid].getValue().map(i=>i.value)
-    }).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
+    }).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
     if (json.status == 'success' && !json.message) {
         json.message = 'No changes'
         json.status = 'info'
     }
-    toast(json.status, json.message)
+    void toast(json.status, json.message)
 }
 
 document.addEventListener('DOMContentLoaded', async() => {

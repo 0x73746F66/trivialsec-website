@@ -8,11 +8,11 @@ const projectArchiveButton = async event => {
     const json = await Api.post_async(`/v1/archive-project`, {
         project_id
     }).catch(() => {
-        toast('error', 'An unexpected error occurred. Please refresh the page and try again.')
+        void toast('error', 'An unexpected error occurred. Please refresh the page and try again.')
         document.querySelector('.loading').remove()
     })
     document.querySelector('.loading').remove()
-    toast(json.status, json.message)
+    void toast(json.status, json.message)
     if (json.status == 'error') {
         return;
     }
@@ -27,8 +27,8 @@ const toggleDomainAction = async event => {
         classNameAlt = 'icofont-toggle-off'
         action = 'disable-domain'
     }
-    const json = await Api.post_async(`/v1/${action}`, {domain_id}).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
-    toast(json.status, json.message)
+    const json = await Api.post_async(`/v1/${action}`, {domain_id}).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    void toast(json.status, json.message)
     if (json.status != 'success') {
         return;
     }
@@ -39,8 +39,8 @@ const toggleDomainAction = async event => {
 const deleteDomainAction = async event => {
     const toggleTd = event.currentTarget
     const domain_id = toggleTd.parent('tr').dataset.domainId
-    const json = await Api.post_async(`/v1/delete-domain`, {domain_id}).catch(()=>toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
-    toast(json.status, json.message)
+    const json = await Api.post_async(`/v1/delete-domain`, {domain_id}).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    void toast(json.status, json.message)
     if (json.status != 'success') {
         return;
     }
@@ -55,10 +55,10 @@ const handleSocket = async data => {
     }
 }
 document.addEventListener('DOMContentLoaded', async() => {
-    socket.on('update_job_state', handleSocket)
-    socket.on('dns_changes', handleSocket)
-    socket.on('domain_changes', handleSocket)
-    socket.on('check_domains_tld', handleSocket)
+    void app.websocket.on('update_job_state', handleSocket)
+    void app.websocket.on('dns_changes', handleSocket)
+    void app.websocket.on('domain_changes', handleSocket)
+    void app.websocket.on('check_domains_tld', handleSocket)
     const projectActionEl = document.querySelector('.archive-project')
     projectActionEl.addEventListener('click', projectArchiveButton, false)
     projectActionEl.addEventListener('touchstart', projectArchiveButton, supportsPassive ? { passive: true } : false)

@@ -28,7 +28,21 @@ table {
 	border-collapse: collapse;
 	border: solid 1px var.$grey_lightest;
 	width: 98%;
-
+	caption {
+		font-size: 1.5em;
+		text-align: left;
+		img {
+			vertical-align: middle;
+			width: 35px;
+		}
+		a {
+			text-decoration: underline 1px dotted;
+			color: var.$primary;
+		}
+		h2, h3 {
+			display: inline-block;
+		}
+	}
 	th, td {
 		height: 2.5rem;
 		vertical-align: middle;

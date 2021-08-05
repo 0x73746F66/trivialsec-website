@@ -26,6 +26,10 @@ const init_site = async() => {
         el.addEventListener('touchstart', toggler, supportsPassive ? { passive: true } : false)
     }
 }
+const browserErrorHandler = async event => {
+    if (event.origin !== `${app.domainScheme}${app.domainName}`) return;
+    toast('error', event.reason, `Browser Exception`);
+}
 const sidebar = () => {
     document.body.classList.remove('sidenav-open')
     document.body.classList.remove('sidenav-closed')
@@ -33,7 +37,7 @@ const sidebar = () => {
 }
 const toggler = () => {
     app.sidebarState = document.body.classList.contains('sidenav-open') ? 'sidenav-closed' : 'sidenav-open'
-    localStorage.setItem('sidebarState', app.sidebarState)
+    void localStorage.setItem('sidebarState', app.sidebarState)
     document.body.classList.toggle('sidenav-open')
     document.body.classList.toggle('sidenav-closed')
 }
@@ -46,3 +50,5 @@ const logout_action = async(e) => {
     window.location.href = '/logout'
 }
 document.addEventListener('DOMContentLoaded', init_site, false)
+window.addEventListener("unhandledrejection", browserErrorHandler, false)
+window.addEventListener("error", browserErrorHandler, false)

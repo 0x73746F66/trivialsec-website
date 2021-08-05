@@ -1,6 +1,6 @@
 const chooseMethod = async event => {
     if (event.currentTarget.id != 'choose-method') {
-        toast('warning', 'This feature is not currently available', 'Sorry')
+        void toast('warning', 'This feature is not currently available', 'Sorry')
         return;
     }
     const methodTypeArr = Array.from(document.getElementsByName('recoveryType')).filter(e => e.checked)
