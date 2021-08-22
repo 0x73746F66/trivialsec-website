@@ -431,22 +431,22 @@ const PublicApi = Object.assign({
         }, options)
         const url = `${app.apiScheme}${app.apiDomain}/${BaseApi.version}${config.target}`
         const method = 'GET'
-        let transaction_id = sessionStorage.getItem(`_authz_${config.target}`)
-        if (typeof transaction_id !== 'string') {
-            transaction_id = await BaseApi.authorization_transaction(config.target)
-        }
-        if (typeof transaction_id === 'string') {
-            const authz_resp = await BaseApi.authorization(transaction_id, config.target)
-            if (!authz_resp) {
-                return;
-            } else if (typeof authz_resp === 'string') {
-                config.headers['X-Authorization-Token'] = authz_resp
-            } else if (typeof authz_resp === 'object' && 'status' in authz_resp && authz_resp.message != 'ok') {
-                document.body.classList.remove('loading')
-                return authz_resp
-            }
-        }
         if (config.sign !== false) {
+            let transaction_id = sessionStorage.getItem(`_authz_${config.target}`)
+            if (typeof transaction_id !== 'string') {
+                transaction_id = await BaseApi.authorization_transaction(config.target)
+            }
+            if (typeof transaction_id === 'string') {
+                const authz_resp = await BaseApi.authorization(transaction_id, config.target)
+                if (!authz_resp) {
+                    return;
+                } else if (typeof authz_resp === 'string') {
+                    config.headers['X-Authorization-Token'] = authz_resp
+                } else if (typeof authz_resp === 'object' && 'status' in authz_resp && authz_resp.message != 'ok') {
+                    document.body.classList.remove('loading')
+                    return authz_resp
+                }
+            }
             if (!('apiKeyId' in app)) {
                 BaseApi.handle_debug(`HMAC requires an apiKeyId`)
                 void toast('warning', 'This feature is not currently available', 'Sorry')
@@ -481,27 +481,27 @@ const PublicApi = Object.assign({
             headers: {"Content-Type": HMAC.default_content_type},
             sign: true
         }, options)
-        let transaction_id = sessionStorage.getItem(`_authz_${config.target}`)
-        if (typeof transaction_id !== 'string') {
-            transaction_id = await BaseApi.authorization_transaction(config.target)
-        }
-        if (typeof transaction_id === 'string') {
-            const authz_resp = await BaseApi.authorization(transaction_id, config.target)
-            if (!authz_resp) {
-                return;
-            } else if (typeof authz_resp === 'string') {
-                config.headers['X-Authorization-Token'] = authz_resp
-            } else if (typeof authz_resp === 'object' && 'status' in authz_resp && authz_resp.message != 'ok') {
-                document.body.classList.remove('loading')
-                return authz_resp
-            }
-        }
         const url = `${app.apiScheme}${app.apiDomain}/${BaseApi.version}${config.target}`
         const content = JSON.stringify(config.body)
         const method = 'POST'
         const apiKeySecret = localStorage.getItem('_apiKeySecret')
         let json
         if (config.sign !== false) {
+            let transaction_id = sessionStorage.getItem(`_authz_${config.target}`)
+            if (typeof transaction_id !== 'string') {
+                transaction_id = await BaseApi.authorization_transaction(config.target)
+            }
+            if (typeof transaction_id === 'string') {
+                const authz_resp = await BaseApi.authorization(transaction_id, config.target)
+                if (!authz_resp) {
+                    return;
+                } else if (typeof authz_resp === 'string') {
+                    config.headers['X-Authorization-Token'] = authz_resp
+                } else if (typeof authz_resp === 'object' && 'status' in authz_resp && authz_resp.message != 'ok') {
+                    document.body.classList.remove('loading')
+                    return authz_resp
+                }
+            }                
             if (!('apiKeyId' in app)) {
                 BaseApi.handle_debug(`HMAC requires an apiKeyId`)
                 void toast('warning', 'This feature is not currently available', 'Sorry')

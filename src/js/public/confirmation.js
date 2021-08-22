@@ -1,4 +1,3 @@
-const confirmation_hash = document.getElementById('confirmation_hash').value
 const decoder = (new TextDecoder)
 const enc = (new TextEncoder)
 const chooseMfa = async event => {
@@ -26,6 +25,7 @@ const chooseMfa = async event => {
 }
 
 const generateTotp = async () => {
+    const confirmation_hash = document.getElementById('confirmation_hash').value
     const json = await PublicApi.post({
         target: '/registration/totp',
         body: {
@@ -58,6 +58,7 @@ const generateTotp = async () => {
 }
 
 const verifyTotp = async event => {
+    const confirmation_hash = document.getElementById('confirmation_hash').value
     const totp_code = Array.from(document.querySelectorAll('.totp__fieldset input')).map(n=>n.value).join('')
     const json = await PublicApi.post({
         target: '/authorization/totp',
@@ -101,6 +102,7 @@ const nameWebauthn = async event => {
 }
 
 const createWebauthn = async () => {
+    const confirmation_hash = document.getElementById('confirmation_hash').value
     let credential = await navigator.credentials.create({
         publicKey: {
             challenge: enc.encode(app.apiKeyId),
@@ -163,6 +165,7 @@ const createWebauthn = async () => {
     }
 }
 const verifyWebauthn = async () => {
+    const confirmation_hash = document.getElementById('confirmation_hash').value
     if (app.keys.length === 0) {
         void toast('error', 'No device registered')
         return;
