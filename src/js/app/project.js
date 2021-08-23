@@ -78,7 +78,13 @@ document.addEventListener('DOMContentLoaded', async() => {
     }
     const findingsCanvasEl = document.querySelector('.findings-canvas canvas')
     if (findingsCanvasEl) {
-        new Chart(findingsCanvasEl.getContext('2d'), {
+        const findings_data = [
+            document.getElementById('findings-info').value,
+            document.getElementById('findings-low').value,
+            document.getElementById('findings-medium').value,
+            document.getElementById('findings-high').value,
+        ]
+        void new Chart(findingsCanvasEl.getContext('2d'), {
             type: 'pie',
             data: {
                 labels: [
@@ -110,7 +116,12 @@ document.addEventListener('DOMContentLoaded', async() => {
     }
     const jobsCanvasEl = document.querySelector('.jobs-canvas canvas')
     if (jobsCanvasEl) {
-        new Chart(jobsCanvasEl.getContext('2d'), {
+        const jobs_data = [
+            document.getElementById('jobs-completed').value,
+            document.getElementById('jobs-pending').value,
+            document.getElementById('jobs-total').value,
+        ]
+        void new Chart(jobsCanvasEl.getContext('2d'), {
             type: 'doughnut',
             data: {
                 labels: [`Complete`, `Pending`],

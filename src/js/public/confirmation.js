@@ -1,5 +1,26 @@
-const decoder = (new TextDecoder)
-const enc = (new TextEncoder)
+const init_confirmation = async() => {
+    if (location.pathname != '/confirmation') {
+        history.pushState({}, document.title, '/confirmation')
+    }
+    if (!('credentials' in navigator)) {
+        document.querySelector('.ChooseMfa__label.webauthn').title = 'Hardware Security Keys are not supported on this browser'
+        document.querySelector('.ChooseMfa__label.webauthn').classList.add('disabled')
+        document.querySelector('.ChooseMfa__label.webauthn input').disabled = true
+    }
+    const chooseMfaEl = document.getElementById('choose-mfa')
+    chooseMfaEl.addEventListener('click', chooseMfa, false)
+    chooseMfaEl.addEventListener('touchstart', chooseMfa, supportsPassive ? { passive: true } : false)
+    const retryWebauthnEl = document.getElementById('retry-webauthn')
+    retryWebauthnEl.addEventListener('click', verifyWebauthn, false)
+    retryWebauthnEl.addEventListener('touchstart', verifyWebauthn, supportsPassive ? { passive: true } : false)
+    const verifyTotpEl = document.getElementById('verify-totp')
+    verifyTotpEl.addEventListener('click', verifyTotp, false)
+    verifyTotpEl.addEventListener('touchstart', verifyTotp, supportsPassive ? { passive: true } : false)
+    for (const el of document.querySelectorAll('.totp__fieldset input')) {
+        el.addEventListener('input', check_totp_fieldset, false)
+        el.addEventListener('paste', handle_totp_paste, false)
+    }
+}
 const chooseMfa = async event => {
     if (event.currentTarget.id != 'choose-mfa') {
         void toast('warning', 'This feature is not currently available', 'Sorry')
@@ -55,6 +76,7 @@ const generateTotp = async () => {
         registerQREl.addEventListener('touchstart', triggerDownload.click, supportsPassive ? { passive: true } : false)
         document.getElementById('totp-message').textContent = json.message
     }
+    void toast(json.status, json.message)
 }
 
 const verifyTotp = async event => {
@@ -84,13 +106,17 @@ const verifyTotp = async event => {
         document.querySelector('.verify-totp h1').textContent = json.message
         document.querySelector('.verify-totp .ChooseMfa__parra').textContent = json.description
     }
+    void toast(json.status, json.message)
 }
-
+let nameWebauthnActive = false
 const nameWebauthn = async event => {
+    if (nameWebauthnActive === false) {
+        nameWebauthnActive = true
+    }
     const deviceEl = document.getElementById('name-device')
     const device_name = deviceEl.value
     const device_id = deviceEl.dataset.deviceId
-    return PublicApi.post({
+    const json = PublicApi.post({
         target: '/webauthn/device-name',
         body: {
             recaptcha_token,
@@ -99,9 +125,12 @@ const nameWebauthn = async event => {
         },
         sign: false,
     })
+    nameWebauthnActive = false
+    void toast(json.status, json.message)
 }
 
 const createWebauthn = async () => {
+    const enc = (new TextEncoder)
     const confirmation_hash = document.getElementById('confirmation_hash').value
     let credential = await navigator.credentials.create({
         publicKey: {
@@ -129,8 +158,9 @@ const createWebauthn = async () => {
             timeout: 90000,
             attestation: "direct"
         }
-    }).catch(console.error)
+    }).catch(BaseApi.handle_webauthn_error)
     if (credential) {
+        const decoder = (new TextDecoder)
         const decodedClientData = decoder.decode(credential.response.clientDataJSON)
         const webauthn_challenge = JSON.parse(decodedClientData).challenge
         const webauthn_id = arrayBufferToBase64(credential.rawId)
@@ -162,9 +192,11 @@ const createWebauthn = async () => {
             app.keys = [{webauthn_id}]
             return verifyWebauthn()
         }
+        void toast(json.status, json.message)
     }
 }
 const verifyWebauthn = async () => {
+    const enc = (new TextEncoder)
     const confirmation_hash = document.getElementById('confirmation_hash').value
     if (app.keys.length === 0) {
         void toast('error', 'No device registered')
@@ -183,7 +215,7 @@ const verifyWebauthn = async () => {
             }],
             timeout: 90000,
         }
-    }).catch(console.error)
+    }).catch(BaseApi.handle_webauthn_error)
     if (assertion) {
         const response = assertion.response
         const authData = new Uint8Array(response.authenticatorData)
@@ -230,6 +262,7 @@ const verifyWebauthn = async () => {
             scratchEl.classList.add('source-code')
             scratchEl.textContent = json.scratch_code
         }
+        void toast(json.status, json.message)
     }
 }
 const check_totp_fieldset = async event => {
@@ -279,29 +312,5 @@ const handle_totp_paste = async event => {
     }
 }
 
-grecaptcha.ready(() => {
-    init_recaptcha('confirmation_action')
-})
-document.addEventListener('DOMContentLoaded', async() => {
-    if (location.pathname != '/confirmation') {
-        history.pushState({}, document.title, '/confirmation')
-    }
-    if (!('credentials' in navigator)) {
-        document.querySelector('.ChooseMfa__label.webauthn').title = 'Hardware Security Keys are not supported on this browser'
-        document.querySelector('.ChooseMfa__label.webauthn').classList.add('disabled')
-        document.querySelector('.ChooseMfa__label.webauthn input').disabled = true
-    }
-    const chooseMfaEl = document.getElementById('choose-mfa')
-    chooseMfaEl.addEventListener('click', chooseMfa, false)
-    chooseMfaEl.addEventListener('touchstart', chooseMfa, supportsPassive ? { passive: true } : false)
-    const retryWebauthnEl = document.getElementById('retry-webauthn')
-    retryWebauthnEl.addEventListener('click', verifyWebauthn, false)
-    retryWebauthnEl.addEventListener('touchstart', verifyWebauthn, supportsPassive ? { passive: true } : false)
-    const verifyTotpEl = document.getElementById('verify-totp')
-    verifyTotpEl.addEventListener('click', verifyTotp, false)
-    verifyTotpEl.addEventListener('touchstart', verifyTotp, supportsPassive ? { passive: true } : false)
-    for (const el of document.querySelectorAll('.totp__fieldset input')) {
-        el.addEventListener('input', check_totp_fieldset, false)
-        el.addEventListener('paste', handle_totp_paste, false)
-    }
-}, false)
+grecaptcha.ready(() => init_recaptcha('confirmation_action'))
+document.addEventListener('DOMContentLoaded', init_confirmation, false)

@@ -17,11 +17,25 @@
         data-domain-scheme="https://"
         data-websocket-domain="ws.trivialsec"
         data-websocket-scheme="https://" />
+    <script type=text/javascript src="/js/vendor/micromustache.umd.8.0.3.min.js"></script>
+    <script type=text/javascript src="/js/site.min.js"></script>
     <script type=text/javascript src="/js/utils.min.js"></script>
     <script type=text/javascript src="/js/api.min.js"></script>
     <script type=text/javascript src="/js/public/langing.min.js"></script>
 </head>
 <body>
+    <template id="tmpl-toast">
+        <div id="{{ uid }}" class="toast toast--active toast--{{ type }}" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast__icon">
+                <img src="/images/icon-{{ type }}-white.svg" alt />
+            </div>
+            <div class="toast__content">
+                <h2>{{ heading }}</h2>
+                <p class="alert">{{ message }}</p>
+            </div>
+        </div>
+    </template>
+    <section class="toast__container"></section>
     <div class="container">
         <input type="hidden" id="recaptcha_token" name="recaptcha_token">
         <section class="main vh70 bg-dark">

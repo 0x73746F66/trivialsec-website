@@ -86,8 +86,8 @@ const toast = async (type, message, heading, noFade) => {
     const container = document.querySelector(`.toast__container`)
     const template = htmlDecode(template_raw.innerHTML)
     heading ||= headings[type]
-    const alert = micromustache.render(template, {message, type, heading, uid})
-    container.insertAdjacentHTML('beforeend', alert)
+    const alert_tmpl = micromustache.render(template, {message, type, heading, uid})
+    container.insertAdjacentHTML('beforeend', alert_tmpl)
     const alertEl = document.getElementById(uid)
     const closeToast = async() => {
         alertEl.remove()

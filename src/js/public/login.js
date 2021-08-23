@@ -63,7 +63,7 @@ const verifyWebauthn = async () => {
             allowCredentials,
             timeout: 90000,
         }
-    }).catch(console.error)
+    }).catch(BaseApi.handle_webauthn_error)
     if (assertion) {
         const response = assertion.response
         const authData = new Uint8Array(response.authenticatorData)
