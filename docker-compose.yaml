@@ -1,16 +1,7 @@
-version: '3.6'
-x-defaults: &defaults
-  env_file: .env
-  # network_mode: host
-  restart: unless-stopped
-  logging:
-    options:
-      max-size: "10m"
-      max-file: "3"
-
+version: '3.9'
 services:
   website:
-    <<: *defaults
+    env_file: .env
     image: trivialsec/static-website
     container_name: website
     build:
@@ -33,6 +24,23 @@ services:
         aliases:
           - website
           - assets
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 0s
+        max_attempts: 10
+        window: 3s
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1GB
+        reservations:
+          cpus: '0.50'
+          memory: 500M
 
 networks:
   default:
