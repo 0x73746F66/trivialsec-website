@@ -70,6 +70,17 @@ const renderer = async (template_id, container_selector, data, insert_method) =>
     void container.insertAdjacentHTML(insert_method, micromustache.render(template, data))
 }
 window.toasts = {}
+const closeToast = async toastId => {
+    if (toastId.currentTarget !== undefined) {
+        toastId = toastId.currentTarget.id
+    }
+    const alertEl = document.getElementById(toastId)
+    if (window.toasts[toastId] !== undefined) {
+        clearTimeout(window.toasts[toastId])
+        delete window.toasts[toastId]
+    }
+    alertEl.remove()
+}
 const toast = async (type, message, heading, noFade) => {
     const headings = {
         info: 'Information',
@@ -89,14 +100,9 @@ const toast = async (type, message, heading, noFade) => {
     const alert_tmpl = micromustache.render(template, {message, type, heading, uid})
     container.insertAdjacentHTML('beforeend', alert_tmpl)
     const alertEl = document.getElementById(uid)
-    const closeToast = async() => {
-        alertEl.remove()
-        clearTimeout(window.toasts[uid])
-        delete window.toasts[uid]
-    }
     alertEl.addEventListener('click', closeToast, false)
     alertEl.addEventListener('touchstart', closeToast, supportsPassive ? { passive: true } : false)
-    window.toasts[uid] = !!noFade ? message : setTimeout(closeToast, 5000)
+    window.toasts[uid] = !!noFade ? message : setTimeout(()=>closeToast(uid), 5000)
 }
 const livetime = async() => {
     for await(const el of document.querySelectorAll('time')) {

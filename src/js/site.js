@@ -1,14 +1,14 @@
+window.supportsPassive = false
+try {
+  let opts = Object.defineProperty({}, 'passive', {
+    get: function() {
+        window.supportsPassive = true
+    }
+  })
+  window.addEventListener("testPassive", null, opts)
+  window.removeEventListener("testPassive", null, opts)
+} catch (e) {}
 const init_site = async() => {
-    window.supportsPassive = false
-    try {
-      let opts = Object.defineProperty({}, 'passive', {
-        get: function() {
-            window.supportsPassive = true
-        }
-      })
-      window.addEventListener("testPassive", null, opts)
-      window.removeEventListener("testPassive", null, opts)
-    } catch (e) {}
     window.app = {...document.head.querySelector('[name=application-name]').dataset}
     app.keys = 'keys' in app ?JSON.parse(app.keys):[]    
     app.lang = window.navigator.userLanguage || window.navigator.language
@@ -24,6 +24,10 @@ const init_site = async() => {
     for await(const el of document.querySelectorAll('.toggle-sidenav .toggler')) {
         el.addEventListener('click', toggler, false)
         el.addEventListener('touchstart', toggler, supportsPassive ? { passive: true } : false)
+    }
+    for await(const el of document.querySelectorAll('.toast')) {
+        el.addEventListener('click', closeToast, false)
+        el.addEventListener('touchstart', closeToast, supportsPassive ? { passive: true } : false)
     }
 }
 const browserErrorHandler = async event => {

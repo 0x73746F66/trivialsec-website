@@ -1,22 +1,4 @@
-const saveBillingEmail = async event => {
-    if (event.key && event.key !== 'Enter') return;
-    event.preventDefault()
-    const billingEmailEl = document.getElementById('billing_email')
-    billingEmailEl.classList.remove('error')
-    billingEmailEl.classList.remove('success')
-    const billing_email = billingEmailEl.value
-    const json = await PublicApi.post({
-        target: '/account/update-billing-email',
-        body: {billing_email}
-    })
-    if (json) {
-        billingEmailEl.classList.add(json.status)
-        void toast(json.status, json.message)
-    }
-}
-
-document.addEventListener('DOMContentLoaded', async() => {
-    sidebar()
+const init_subscription = async() => {
     livetime()
     setInterval(livetime, 1000)
     const emailChangeEl = document.getElementById('billing_email')
@@ -49,5 +31,22 @@ document.addEventListener('DOMContentLoaded', async() => {
             }
         })
     }
+}
+const saveBillingEmail = async event => {
+    if (event.key && event.key !== 'Enter') return;
+    event.preventDefault()
+    const billingEmailEl = document.getElementById('billing_email')
+    billingEmailEl.classList.remove('error')
+    billingEmailEl.classList.remove('success')
+    const billing_email = billingEmailEl.value
+    const json = await PublicApi.post({
+        target: '/account/update-billing-email',
+        body: {billing_email}
+    })
+    if (json) {
+        billingEmailEl.classList.add(json.status)
+        void toast(json.status, json.message)
+    }
+}
 
-}, false)
+document.addEventListener('DOMContentLoaded', init_subscription, false)

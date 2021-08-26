@@ -53,14 +53,6 @@ section.fields {
 	vertical-align: middle;
 	height: 48px;
 }
-td i {
-	font-size: 28px;
-	color: #3f5367;
-	vertical-align: middle;
-}
-i.icofont-toggle-on, i.icofont-toggle-off {
-	font-size: 3rem;
-}
 .projects-list {
 	margin: 10px 0 0 0;
 	td:first-of-type {
@@ -76,7 +68,8 @@ i.icofont-toggle-on, i.icofont-toggle-off {
 		text-align: left;
 	}
 	td:nth-child(2) {
-		font-weight: 700;
+		font-weight: 800;
+		font-size: 1.3em;
 	}
 	.details {
 		vertical-align: middle;

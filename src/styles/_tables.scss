@@ -55,6 +55,9 @@ table {
 	td:first-child {
 		font-weight: bold;
 	}
+	td:last-child {
+		text-align: right;
+	}
 	&.striped tbody tr:nth-child(even) td {
 		background-color: var.$grey_lightest;
 	}
@@ -69,13 +72,18 @@ table {
 		text-align: left;
 		width: 10px;
 	}
-	img.caret {
+	img.icon, img.caret {
 		display: inline-block;
 		padding: 0;
 		margin: 0;
 		border: 0;
-		width: 30px;
 		vertical-align: middle;
+	}
+	img.icon {
+		width: 40px;
+	}
+	img.caret {
+		width: 30px;
 	}
 }
 

@@ -3,51 +3,53 @@ const domainsAction = async event => {
     location.href = `/domain/${domain_id}`
 }
 const projectArchiveButton = async event => {
-    document.body.insertAdjacentHTML('afterbegin', `<div class="loading"></div>`) // nosemgrep
     const project_id = event.currentTarget.parent('.project-actions').dataset.projectId
-    const json = await Api.post_async(`/v1/archive-project`, {
-        project_id
-    }).catch(() => {
-        void toast('error', 'An unexpected error occurred. Please refresh the page and try again.')
-        document.querySelector('.loading').remove()
+    const json = await PublicApi.post({
+        target: `/archive-project`,
+        body: {project_id}
     })
-    document.querySelector('.loading').remove()
     void toast(json.status, json.message)
-    if (json.status == 'error') {
-        return;
-    }
+
 }
 const toggleDomainAction = async event => {
-    const toggleTd = event.currentTarget
-    const toggleIconEl = toggleTd.querySelector('i')
-    const domain_id = toggleTd.parent('tr').dataset.domainId
-    let action = 'enable-domain'
-    let classNameAlt = 'icofont-toggle-on'
-    if (toggleIconEl.classList.contains('icofont-toggle-on')) {
-        classNameAlt = 'icofont-toggle-off'
-        action = 'disable-domain'
-    }
-    const json = await Api.post_async(`/v1/${action}`, {domain_id}).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    const domain_id = event.currentTarget.parent('tr').dataset.domainId
+    const toggleTd = document.querySelector(`tr[data-domain-id="${domain_id}"] td.toggle-monitoring`)
+    const is_monitoring = toggleTd.getAttribute('data-monitoring') === 'on'
+    const target = is_monitoring ? '/disable-domain' : '/enable-domain'
+    const json = await PublicApi.post({
+        target,
+        body: {domain_id}
+    })
     void toast(json.status, json.message)
-    if (json.status != 'success') {
+    if (json?.status !== 'success') {
         return;
     }
-    toggleIconEl.classList.remove(toggleIconEl.className)
-    toggleIconEl.classList.add(classNameAlt)
-    toggleTd.title = action == 'disable-domain' ? 'Enable domain monitoring' : 'Disable domain monitoring'
+    const iconEl = toggleTd.querySelector('img.icon')
+    if (is_monitoring) {
+        iconEl.setAttribute('src', `${app.staticScheme}${app.staticDomain}/images/icon-toggle-off.svg`)
+        iconEl.title = 'Enable domain monitoring'
+        toggleTd.setAttribute('data-monitoring', 'off')
+    } else {
+        iconEl.setAttribute('src', `${app.staticScheme}${app.staticDomain}/images/icon-toggle-on.svg`)
+        iconEl.title = 'Disable domain monitoring'
+        toggleTd.setAttribute('data-monitoring', 'on')
+    }
 }
 const deleteDomainAction = async event => {
     const toggleTd = event.currentTarget
     const domain_id = toggleTd.parent('tr').dataset.domainId
-    const json = await Api.post_async(`/v1/delete-domain`, {domain_id}).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    const json = await PublicApi.post({
+        target: `/delete-domain`,
+        body: {domain_id}
+    })
     void toast(json.status, json.message)
-    if (json.status != 'success') {
+    if (json?.status !== 'success') {
         return;
     }
     toggleTd.parent('tr').remove()
 }
 const handleSocket = async data => {
-    if (data.service_category == 'crawler' && data.state == 'completed') {
+    if (data.service_category === 'crawler' && data.state === 'completed') {
         const trEl = document.querySelector(`tr.disabled-events[data-domain-id="${data.id}"`)
         if (trEl) {
             location.reload()
@@ -55,6 +57,8 @@ const handleSocket = async data => {
     }
 }
 document.addEventListener('DOMContentLoaded', async() => {
+    livetime()
+    setInterval(livetime, 1000)
     void app.websocket.on('update_job_state', handleSocket)
     void app.websocket.on('dns_changes', handleSocket)
     void app.websocket.on('domain_changes', handleSocket)

@@ -387,6 +387,8 @@ const Fetch = Object.assign({
             headers: Object.assign({}, config.headers)
         })
         document.body.classList.remove('loading')
+        json.status ??= 'error'
+        json.message ??= 'Unexpected server response'
         return json
     },
     post: async (options) => {
@@ -418,6 +420,8 @@ const Fetch = Object.assign({
                 headers: config.headers
             })
         }
+        json.status ??= 'error'
+        json.message ??= 'Unexpected server response'
         return json
     }
 })
@@ -471,6 +475,8 @@ const PublicApi = Object.assign({
             headers: Object.assign({}, config.headers)
         })
         document.body.classList.remove('loading')
+        json.status ??= 'error'
+        json.message ??= 'Unexpected server response'
         return json
     },
     post: async (options) => {
@@ -537,6 +543,8 @@ const PublicApi = Object.assign({
             })
         }
         document.body.classList.remove('loading')
+        json.status ??= 'error'
+        json.message ??= 'Unexpected server response'
         return json
     }
 })
