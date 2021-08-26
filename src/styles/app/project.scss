@@ -148,38 +148,6 @@ td:nth-child(2), td:nth-child(3) {
 td:nth-child(2), td:nth-child(3) {
 	text-align: left;
 }
-td i {
-	font-size: 28px;
-	color: #3f5367;
-	vertical-align: middle;
-}
-i.flag-icon {
-	vertical-align: text-bottom;
-	font-size: 16px;
-}
-i.icofont-red {
-	color: rgb(216, 87, 87);
-}
-i.icofont-yellow {
-	color: rgb(218 140 39);
-}
-i.icofont-green {
-	color: rgb(18 140 39);
-}
-i.icofont-toggle-on, i.icofont-toggle-off {
-	font-size: 3rem;
-}
-#delete-domain i {
-	font-size: 1.5rem;
-	color: rgb(255, 116, 92);
-}
-#delete-domain:hover i {
-	cursor: pointer ;
-	color: rgb(255, 38, 0);
-}
-.toggle-monitoring .icofont-toggle-on {
-	color: rgba(54, 204, 175, 1.0);
-}
 .disabled-events a, .disabled-events td, .disabled-events {
 	cursor: not-allowed ;
 }

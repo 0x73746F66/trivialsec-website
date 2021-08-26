@@ -47,6 +47,9 @@ table {
 		height: 2.5rem;
 		vertical-align: middle;
 		text-align: center;
+		&.td-small {
+			width: 40px;
+		}
 	}
 	th {
 		background-color: var.$secondary_light;
