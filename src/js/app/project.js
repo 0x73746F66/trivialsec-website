@@ -5,7 +5,7 @@ const domainsAction = async event => {
 const projectArchiveButton = async event => {
     const project_id = event.currentTarget.parent('.project-actions').dataset.projectId
     const json = await PublicApi.post({
-        target: `/archive-project`,
+        target: `/project/archive`,
         body: {project_id}
     })
     void toast(json.status, json.message)
@@ -15,7 +15,7 @@ const toggleDomainAction = async event => {
     const domain_id = event.currentTarget.parent('tr').dataset.domainId
     const toggleTd = document.querySelector(`tr[data-domain-id="${domain_id}"] td.toggle-monitoring`)
     const is_monitoring = toggleTd.getAttribute('data-monitoring') === 'on'
-    const target = is_monitoring ? '/disable-domain' : '/enable-domain'
+    const target = is_monitoring ? '/domain/disable' : '/domain/enable'
     const json = await PublicApi.post({
         target,
         body: {domain_id}
@@ -39,7 +39,7 @@ const deleteDomainAction = async event => {
     const toggleTd = event.currentTarget
     const domain_id = toggleTd.parent('tr').dataset.domainId
     const json = await PublicApi.post({
-        target: `/delete-domain`,
+        target: `/domain/delete`,
         body: {domain_id}
     })
     void toast(json.status, json.message)

@@ -27,9 +27,12 @@ const toggleDomain = async toggleEl => {
     return json
 }
 const deleteDomain = async domain_id => {
-    const json = await Api.post_async(`/v1/delete-domain`, {
-        domain_id
-    }).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    const json = await PublicApi.post({
+        target:`/domain/delete`,
+        body: {
+            domain_id
+        }
+    })
     void toast(json.status, json.message)
     return json
 }

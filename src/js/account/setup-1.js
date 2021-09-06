@@ -1,12 +1,15 @@
 const setupActions = async(event) => {
     if (event.currentTarget.id == 'step1') {
-        const json = await Api.post_async('/v1/setup-account', [{
-            prop: 'alias',
-            value: document.querySelector('[name="account_alias"]').value
-        }, {
-            prop: 'default_role_id',
-            value: document.querySelector('[name="default_role_id"]').value
-        }])
+        const json = await PublicApi.post({
+            target: '/account/setup',
+            body: [{
+                prop: 'alias',
+                value: document.querySelector('[name="account_alias"]').value
+            }, {
+                prop: 'default_role_id',
+                value: document.querySelector('[name="default_role_id"]').value
+            }]
+        })
         void toast(json.status, json.message)
         if (json.status == 'success') {
             void setTimeout(()=>{window.location.href = '/account/setup/2'}, 2000)

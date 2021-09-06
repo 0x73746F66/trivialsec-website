@@ -4,11 +4,14 @@ const memberAction = async() => {
     if (!(cid in choices_rendered)) {
         void toast('error', 'Problem encountered gathering assigned roles, please try refreshing the page')
     }
-    const json = await Api.post_async('/v1/organisation/member', {
-        member_id: document.querySelector('section[data-member-id]').dataset.memberId,
-        email: document.getElementById('member_email').value,
-        roles: choices_rendered[cid].getValue().map(i=>i.value)
-    }).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
+    const json = await PublicApi.post({
+        target: '/account/update-member',
+        body: {
+            member_id: document.querySelector('section[data-member-id]').dataset.memberId,
+            email: document.getElementById('member_email').value,
+            roles: choices_rendered[cid].getValue().map(i=>i.value)
+        }
+    })
     if (json.status == 'success' && !json.message) {
         json.message = 'No changes'
         json.status = 'info'

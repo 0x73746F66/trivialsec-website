@@ -16,7 +16,7 @@ const remove_device = async event => {
         return;
     }
     const json = await PublicApi.post({
-        target: '/mfa/remove-device',
+        target: '/auth/remove-mfa-device',
         body: {device_id},
     })
     event.target.classList.add(json.status)
@@ -34,7 +34,7 @@ const change_name = async event => {
     const device_name = event.target.textContent
     const device_id = event.target.parent('tr').dataset.mfaId
     const json = await PublicApi.post({
-        target: '/mfa/rename-device',
+        target: '/auth/rename-mfa-device',
         body: {
             device_id,
             device_name,

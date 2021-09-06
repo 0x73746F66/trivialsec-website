@@ -6,9 +6,12 @@ const buttonActions = async(event) => {
         return;
     }
     
-    const json = await Api.post_async('/v1/checkout', {
-        selection: event.currentTarget.id
-    }).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    const json = await PublicApi.post({
+        target: '/account/checkout',
+        body: {
+            selection: event.currentTarget.id
+        }
+    })
     void toast(json.status, json.message)
     if (json.status != 'success') {
         return;

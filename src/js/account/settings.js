@@ -8,11 +8,15 @@ const bulkAction = async() => {
         if (invite_email.length === 0) {
             continue
         }
-        const json = await Api.post_async('/v1/invitation', {
-            invite_message,
-            invite_email,
-            invite_role_id: default_role_id
-        }).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
+        const json = await PublicApi.post({
+            target: '/account/invitation',
+            body: {
+                invite_message,
+                invite_email,
+                invite_role_id: default_role_id
+            }
+        })
+        void toast(json.status, json.message)
         document.getElementById('invitation-list').style = 'display: inline-block;'
         const tmpl = htmlDecode(document.getElementById('tmpl-invitation-list').innerHTML) // nosemgrep
         json.invited_by = app.accountEmail
@@ -28,10 +32,13 @@ const settingsAction = async() => {
         prop: 'alias',
         value: document.getElementById('alias').value
     }]).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
-    const json2 = await Api.post_async('/v1/account-config', [{
-        prop: 'permit_domains',
-        value: document.getElementById('permit_domains').value
-    }]).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))        
+    const json2 = await PublicApi.post({
+        target: '/account/update-configuration',
+        body: [{
+            prop: 'permit_domains',
+            value: document.getElementById('permit_domains').value
+        }]
+    })
     if (json1.status != 'error' && json2.status != 'error') {
         void toast('success', `${json1.message} ${json2.message}`)
         return;
@@ -52,13 +59,16 @@ const memberAction = async(event) => {
 const scannerLists = async() => {
     const nameservers = document.getElementById('nameservers').value
     const ignore_list = document.getElementById('ignore_list').value
-    const json = await Api.post_async('/v1/account-config', [{
-        prop: 'nameservers',
-        value: nameservers
-    },{
-        prop: 'ignore_list',
-        value: ignore_list
-    }]).catch(()=>void toast('error', 'An unexpected error occurred. Please refresh the page and try again.'))
+    const json = await Api.post_async({
+        target: '/account/update-configuration',
+        body: [{
+            prop: 'nameservers',
+            value: nameservers
+        },{
+            prop: 'ignore_list',
+            value: ignore_list
+        }]
+    })
     void toast(json.status, json.message)
 }
 

@@ -48,7 +48,7 @@ const chooseMfa = async event => {
 const generateTotp = async () => {
     const confirmation_hash = document.getElementById('confirmation_hash').value
     const json = await PublicApi.post({
-        target: '/registration/totp',
+        target: '/account/totp-onboarding',
         body: {
             recaptcha_token,
             confirmation_hash
@@ -83,7 +83,7 @@ const verifyTotp = async event => {
     const confirmation_hash = document.getElementById('confirmation_hash').value
     const totp_code = Array.from(document.querySelectorAll('.totp__fieldset input')).map(n=>n.value).join('')
     const json = await PublicApi.post({
-        target: '/authorization/totp',
+        target: '/auth/setup/verify-totp',
         body: {
             recaptcha_token,
             confirmation_hash,
@@ -117,7 +117,7 @@ const nameWebauthn = async event => {
     const device_name = deviceEl.value
     const device_id = deviceEl.dataset.deviceId
     const json = PublicApi.post({
-        target: '/webauthn/device-name',
+        target: '/auth/setup/webauthn-device-name',
         body: {
             recaptcha_token,
             device_id,
@@ -173,7 +173,7 @@ const createWebauthn = async () => {
         const credentialIdLength = dataView.getUint16()
         const webauthn_public_key = arrayBufferToBase64(decodedAttestationObj.authData.slice(55 + credentialIdLength))
         const json = await PublicApi.post({
-            target: '/registration/webauthn',
+            target: '/account/webauthn-onboarding',
             body: {
                 recaptcha_token,
                 confirmation_hash,
@@ -233,7 +233,7 @@ const verifyWebauthn = async () => {
           assertionClientExtensions: JSON.stringify(assertionClientExtensions),
         }
         const json = await PublicApi.post({
-            target: '/authorization/webauthn',
+            target: '/auth/setup/verify-webauthn',
             body: {
                 recaptcha_token,
                 confirmation_hash,

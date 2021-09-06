@@ -25,7 +25,7 @@ const chooseMfa = async event => {
 }
 
 const generateTotp = async () => {
-    const json = await PublicApi.get({target: '/add-mfa/totp'})
+    const json = await PublicApi.get({target: '/auth/add-totp'})
     if (json.status && json.status == 'success') {
         void toast('info', json.message, 'TOTP Setup', true)
         document.getElementById('totp-secret-code').textContent = json.totp_code
@@ -54,7 +54,7 @@ const generateTotp = async () => {
 const verifyTotp = async() => {
     const totp_code = Array.from(document.querySelectorAll('.totp__fieldset input')).map(n=>n.value).join('')
     const json = await PublicApi.post({
-        target: '/add-mfa/totp',
+        target: '/auth/add-totp',
         body: {totp_code}
     })
     void toast(json.status, json.message)
@@ -117,7 +117,7 @@ const createWebauthn = async () => {
         const credentialIdLength = dataView.getUint16()
         const webauthn_public_key = arrayBufferToBase64(decodedAttestationObj.authData.slice(55 + credentialIdLength))
         const json = await PublicApi.post({
-            target: '/add-mfa/webauthn',
+            target: '/auth/add-webauthn',
             body: {
                 webauthn_id,
                 webauthn_public_key,
@@ -175,7 +175,7 @@ const verifyWebauthn = async () => {
           assertionClientExtensions: JSON.stringify(assertionClientExtensions),
         }
         const json = await PublicApi.post({
-            target: '/add-mfa/webauthn',
+            target: '/auth/add-webauthn',
             body: {assertion_response},
         })
         void toast(json.status, json.message)

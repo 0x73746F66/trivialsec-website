@@ -64,7 +64,7 @@ const signInAction = async() => {
         return;
     }
     const json = await PublicApi.post({
-        target: '/magic-link',
+        target: '/auth/magic-link',
         body: {
             recaptcha_token,
             email,
@@ -162,16 +162,16 @@ const registerAction = async event => {
         void toast('warning', 'This feature is not currently available', 'Sorry')
         return;
     }
-    const json = await PublicApi.post(`/register`, {
-        recaptcha_token,
-        first_name,
-        last_name,
-        company,
-        email,
-        privacy
-    }).catch(err => {
-        void toast(appAlert, 'error', 'An unexpected error occurred. Please refresh the page and try again.')
-        console.log(err)
+    const json = await PublicApi.post({
+        target: `/account/register`,
+        body: {
+            recaptcha_token,
+            first_name,
+            last_name,
+            company,
+            email,
+            privacy
+        }
     })
     void toast(appAlert, json.status, json.message)
 }

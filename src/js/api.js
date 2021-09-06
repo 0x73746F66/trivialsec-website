@@ -35,7 +35,7 @@ const BaseApi = Object.assign({
         const apiKeySecret = localStorage.getItem('_apiKeySecret')
         const endpoint_authz_body = JSON.stringify({target})
         const json = await BaseApi.request(
-            `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/endpoints/authorization`, {
+            `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/auth/transaction`, {
             mode: "cors",
             credentials: "omit",
             method: "POST",
@@ -47,7 +47,7 @@ const BaseApi = Object.assign({
                         key: apiKeySecret,
                         alg: HMAC.default_algorithm
                     },
-                    uri: `/${BaseApi.version}/endpoints/authorization`,
+                    uri: `/${BaseApi.version}/auth/transaction`,
                     body: endpoint_authz_body,
                     method: "POST"
                 })
@@ -95,7 +95,7 @@ const BaseApi = Object.assign({
                 transaction_id
             })
             return BaseApi.request(
-                `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/authorization`, {
+                `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/auth/authorization-verify`, {
                 mode: "cors",
                 credentials: "omit",
                 method: "POST",
@@ -107,7 +107,7 @@ const BaseApi = Object.assign({
                             key: apiKeySecret,
                             alg: HMAC.default_algorithm
                         },
-                        uri: `/${BaseApi.version}/authorization`,
+                        uri: `/${BaseApi.version}/auth/authorization-verify`,
                         body: authz_body,
                         method: "POST"
                     })
@@ -125,7 +125,7 @@ const BaseApi = Object.assign({
                 authorization_token,
             })
             const json = await BaseApi.request(
-                `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/authorization/check`, {
+                `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/auth/authorization-check`, {
                 mode: "cors",
                 credentials: "omit",
                 method: "POST",
@@ -137,7 +137,7 @@ const BaseApi = Object.assign({
                             key: apiKeySecret,
                             alg: HMAC.default_algorithm
                         },
-                        uri: `/${BaseApi.version}/authorization/check`,
+                        uri: `/${BaseApi.version}/auth/authorization-check`,
                         body: authz_body,
                         method: "POST"
                     })
@@ -210,7 +210,7 @@ const BaseApi = Object.assign({
                 transaction_id
             })
             const json = await BaseApi.request(
-                `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/authorization`, {
+                `${app.apiScheme}${app.apiDomain}/${BaseApi.version}/auth/authorization-verify`, {
                 mode: "cors",
                 credentials: "omit",
                 method: "POST",
@@ -222,7 +222,7 @@ const BaseApi = Object.assign({
                             key: apiKeySecret,
                             alg: HMAC.default_algorithm
                         },
-                        uri: `/${BaseApi.version}/authorization`,
+                        uri: `/${BaseApi.version}/auth/authorization-verify`,
                         body: authz_body,
                         method: "POST"
                     })

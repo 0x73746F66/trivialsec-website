@@ -25,7 +25,7 @@ const createProject = async event => {
     const project_name = document.getElementById('project_name_input').value
     const domain_name = document.getElementById('domain_name_input').value
     const json = await PublicApi.post({
-        target: '/create-project',
+        target: '/project/create',
         body: {project_name, domain_name}
     })
     void toast(json.status, json.message)
