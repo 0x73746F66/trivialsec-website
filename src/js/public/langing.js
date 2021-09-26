@@ -60,7 +60,7 @@ const signInAction = async() => {
         }
     }
     if (invalid === true) {
-        void toast('warning', 'This feature is not currently available', 'Sorry')
+        void toast('error', 'Please correct them and try again', 'Form Validation Errors', true)
         return;
     }
     const json = await PublicApi.post({
@@ -114,7 +114,7 @@ const contactUsAction = async event => {
         invalid = true
     }
     if (invalid == true) {
-        void toast('warning', 'This feature is not currently available', 'Sorry')
+        void toast('error', 'Please correct them and try again', 'Form Validation Errors', true)
         return;
     }
     const json = await PublicApi.post(`/contact-form`, {
@@ -159,7 +159,7 @@ const registerAction = async event => {
         invalid = true
     }
     if (invalid === true) {
-        void toast('warning', 'This feature is not currently available', 'Sorry')
+        void toast('error', 'Please correct them and try again', 'Form Validation Errors', true)
         return;
     }
     const json = await PublicApi.post({
@@ -171,7 +171,8 @@ const registerAction = async event => {
             company,
             email,
             privacy
-        }
+        },
+        sign: false,
     })
     void toast(appAlert, json.status, json.message)
 }

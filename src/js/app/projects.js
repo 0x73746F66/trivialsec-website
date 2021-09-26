@@ -31,8 +31,7 @@ const createProject = async event => {
     void toast(json.status, json.message)
     if (!!json.domain) {
         document.querySelector('#projects-list caption').textContent = 'Projects'
-        const project_id = json.domain.project_id
-        const tr = document.querySelector(`[data-project-id="${project_id}"]`)
+        const tr = document.querySelector(`[data-project-id="${json.project_id}"]`)
         if (tr) {
             const domainsEl = tr.querySelector('[title="Domains"] div')
             domainsEl.textContent = parseInt(domainsEl.textContent) + 1
@@ -43,9 +42,9 @@ const createProject = async event => {
                 return;
             }
             const container = document.querySelector('.projects-list tbody')
-            const template = micromustache.render(htmlDecode(template_raw.innerHTML), {project_id, project_name})
+            const template = micromustache.render(htmlDecode(template_raw.innerHTML), {project_id: json.project_id, project_name})
             container.insertAdjacentHTML('beforeend', template)
-            const row = document.querySelector(`tr[data-project-id="${project_id}"]`)
+            const row = document.querySelector(`tr[data-project-id="${json.project_id}"]`)
             row.addEventListener('click', projectsAction, false)
             row.addEventListener('touchstart', projectsAction, supportsPassive ? { passive: true } : false)
         }

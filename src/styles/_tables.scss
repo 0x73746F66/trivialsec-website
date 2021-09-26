@@ -43,6 +43,22 @@ table {
 			display: inline-block;
 		}
 	}
+	a.primary, a.primary:visited {
+		color: var.$primary;
+		font-weight: 600;
+	}
+	a.secondary, a.secondary:visited {
+		color: var.$secondary;
+		font-weight: 500;
+	}
+	a:visited {
+		color: inherit;
+	}
+	a {
+		display: inline-block;
+		text-decoration: none;
+		font-weight: 400;
+	}
 	th, td {
 		height: 2.5rem;
 		vertical-align: middle;
@@ -88,13 +104,6 @@ table {
 	img.caret {
 		width: 30px;
 	}
-}
-
-tr a {
-	color: #66a3d8;
-	display: inline-block;
-	text-decoration: none;
-	font-weight: 400;
 }
 
 @media (min-width: 860px) {
