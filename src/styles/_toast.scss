@@ -36,6 +36,9 @@ $breakpoints: (
     border-radius: 5px;
     margin-bottom: 0.5em;
   }
+  img {
+    min-width: 34px;
+  }
   &::after {
     content: '\2716';
     color: white;

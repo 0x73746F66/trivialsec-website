@@ -10,6 +10,7 @@ try {
 } catch (e) {}
 const init_site = async() => {
     window.app = {...document.head.querySelector('[name=application-name]').dataset}
+    app.charts = {}
     app.keys = 'keys' in app ?JSON.parse(app.keys):[]    
     app.lang = window.navigator.userLanguage || window.navigator.language
     app.sidebarState = localStorage.getItem('sidebarState')
@@ -28,6 +29,9 @@ const init_site = async() => {
     for await(const el of document.querySelectorAll('.toast')) {
         el.addEventListener('click', closeToast, false)
         el.addEventListener('touchstart', closeToast, supportsPassive ? { passive: true } : false)
+    }
+    app.ERRORS = {
+        corrupt: 'Critical account data has been modified or is unavailable.\nTry refreshing the page or allow a moment for us to correct a known issue reported at; https://status.trivialsec.com/'
     }
 }
 const browserErrorHandler = async event => {

@@ -1,3 +1,30 @@
+const initProject = async event => {
+    void livetime()
+    void setInterval(livetime, 1000)
+    void app.websocket.on('update_job_state', handleSocket)
+    void app.websocket.on('dns_changes', handleSocket)
+    void app.websocket.on('domain_changes', handleSocket)
+    void app.websocket.on('check_domains_tld', handleSocket)
+    void renderFindingsChart.call({}, event)
+    void renderJobsChart.call({}, event)
+    const projectActionEl = document.querySelector('.archive-project')
+    projectActionEl.addEventListener('click', projectArchiveButton, false)
+    projectActionEl.addEventListener('touchstart', projectArchiveButton, supportsPassive ? { passive: true } : false)
+    for await(const domainEl of document.querySelectorAll('.domains-list td.click-through')) {
+        const disabled = domainEl.parent('.disabled-events')
+        if (disabled) continue
+        domainEl.addEventListener('click', domainsAction, false)
+        domainEl.addEventListener('touchstart', domainsAction, supportsPassive ? { passive: true } : false)
+    }
+    for await(const domainEl of document.querySelectorAll('.domains-list td.toggle-monitoring')) {
+        domainEl.addEventListener('click', toggleDomainAction, false)
+        domainEl.addEventListener('touchstart', toggleDomainAction, supportsPassive ? { passive: true } : false)
+    }
+    for await(const domainEl of document.querySelectorAll('.domains-list td.delete-domain')) {
+        domainEl.addEventListener('click', deleteDomainAction, false)
+        domainEl.addEventListener('touchstart', deleteDomainAction, supportsPassive ? { passive: true } : false)
+    }
+}
 const domainsAction = async event => {
     const domain_id = event.currentTarget.parent('tr').dataset.domainId
     location.href = `/domain/${domain_id}`
@@ -56,39 +83,24 @@ const handleSocket = async data => {
         }
     }
 }
-document.addEventListener('DOMContentLoaded', async() => {
-    livetime()
-    setInterval(livetime, 1000)
-    void app.websocket.on('update_job_state', handleSocket)
-    void app.websocket.on('dns_changes', handleSocket)
-    void app.websocket.on('domain_changes', handleSocket)
-    void app.websocket.on('check_domains_tld', handleSocket)
-    const projectActionEl = document.querySelector('.archive-project')
-    projectActionEl.addEventListener('click', projectArchiveButton, false)
-    projectActionEl.addEventListener('touchstart', projectArchiveButton, supportsPassive ? { passive: true } : false)
-    for await(const domainEl of document.querySelectorAll('.domains-list td.click-through')) {
-        const disabled = domainEl.parent('.disabled-events')
-        if (disabled) continue
-        domainEl.addEventListener('click', domainsAction, false)
-        domainEl.addEventListener('touchstart', domainsAction, supportsPassive ? { passive: true } : false)
+const renderFindingsChart = async event => {
+    const findings_info    = document.getElementById('findings-info').value
+    const findings_low     = document.getElementById('findings-low').value
+    const findings_medium  = document.getElementById('findings-medium').value
+    const findings_high    = document.getElementById('findings-high').value
+    const canvasEl         = document.getElementById('findings-chart')
+    if (!findings_high || !findings_medium || !findings_low || !findings_info || !canvasEl) {
+        toast('warning', app.ERRORS.corrupt, 'Application Error', true)
+        return;
     }
-    for await(const domainEl of document.querySelectorAll('.domains-list td.toggle-monitoring')) {
-        domainEl.addEventListener('click', toggleDomainAction, false)
-        domainEl.addEventListener('touchstart', toggleDomainAction, supportsPassive ? { passive: true } : false)
-    }
-    for await(const domainEl of document.querySelectorAll('.domains-list td.delete-domain')) {
-        domainEl.addEventListener('click', deleteDomainAction, false)
-        domainEl.addEventListener('touchstart', deleteDomainAction, supportsPassive ? { passive: true } : false)
-    }
-    const findingsCanvasEl = document.querySelector('.findings-canvas canvas')
-    if (findingsCanvasEl) {
+    if (canvasEl) {
         const findings_data = [
-            document.getElementById('findings-info').value,
-            document.getElementById('findings-low').value,
-            document.getElementById('findings-medium').value,
-            document.getElementById('findings-high').value,
+            findings_info,
+            findings_low,
+            findings_medium,
+            findings_high,
         ]
-        void new Chart(findingsCanvasEl.getContext('2d'), {
+        app.charts.projectFindings = new Chart(canvasEl.getContext('2d'), {
             type: 'pie',
             data: {
                 labels: [
@@ -112,20 +124,31 @@ document.addEventListener('DOMContentLoaded', async() => {
                 }],
             },
             options: {
-                legend: {
-                    display: false
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 }
             }
         })
     }
-    const jobsCanvasEl = document.querySelector('.jobs-canvas canvas')
-    if (jobsCanvasEl) {
+}
+const renderJobsChart = async event => {
+    const completed = document.getElementById('jobs-completed').value
+    const pending   = document.getElementById('jobs-pending').value
+    const total     = document.getElementById('jobs-total').value
+    const canvasEl  = document.getElementById('jobs-chart')
+    if (!completed || !pending || !total || !canvasEl) {
+        toast('warning', app.ERRORS.corrupt, 'Application Error', true)
+        return;
+    }
+    if (canvasEl) {
         const jobs_data = [
-            document.getElementById('jobs-completed').value,
-            document.getElementById('jobs-pending').value,
-            document.getElementById('jobs-total').value,
+            completed,
+            pending,
+            total,
         ]
-        void new Chart(jobsCanvasEl.getContext('2d'), {
+        app.charts.projectJobs = new Chart(canvasEl.getContext('2d'), {
             type: 'doughnut',
             data: {
                 labels: [`Complete`, `Pending`],
@@ -136,18 +159,20 @@ document.addEventListener('DOMContentLoaded', async() => {
                         'rgb(79 111 141)',
                         'transparent'
                     ],
-                    borderWidth: 0,
                     hoverOffset: 4,
                     rotation: -90,
                     data: jobs_data
                 }]
             },
             options: {
-                legend: {
-                    display: false
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 }
             }
         })
     }
+}
 
-}, false)
+document.addEventListener('DOMContentLoaded', initProject, false)

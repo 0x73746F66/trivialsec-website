@@ -53,14 +53,10 @@ body {
 	height: fit-content;
 	.heading {
 		font-size: 32px;
-		margin: 5px 0 0 0;
-		i {
-			vertical-align: middle;
-		}
 	}
 	.sub-heading {
 		font-size: 14px;
-		margin: 0px 0 5px 43px;
+		margin: 10px 0 0 0;
 	}
 }
 .project-header {
@@ -72,7 +68,7 @@ body {
 	.banner-section.graphs {
 		flex: 0 0 20%;
 		margin: auto 0;
-		height: 150px;
+		height: 100px;
 		overflow: hidden;
 	}
 	.project-actions {
@@ -158,4 +154,10 @@ td:nth-child(2), td:nth-child(3) {
 .archive-project img {
     cursor: pointer;
     width: 30px;
+}
+#findings-chart {
+	width: 100px;
+}
+#jobs-chart {
+	width: 200px;
 }

@@ -116,7 +116,7 @@ const nameWebauthn = async event => {
     const deviceEl = document.getElementById('name-device')
     const device_name = deviceEl.value
     const device_id = deviceEl.dataset.deviceId
-    const json = PublicApi.post({
+    const json = await PublicApi.post({
         target: '/auth/setup/webauthn-device-name',
         body: {
             recaptcha_token,

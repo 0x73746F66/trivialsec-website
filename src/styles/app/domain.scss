@@ -72,17 +72,12 @@ body {
 		flex-flow: row wrap;
 		width: fit-content;
 	}
-}
-.heading-area .heading {
-	font-size: 32px;
-	margin: 5px 0 0 0;
-	i {
-		vertical-align: middle;
+	.heading {
+		font-size: 32px;
 	}
-}
-.heading-area .sub-heading {
-	font-size: 14px;
-	margin: 0px 0 5px 43px;
+	.sub-heading {
+		font-size: 14px;
+	}
 }
 .banner-section.scan-actions {
 	flex: 15%;
