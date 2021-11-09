@@ -60,3 +60,16 @@ const logout_action = async(e) => {
 document.addEventListener('DOMContentLoaded', init_site, false)
 window.addEventListener("unhandledrejection", browserErrorHandler, false)
 window.addEventListener("error", browserErrorHandler, false)
+console.log('%c'+
+' _____      _       _       _ __             \n'+
+'/__   \\_ __(_)_   _(_) __ _| / _\\ ___  ___   \n'+
+'  / /\\/ \'__| \\ \\ / / |/ _` | \\ \\ / _ \\/ __| \n'+
+' / /  | |  | |\\ V /| | (_| | |\\ \\  __/ (__   \n'+
+' \\/   |_|  |_| \\_/ |_|\\__,_|_\\__/\\___|\\___|',
+'color: #1abb9c;')
+console.log('%c'+
+'Please check out some open source repositories we released:\n'+
+'https://gitlab.com/chrislangton/py-tls-trust/\n'+
+'https://gitlab.com/chrislangton/py-tls-veryify/\n'+
+'\nCheers\n- Stof',
+'font-family: Roboto; font-size: 1.2em; line-height: 1.4em; font-style: italic;')

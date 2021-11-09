@@ -8,6 +8,7 @@ const init_projects = async () => {
     createEl.addEventListener('click', createProject, false)
     createEl.addEventListener('touchstart', createProject, supportsPassive ? { passive: true } : false)
     document.getElementById('domain_name_input').addEventListener('keyup', async event => event.keyCode == 13 ? createProject(event) : 0, false)
+    document.getElementById('domain_name_input').addEventListener('change', cleanDomainAction, false)
 
     for await (const projectsEl of document.querySelectorAll('.projects-list tr')) {
         projectsEl.addEventListener('click', projectsAction, false)
@@ -18,8 +19,16 @@ const projectsAction = async event => {
     const project_id = event.currentTarget.parent('tr').dataset.projectId
     location.href = `/project/${project_id}`
 }
+const cleanDomainAction = async event => {
+    const input = event.currentTarget.value
+    const no_protocol = input.replace('https', '').replace('http', '').replace('://', '')
+    const removed_uri = no_protocol.split('/')[0]
+    if (removed_uri) {
+        document.getElementById('domain_name_input').value = removed_uri
+    }
+}
 const handleSocket = async data => {
-    console.debug(data)
+    console.log(data)
 }
 const createProject = async event => {
     const project_name = document.getElementById('project_name_input').value
