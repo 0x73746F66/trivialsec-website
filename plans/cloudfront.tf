@@ -19,7 +19,7 @@ resource "aws_cloudfront_distribution" "assets_trivialsec" {
     enabled             = true
     is_ipv6_enabled     = true
     default_root_object = "index.html"
-    aliases = [local.www_domain_name]
+    aliases = ["www.${local.apex_domain}", "assets.${local.apex_domain}"]
 
     default_cache_behavior {
         allowed_methods  = ["GET", "HEAD"]

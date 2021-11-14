@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "content_s3_bucket" {
   bucket         = "assets-${local.domain}"
-  website_domain = local.www_domain_name
+  website_domain = "assets.${local.apex_domain}"
   acl     = "private"
   versioning {
     enabled = true
