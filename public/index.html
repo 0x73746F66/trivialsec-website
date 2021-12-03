@@ -6,7 +6,7 @@
     <meta name="msapplication-TileColor" content="#494949">
     <meta name="theme-color" content="#1ABB9C">
     <title>Trivial Security</title>
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/images/icon-256x256.png">
     <link rel="stylesheet" type="text/css" href="/styles/public/main.css" />
     <link rel="stylesheet" type="text/css" href="/styles/public/landing.css" />
     <meta name="application-name" content="Trivial Security"
@@ -17,13 +17,13 @@
         data-domain-scheme="https://"
         data-static-domain="asset.trivialsec.com"
         data-static-scheme="https://"
-        data-websocket-domain="ws.trivialsec.com"
-        data-websocket-scheme="https://" />
+        data-websocket-domain="push.trivialsec.com"
+        data-websocket-scheme="wss://" />
     <script type=text/javascript src="/js/vendor/micromustache.umd.8.0.3.min.js"></script>
     <script type=text/javascript src="/js/site.min.js"></script>
     <script type=text/javascript src="/js/utils.min.js"></script>
     <script type=text/javascript src="/js/api.min.js"></script>
-    <script type=text/javascript src="/js/public/langing.min.js"></script>
+    <script type=text/javascript src="/js/public/landing.min.js"></script>
 </head>
 <body>
     <template id="tmpl-toast">
@@ -95,7 +95,7 @@
                 <div class="input-group">
                     <input id="privacy-acceptance" type="checkbox" required>
                     <label for="privacy-acceptance">By submitting my information I acknowledge that I read<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        and agree to <a href="https://docs.trivialsec.com/terms">Terms of Service</a> and <a href="https://docs.trivialsec.com/privacy/">Privacy Policy</a>
+                        and agree to <a href="https://docs.trivialsec.com/terms-of-service/">Terms of Service</a> and <a href="https://docs.trivialsec.com/privacy/">Privacy Policy</a>
                     </label>
                     <div class="invalid privacy">
                         Please read and accept both our Privacy Policy and Terms of Service
@@ -217,8 +217,8 @@
     <div class="footer__spacer"></div>
     <div class="footer">
         <div>
-            © 2021 Trivial Security. All Rights Reserved.<br>
-            <a href="https://docs.trivialsec.com/terms">Terms of Service</a> | <a href="https://docs.trivialsec.com/privacy/">Privacy Policy</a>
+            © 2021 Trivial Security Pty Ltd. All Rights Reserved.<br>
+            <a href="https://docs.trivialsec.com/terms-of-service">Terms of Service</a> | <a href="https://docs.trivialsec.com/privacy-policy/">Privacy Policy</a>
         </div>
     </div>
     <input type="hidden" name="recaptcha_token" id="recaptcha_token" />

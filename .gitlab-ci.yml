@@ -1,6 +1,6 @@
 variables:
   AWS_REGION: ap-southeast-2
-  CF_DISTRIBUTION_ID: E33EE7R8AKZ48U
+  CF_DISTRIBUTION_ID: E7EG16TX5RER1
 
 stages:
   - test
