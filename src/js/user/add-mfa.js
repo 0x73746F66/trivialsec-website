@@ -100,7 +100,7 @@ const createWebauthn = async () => {
                 requireResidentKey: false,
                 userVerification: "discouraged"
             },
-            timeout: 90000,
+            timeout: 120000,
             attestation: "direct"
         }
     }).catch(BaseApi.handle_webauthn_error)
