@@ -69,7 +69,7 @@ console.log('%c'+
 'color: #1abb9c;')
 console.log('%c'+
 'Please check out some open source repositories we released:\n'+
-'https://gitlab.com/chrislangton/py-tls-trust/\n'+
-'https://gitlab.com/chrislangton/py-tls-veryify/\n'+
+'https://gitlab.com/trivialsec/tlstrust/\n'+
+'https://gitlab.com/trivialsec/tlsveryify/\n'+
 '\nCheers\n- Stof',
 'font-family: Roboto; font-size: 1.2em; line-height: 1.4em; font-style: italic;')

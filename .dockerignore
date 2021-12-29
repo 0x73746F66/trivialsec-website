@@ -4,8 +4,10 @@ scripts/
 .git/
 .venv/
 .cache
+.repo/
 .terraform/
 terraform.*
+plans/
 **.pyc
 **.tf
 **.tfstate
